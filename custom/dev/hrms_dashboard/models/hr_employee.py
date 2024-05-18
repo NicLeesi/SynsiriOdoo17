@@ -450,90 +450,44 @@ class HrEmployee(models.Model):
         }]
         return graph_result
 
-    # @api.model
-    # def get_attrition_rate(self):
-    #     month_attrition = []
-    #     monthly_join_resign = self.join_resign_trends()
-    #     month_join = monthly_join_resign[0]['values']
-    #     month_resign = monthly_join_resign[1]['values']
-    #     sql = """
-    #     SELECT (date_trunc('month', CURRENT_DATE))::date - interval '1'
-    #     month * s.a AS month_start
-    #     FROM generate_series(0,11,1) AS s(a);"""
-    #     self._cr.execute(sql)
-    #     month_start_list = self._cr.fetchall()
-    #     for month_date in month_start_list:
-    #         self._cr.execute("""select count(id),
-    #         to_char(date '%s', 'Month YYYY') as l_month from hr_employee
-    #         where resign_date> date '%s' or resign_date is null and
-    #         joining_date < date '%s'
-    #         """ % (month_date[0], month_date[0], month_date[0],))
-    #         month_emp = self._cr.fetchone()
-    #         match_join = \
-    #             list(filter(
-    #                 lambda d: d['l_month'] == month_emp[1].split(' ')[:1][
-    #                                               0].strip()[:3], month_join))[
-    #                 0][
-    #                 'count']
-    #         match_resign = \
-    #             list(filter(
-    #                 lambda d: d['l_month'] == month_emp[1].split(' ')[:1][
-    #                                               0].strip()[:3],
-    #                 month_resign))[0][
-    #                 'count']
-    #         month_avg = (month_emp[0] + match_join - match_resign + month_emp[
-    #             0]) / 2
-    #         attrition_rate = (match_resign / month_avg) * 100 \
-    #             if month_avg != 0 else 0
-    #         vals = {
-    #             'month': month_emp[1].split(' ')[:1][0].strip()[:3],
-    #             'attrition_rate': round(float(attrition_rate), 2)
-    #         }
-    #         month_attrition.append(vals)
-    #     return month_attrition
-
     @api.model
     def get_attrition_rate(self):
         month_attrition = []
-
-        # Fetching monthly join and resign trends
         monthly_join_resign = self.join_resign_trends()
         month_join = monthly_join_resign[0]['values']
         month_resign = monthly_join_resign[1]['values']
-
-        # Generating monthly start dates for the last 12 months
         sql = """
-        SELECT (date_trunc('month', CURRENT_DATE) - interval '1 month' * s.a)::date AS month_start
-        FROM generate_series(0,11) AS s(a);
-        """
+        SELECT (date_trunc('month', CURRENT_DATE))::date - interval '1' 
+        month * s.a AS month_start
+        FROM generate_series(0,11,1) AS s(a);"""
         self._cr.execute(sql)
         month_start_list = self._cr.fetchall()
-
         for month_date in month_start_list:
-            # Formatting month_date for SQL query
-            month_date_str = month_date[0].strftime('%Y-%m-%d')
-
-            # Executing SQL query to count employees
-            self._cr.execute("""
-                SELECT count(id) AS emp_count
-                FROM hr_employee
-                WHERE (resign_date > %s OR resign_date IS NULL) AND joining_date < %s
-            """, (month_date_str, month_date_str))
+            self._cr.execute("""select count(id), 
+            to_char(date '%s', 'Month YYYY') as l_month from hr_employee
+            where resign_date> date '%s' or resign_date is null and 
+            joining_date < date '%s'
+            """ % (month_date[0], month_date[0], month_date[0],))
             month_emp = self._cr.fetchone()
-
-            # Filtering join and resign counts for the current month
-            match_join = next((d['count'] for d in month_join if d['l_month'] == month_date_str), 0)
-            match_resign = next((d['count'] for d in month_resign if d['l_month'] == month_date_str), 0)
-
-            # Calculating attrition rate
-            month_avg = (month_emp[0] + match_join - match_resign + month_emp[0]) / 2
-            attrition_rate = (match_resign / month_avg) * 100 if month_avg != 0 else 0
-
-            # Constructing result dictionary
+            match_join = \
+                list(filter(
+                    lambda d: d['l_month'] == month_emp[1].split(' ')[:1][
+                                                  0].strip()[:3], month_join))[
+                    0][
+                    'count']
+            match_resign = \
+                list(filter(
+                    lambda d: d['l_month'] == month_emp[1].split(' ')[:1][
+                                                  0].strip()[:3],
+                    month_resign))[0][
+                    'count']
+            month_avg = (month_emp[0] + match_join - match_resign + month_emp[
+                0]) / 2
+            attrition_rate = (match_resign / month_avg) * 100 \
+                if month_avg != 0 else 0
             vals = {
-                'month': month_date[0].strftime('%b %Y'),
-                'attrition_rate': round(attrition_rate, 2)
+                'month': month_emp[1].split(' ')[:1][0].strip()[:3],
+                'attrition_rate': round(float(attrition_rate), 2)
             }
             month_attrition.append(vals)
-
         return month_attrition
