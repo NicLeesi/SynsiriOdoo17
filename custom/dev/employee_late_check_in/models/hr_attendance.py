@@ -68,7 +68,7 @@ class HrAttendance(models.Model):
         """Function creates records in late.check.in model for the employees
         who were late"""
         minutes_after = int(self.env['ir.config_parameter'].sudo().get_param(
-            'late_check_in_after')) or 0
+            'late_check_in_after')) or 10
         max_limit = int(self.env['ir.config_parameter'].sudo().get_param(
             'maximum_minutes')) or 0
         for rec in self.sudo().search(
