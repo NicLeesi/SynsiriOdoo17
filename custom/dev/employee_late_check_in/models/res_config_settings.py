@@ -26,17 +26,29 @@ class LateCheckinSettings(models.TransientModel):
     """Inherit the model to add fields"""
     _inherit = 'res.config.settings'
 
+    day_off_start_morning = fields.Float(
+        config_parameter='employee_late_check_in.day_off_start_morning',
+        string='Day-off morning start time',
+        help='Setting day-off morning start time for employee who want to work in day-off.')
+    day_off_start_afternoon = fields.Float(
+        config_parameter='employee_late_check_in.day_off_start_afternoon',
+        string='Day-off afternoon start time',
+        help='Setting day-off afternoon start time for employee who want to work in day-off.')
+    late_check_in_not_count_after = fields.Char(
+        config_parameter='employee_late_check_in.late_check_in_not_count_after',
+        help='When should the late check-in not count starts.',
+        string="Late check-in not count after", )
     deduction_amount = fields.Float(
         config_parameter='employee_late_check_in.deduction_amount',
-        help='How much amount need to be deducted if a employee was late',
+        help='How much amount need to be deducted if a employee was late ',
         string="Deduction Amount",)
     maximum_minutes = fields.Char(
         config_parameter='employee_late_check_in.maximum_minutes',
-        help="Maximum time limit a employee was considered as late",
+        help="Maximum time limit a employee was considered as late when compute record",
         string="Maximum Late Minute")
     late_check_in_after = fields.Char(
         config_parameter='employee_late_check_in.late_check_in_after',
-        help='When should the late check-in count down starts.',
+        help='When should the late check-in count.',
         string="Late Check-in Starts After",)
     deduction_type = fields.Selection(
         selection=[('minutes', 'Per Minutes'), ('total', 'Per Total')],
@@ -62,4 +74,11 @@ class LateCheckinSettings(models.TransientModel):
             'late_check_in_after', self.late_check_in_after)
         self.env['ir.config_parameter'].sudo().set_param(
             'deduction_type', self.deduction_type)
+        self.env['ir.config_parameter'].sudo().set_param(
+            'late_check_in_not_count_after', self.late_check_in_not_count_after)
+        self.env['ir.config_parameter'].sudo().set_param(
+            'day_off_start_morning', self.day_off_start_morning)
+        self.env['ir.config_parameter'].sudo().set_param(
+            'day_off_start_afternoon', self.day_off_start_afternoon)
         return res
+

@@ -7,8 +7,13 @@
         <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
         <field name="arch" type="xml">
             <field name="check_out" position="after">
+                <field name="late_check_in_afternoon" />
                 <field name="late_check_in"/>
+            </field>
+            <field name="late_check_in" position="after">
+                <field name="days_work_include_late" />
             </field>
         </field>
     </record>
 </odoo>
+

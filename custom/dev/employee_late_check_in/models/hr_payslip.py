@@ -26,13 +26,18 @@ class PayslipLateCheckIn(models.Model):
     """Inherit the model to add fields and functions"""
     _inherit = 'hr.payslip'
 
+    # Field used for writing attendance record in the payslip input
+    attendance_ids = fields.Many2many(
+        'hr.attendance', string='Attendance',
+        help='Attendance records of the employee')
+
     late_check_in_ids = fields.Many2many(
         'late.check.in', string='Late Check-in',
         help='Late check-in records of the employee')
 
     @api.model
     def get_inputs(self, contracts, date_from, date_to):
-        """Function used for writing late check-in record in the payslip input
+        """Function used for writing late check-in and days work records in the payslip input
          tree."""
         res = super(PayslipLateCheckIn, self).get_inputs(contracts, date_to,
                                                          date_from)
@@ -51,7 +56,25 @@ class PayslipLateCheckIn(models.Model):
                 'contract_id': self.contract_id.id,
             }
             res.append(input_data)
+
+        # attendance_type = self.env.ref(
+        #     'employee_late_check_in.hr_attendance')
+        attendance_id = self.env['hr.attendance'].search(
+            [('employee_id', '=', self.employee_id.id),
+             ('check_in', '<=', self.date_to), ('check_in', '>=', self.date_from)])
+
+        if attendance_id:
+            self.attendance_ids = attendance_id
+            input_data = {
+                'name': "Days Work(late include)",
+                'code': "DW",
+                'amount': sum(attendance_id.mapped('days_work_include_late')),
+                'contract_id': self.contract_id.id,
+            }
+            res.append(input_data)
+
         return res
+
 
     def action_payslip_done(self):
         """Function used for marking deducted Late check-in request."""

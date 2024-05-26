@@ -112,6 +112,7 @@ class HrPayslip(models.Model):
                                    string="Payslip Computation Details",
                                    help="Set Payslip Count")
 
+
     def _compute_details_by_salary_rule_category_ids(self):
         """Compute function for Salary Rule Category for getting
          all Categories"""
@@ -331,6 +332,7 @@ class HrPayslip(models.Model):
                     'date_to': date_to,
                 }
                 res.append(input_data)
+
         return res
 
     @api.model

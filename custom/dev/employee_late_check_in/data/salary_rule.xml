@@ -2,7 +2,7 @@
 <odoo>
         <!--Calculate the amount for the 'Late Check-in' rule.-->
     <record id="late_check_in" model="hr.salary.rule">
-        <field name="name">Late Check-in</field>
+        <field name="name">Late Check-in(Morning)</field>
         <field name="sequence" eval="6"/>
         <field name="code">LC</field>
         <field name="category_id" ref="hr_payroll_community.DED"/>
@@ -16,13 +16,74 @@ except:
     amount = 0
 result = -amount</field>
     </record>
-    <!--Salary structure for late check-in-->
+
+    <record id="hr_attendance" model="hr.salary.rule">
+        <field name="name">Absences</field>
+        <field name="sequence" eval="6"/>
+        <field name="code">AB</field>
+        <field name="category_id" ref="hr_payroll_community.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+days_work = 0
+try:
+    if inputs.DW:
+        days_work = inputs.DW.amount
+except:
+    days_work = 0
+
+net_amount = (worked_days.WORK100.number_of_days - days_work ) * (categories.BASIC + categories.ALW) / 26
+if net_amount &lt; 0:
+   result = 0
+else:
+ result = -net_amount
+                       </field>
+    </record>
+
+    <record id="hr_attendance_unpaid" model="hr.salary.rule">
+        <field name="name">Unpaid</field>
+        <field name="sequence" eval="6"/>
+        <field name="code">UNPAID</field>
+        <field name="category_id" ref="hr_payroll_community.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+amount = 0
+try:
+    if worked_days.UNPAID.number_of_days:
+        amount = worked_days.UNPAID.number_of_days * (categories.BASIC + categories.ALW) / 26
+except:
+    amount = 0
+result = -amount
+                       </field>
+    </record>
+
+
+
+
+<!--&lt;!&ndash;    &lt;!&ndash;Salary structure for late check-in&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <record id="late_check_in_salary_structure" model="hr.payroll.structure">&ndash;&gt;-->
+<!--&lt;!&ndash;        <field name="code">LCS</field>&ndash;&gt;-->
+<!--&lt;!&ndash;        <field name="name">Base Salary Structure For Late Check-in</field>&ndash;&gt;-->
+<!--&lt;!&ndash;        <field name="rule_ids" eval="[(6, 0, [ref('hr_payroll_community.hr_rule_basic'),&ndash;&gt;-->
+<!--&lt;!&ndash;        ref('hr_payroll_community.hr_rule_net'),ref('hr_payroll_community.hr_rule_taxable'),&ndash;&gt;-->
+<!--&lt;!&ndash;        ref('late_check_in')])]"/>&ndash;&gt;-->
+<!--&lt;!&ndash;        <field name="company_id" ref="base.main_company"/>&ndash;&gt;-->
+<!--&lt;!&ndash;    </record>&ndash;&gt;-->
+<!--&lt;!&ndash;</odoo>&ndash;&gt;-->
+
+ Salary structure for late check-in
     <record id="late_check_in_salary_structure" model="hr.payroll.structure">
         <field name="code">LCS</field>
         <field name="name">Base Salary Structure For Late Check-in</field>
         <field name="rule_ids" eval="[(6, 0, [ref('hr_payroll_community.hr_rule_basic'),
-        ref('hr_payroll_community.hr_rule_net'),ref('hr_payroll_community.hr_rule_taxable'),
-        ref('late_check_in')])]"/>
+                                                ref('hr_payroll_community.hr_rule_net'),
+                                                ref('hr_payroll_community.hr_rule_taxable'),
+                                                ref('late_check_in'),
+                                                ref('hr_attendance'),
+                                                ref('hr_attendance_unpaid')
+                                                ])]"/>
         <field name="company_id" ref="base.main_company"/>
     </record>
 </odoo>
+
+
+

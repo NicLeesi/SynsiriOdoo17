@@ -22,6 +22,18 @@
                          help="When should the late check-in count down starts.">
                     <field name="late_check_in_after"/><span>Minutes</span>
                 </setting>
+                <setting id="late_check_in_not_count_after" company_dependent="1"
+                         help="When should the late check-in not count starts.">
+                    <field name="late_check_in_not_count_after"/><span>Minutes</span>
+                </setting>
+                <setting id="day_off_start_morning" company_dependent="1"
+                         help="Setting day-off morning start time for employee who want to work in day-off for computing late check-in.">
+                    <field name="day_off_start_morning" widget="float_time" /><span>Minutes</span>
+                </setting>
+                <setting id="day_off_start_afternoon" company_dependent="1"
+                         help="Setting day-off afternoon start time for employee who want to work in day-off for computing late check-in.">
+                    <field name="day_off_start_afternoon" widget="float_time"/><span>Minutes</span>
+                </setting>
                 <setting id="maximum_minutes" company_dependent="1"
                          help="Maximum time limit a employee was considered as late.">
                     <field name="maximum_minutes"/><span>Minutes</span>
