@@ -23,19 +23,21 @@
                     <field name="late_check_in_after"/><span>Minutes</span>
                 </setting>
                 <setting id="late_check_in_not_count_after" company_dependent="1"
-                         help="When should the late check-in not count starts.">
+                         help="When should the late check-in not count starts.If late check-in over the setting time, employee has consider
+                                absences fro that period and late check-in not count">
                     <field name="late_check_in_not_count_after"/><span>Minutes</span>
                 </setting>
                 <setting id="day_off_start_morning" company_dependent="1"
                          help="Setting day-off morning start time for employee who want to work in day-off for computing late check-in.">
                     <field name="day_off_start_morning" widget="float_time" /><span>Minutes</span>
                 </setting>
-                <setting id="day_off_start_afternoon" company_dependent="1"
-                         help="Setting day-off afternoon start time for employee who want to work in day-off for computing late check-in.">
-                    <field name="day_off_start_afternoon" widget="float_time"/><span>Minutes</span>
+                <setting id="Lunch_break_time" company_dependent="1"
+                         help="Setting Lunch break time for employee.">
+                    <field name="Lunch_break_time"/><span>Minutes</span>
                 </setting>
                 <setting id="maximum_minutes" company_dependent="1"
-                         help="Maximum time limit a employee was considered as late.">
+                         help="Maximum time limit a employee was considered as late when create late check-in records. If not fill,
+                         late check-in record can not be create.">
                     <field name="maximum_minutes"/><span>Minutes</span>
                 </setting>
             </block>

@@ -1,2 +1,0 @@
-#Git ignore Odoo.conf
-odoo.conf

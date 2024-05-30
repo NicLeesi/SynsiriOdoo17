@@ -30,13 +30,14 @@ class LateCheckinSettings(models.TransientModel):
         config_parameter='employee_late_check_in.day_off_start_morning',
         string='Day-off morning start time',
         help='Setting day-off morning start time for employee who want to work in day-off.')
-    day_off_start_afternoon = fields.Float(
+    Lunch_break_time = fields.Integer(
         config_parameter='employee_late_check_in.day_off_start_afternoon',
-        string='Day-off afternoon start time',
-        help='Setting day-off afternoon start time for employee who want to work in day-off.')
+        string='Lunch break time',
+        help='Setting Lunch break time for employee.')
     late_check_in_not_count_after = fields.Char(
         config_parameter='employee_late_check_in.late_check_in_not_count_after',
-        help='When should the late check-in not count starts.',
+        help='''When should the late check-in not count starts.If late check-in exceed the set time, 
+        employee is considered absent for that period and late check-in does not count''',
         string="Late check-in not count after", )
     deduction_amount = fields.Float(
         config_parameter='employee_late_check_in.deduction_amount',
@@ -79,6 +80,6 @@ class LateCheckinSettings(models.TransientModel):
         self.env['ir.config_parameter'].sudo().set_param(
             'day_off_start_morning', self.day_off_start_morning)
         self.env['ir.config_parameter'].sudo().set_param(
-            'day_off_start_afternoon', self.day_off_start_afternoon)
+            'Lunch_break_time', self.Lunch_break_time)
         return res
 
