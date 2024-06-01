@@ -24,12 +24,6 @@ from datetime import datetime, timedelta
 from odoo import fields, models, api
 import logging
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-logging.debug("This is a debug message")
-logging.info("This is an info message")
-logging.warning("This is a warning message")
-logging.error("This is an error message")
-logging.critical("This is a critical message")
 
 class HrAttendance(models.Model):
     """Inherit the module to add fields and methods"""
@@ -135,65 +129,6 @@ class HrAttendance(models.Model):
                                     'late_check_in_not_count_after')):
                                 rec.late_check_in = 0
 
-    # def _compute_late_check_in(self):
-    #     """Calculate late check-in minutes for each record in the current Odoo model."""
-    #     for rec in self:
-    #         rec.late_check_in = 0.0
-    #         contract = rec.employee_id.contract_id
-    #         if contract:
-    #             check_in_time = self._convert_to_user_timezone(rec.check_in)
-    #             for schedule in contract.resource_calendar_id.attendance_ids:
-    #                 if schedule.dayofweek == str(check_in_time.weekday()) and schedule.day_period == 'morning':
-    #                     scheduled_time = self._time_from_float(schedule.hour_from)
-    #                     rec.late_check_in = self._calculate_late_minutes(check_in_time, scheduled_time)
-    #                 else:
-    #                     day_off_start = float(self.env['ir.config_parameter'].sudo().get_param('day_off_start_morning'))
-    #                     scheduled_time = self._time_from_float(day_off_start)
-    #                     rec.late_check_in = self._calculate_late_minutes(check_in_time, scheduled_time)
-    #
-    #                     if rec.late_check_in >= float(
-    #                             self.env['ir.config_parameter'].sudo().get_param('late_check_in_not_count_after')):
-    #                         rec.late_check_in = 0
-
-    # def _compute_late_check_in_afternoon(self):
-    #     """Calculate late check-in minutes for each record in the current Odoo model."""
-    #     for rec in self:
-    #         rec.late_check_in_afternoon = 0.0
-    #         contract = rec.employee_id.contract_id
-    #         if contract:
-    #             check_in_time = self._convert_to_user_timezone(rec.check_in)
-    #             for schedule in contract.resource_calendar_id.attendance_ids:
-    #                 if schedule.dayofweek == str(check_in_time.weekday()) and schedule.day_period == 'afternoon':
-    #                     scheduled_time = self._time_from_float(schedule.hour_from)
-    #                     rec.late_check_in_afternoon = self._calculate_late_minutes(check_in_time, scheduled_time)
-    #                 else:
-    #                     day_off_start = float(self.env['ir.config_parameter'].sudo().get_param('day_off_start_afternoon'))
-    #                     scheduled_time = self._time_from_float(day_off_start)
-    #                     rec.late_check_in_afternoon = self._calculate_late_minutes(check_in_time, scheduled_time)
-    #
-    #                     if rec.late_check_in >= float(
-    #                             self.env['ir.config_parameter'].sudo().get_param('late_check_in_not_count_after')):
-    #                         rec.late_check_in_afternoon = 0
-
-    # def _convert_to_user_timezone(self, dt):
-    #     """Convert a datetime object to the user's timezone."""
-    #     old_tz = pytz.timezone('UTC')
-    #     new_tz = pytz.timezone(self.env.user.tz) if self.env.user.tz in pytz.all_timezones else old_tz
-    #     return old_tz.localize(dt).astimezone(new_tz)
-    #
-    # def _time_from_float(self, time_float):
-    #     """Convert a float representing hours to a time object."""
-    #     hours, minutes = divmod(time_float * 60, 60)
-    #     return timedelta(hours=int(hours), minutes=int(minutes))
-    #
-    # def _calculate_late_minutes(self, check_in_time, scheduled_time):
-    #     """Calculate the number of late minutes."""
-    #     check_in = timedelta(hours=check_in_time.hour, minutes=check_in_time.minute)
-    #     if check_in > scheduled_time:
-    #         return (check_in - scheduled_time).total_seconds() / 60
-    #     return 0.0
-
-
 
     def late_check_in_records(self):
         """Function creates records in late.check.in model for the employees
@@ -222,13 +157,7 @@ class HrAttendance(models.Model):
         check-in time, and the actual check-in time."""
         for rec in self:
             rec.late_check_in_afternoon = 0.0
-            # day_off_afternoon_check_in = True
             if rec.employee_id.contract_id:
-                # for schedule in rec.sudo().employee_id.contract_id.resource_calendar_id.sudo().attendance_ids:
-                #     if (schedule.dayofweek == str(
-                #             rec.sudo().check_in.weekday()) and
-                #             schedule.day_period == 'afternoon'):
-                # day_off_afternoon_check_in = False
                 dt = rec.check_in
                 if self.env.user.tz in pytz.all_timezones:
                     old_tz = pytz.timezone('UTC')
@@ -237,27 +166,19 @@ class HrAttendance(models.Model):
                 str_time = dt.strftime("%H:%M")
                 check_in_date = datetime.strptime(
                     str_time, "%H:%M").time()
-                # print(dt)
-                # start_date = datetime.strptime(
-                #     '{0:02.0f}:{1:02.0f}'.format(*divmod(
-                #         schedule.hour_from * 60, 60)), "%H:%M").time()
                 morning_checkout = self._get_morning_checkout(rec.employee_id, rec.check_in)
-                print(morning_checkout)
                 if morning_checkout:
                     morning_checkout_time = morning_checkout.check_out
                     morning_checkout_time = old_tz.localize(morning_checkout_time).astimezone(
                         new_tz)
-                    print(morning_checkout_time)
                     morning_checkout_str_time = morning_checkout_time.strftime("%H:%M")
                     morning_checkout_time = datetime.strptime(morning_checkout_str_time,
                                                               "%H:%M").time()
                     morning_checkout_timedelta = timedelta(hours=morning_checkout_time.hour,
                                                            minutes=morning_checkout_time.minute)
-                # print(morning_checkout_timedelta)
 
                     break_time = int(self.env['ir.config_parameter'].sudo().get_param(
                                 'Lunch_break_time'))
-
                     check_in = timedelta(hours=check_in_date.hour,
                                          minutes=check_in_date.minute)
                     break_time = timedelta(minutes=break_time)
@@ -277,127 +198,3 @@ class HrAttendance(models.Model):
             ('check_out', '<', check_in_datetime)
         ], limit=1)
 
-
-            # if day_off_afternoon_check_in:
-            #     dt = rec.check_in
-            #     if self.env.user.tz in pytz.all_timezones:
-            #         old_tz = pytz.timezone('UTC')
-            #         new_tz = pytz.timezone(self.env.user.tz)
-            #         dt = old_tz.localize(dt).astimezone(new_tz)
-            #     str_time = dt.strftime("%H:%M")
-            #     check_in_date = datetime.strptime(
-            #         str_time, "%H:%M").time()
-            #     start_date = datetime.strptime(
-            #         '{0:02.0f}:{1:02.0f}'.format(*divmod(float(
-            #             self.env['ir.config_parameter'].sudo().get_param(
-            #                 'day_off_start_afternoon')) * 60, 60)), "%H:%M").time()
-            #     check_in = timedelta(hours=check_in_date.hour,
-            #                          minutes=check_in_date.minute)
-            #     start_date = timedelta(hours=start_date.hour,
-            #                            minutes=start_date.minute)
-            #     if check_in > start_date:
-            #         final = check_in - start_date
-            #         rec.late_check_in_afternoon = final.total_seconds() / 60
-            #
-            #         if rec.late_check_in_afternoon >= float(self.env['ir.config_parameter'].sudo().get_param(
-            #                 'late_check_in_not_count_after')):
-            #             rec.late_check_in_afternoon = 0
-
-
-
-                        # def _compute_late_check_in_afternoon(self):
-                        #     """Calculate late check-in for the afternoon session in minutes for each record."""
-                        #     for rec in self:
-                        #         rec.late_check_in_afternoon = 0.0
-                        #         day_off_afternoon_check_in = True
-                        #         if rec.employee_id.contract_id:
-                        #             # Get the user's time zone
-                        #             user_tz = self.env.user.tz
-                        #             if user_tz not in pytz.all_timezones:
-                        #                 user_tz = 'UTC'
-                        #
-                        #             # Convert check-in time to the user's time zone
-                        #             dt = rec.check_in
-                        #             old_tz = pytz.timezone('UTC')
-                        #             new_tz = pytz.timezone(user_tz)
-                        #             dt = old_tz.localize(dt).astimezone(new_tz)
-                        #
-                        #             # Format check-in time
-                        #             str_time = dt.strftime("%H:%M")
-                        #             check_in_date = datetime.strptime(str_time, "%H:%M").time()
-                        #
-                        #             # Get afternoon start time from configuration
-                        #             start_date = datetime.strptime(
-                        #                 '{0:02.0f}:{1:02.0f}'.format(*divmod(float(
-                        #                     self.env['ir.config_parameter'].sudo().get_param(
-                        #                         'day_off_start_afternoon')) * 60, 60)), "%H:%M").time()
-                        #
-                        #             # Convert times to timedelta for comparison
-                        #             check_in = timedelta(hours=check_in_date.hour, minutes=check_in_date.minute)
-                        #             start_date = timedelta(hours=start_date.hour, minutes=start_date.minute)
-                        #
-                        #             # Check if the check-in time is later than the scheduled start time
-                        #             if check_in > start_date:
-                        #                 final = check_in - start_date
-                        #                 rec.late_check_in_afternoon = final.total_seconds() / 60
-                        #
-                        #             # Adjust calculation based on morning check-out
-                        #             morning_checkout = self._get_morning_checkout(rec.employee_id, rec.check_in)
-                        #             if morning_checkout:
-                        #                 morning_checkout_time = morning_checkout.check_out
-                        #                 morning_checkout_time = old_tz.localize(morning_checkout_time).astimezone(
-                        #                     new_tz)
-                        #                 morning_checkout_str_time = morning_checkout_time.strftime("%H:%M")
-                        #                 morning_checkout_time = datetime.strptime(morning_checkout_str_time,
-                        #                                                           "%H:%M").time()
-                        #                 morning_checkout_timedelta = timedelta(hours=morning_checkout_time.hour,
-                        #                                                        minutes=morning_checkout_time.minute)
-                        #
-                        #                 # Example logic to adjust late check-in based on morning checkout
-                        #                 if morning_checkout_timedelta < start_date:  # Customize this logic as needed
-                        #                     rec.late_check_in_afternoon -= (
-                        #                                                                start_date - morning_checkout_timedelta).total_seconds() / 60
-                        #                     if rec.late_check_in_afternoon < 0:
-                        #                         rec.late_check_in_afternoon = 0
-                        #
-                        #             # Check if late check-in should not be counted after a certain threshold
-                        #             if rec.late_check_in_afternoon >= float(
-                        #                     self.env['ir.config_parameter'].sudo().get_param(
-                        #                             'late_check_in_not_count_after')):
-                        #                 rec.late_check_in_afternoon = 0
-                        #
-                        # def _get_morning_checkout(self, employee, check_in_datetime):
-                        #     """Retrieve the morning check-out record for the same day as the given check-in datetime."""
-                        #     start_of_day = check_in_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
-                        #     noon = start_of_day + timedelta(hours=12)
-                        #
-                        #     return self.env['hr.attendance'].search([
-                        #         ('employee_id', '=', employee.id),
-                        #         ('check_out', '>=', start_of_day),
-                        #         ('check_out', '<', noon)
-                        #     ], limit=1)
-
-                    # else:
-                    #     dt = rec.check_in
-                    #     if self.env.user.tz in pytz.all_timezones:
-                    #         old_tz = pytz.timezone('UTC')
-                    #         new_tz = pytz.timezone(self.env.user.tz)
-                    #         dt = old_tz.localize(dt).astimezone(new_tz)
-                    #     str_time = dt.strftime("%H:%M")
-                    #     check_in_date = datetime.strptime(
-                    #         str_time, "%H:%M").time()
-                    #     start_date = datetime.strptime(
-                    #         '{0:02.0f}:{1:02.0f}'.format(*divmod(float(
-                    #             self.env['ir.config_parameter'].sudo().get_param(
-                    #                 'day_off_start_afternoon')) * 60, 60)), "%H:%M").time()
-                    #     check_in = timedelta(hours=check_in_date.hour,
-                    #                          minutes=check_in_date.minute)
-                    #     start_date = timedelta(hours=start_date.hour,
-                    #                            minutes=start_date.minute)
-                    #     if check_in > start_date:
-                    #         final = check_in - start_date
-                    #         rec.late_check_in_afternoon = final.total_seconds() / 60
-                    #
-                    #         if rec.late_check_in_afternoon >= float(self.env['ir.config_parameter'].sudo().get_param(
-                    #                 'late_check_in_not_count_after')):
-                    #             rec.late_check_in_afternoon = 0

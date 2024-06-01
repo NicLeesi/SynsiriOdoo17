@@ -208,6 +208,8 @@ class HrPayslip(models.Model):
     def action_compute_sheet(self):
         """Function for compute Payslip sheet"""
         for payslip in self:
+            #Call onchange_contract_id function to get Other input lines
+            payslip.onchange_contract_id()
             number = payslip.number or self.env['ir.sequence'].next_by_code(
                 'salary.slip')
             # delete old payslip lines
@@ -221,7 +223,9 @@ class HrPayslip(models.Model):
             lines = [(0, 0, line) for line in
                      self._get_payslip_lines(contract_ids, payslip.id)]
             payslip.write({'line_ids': lines, 'number': number})
+
         return True
+
 
     @api.model
     def get_worked_day_lines(self, contracts, date_from, date_to):
