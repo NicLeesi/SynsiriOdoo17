@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+        <!--Calculate the amount for the 'Late Check-in' rule.-->
+
+    <record id="hr_payroll_commission" model="hr.salary.rule">
+        <field name="name">Commission(goals,skills)</field>
+        <field name="sequence" eval="7"/>
+        <field name="code">CSG</field>
+        <field name="category_id" ref="hr_payroll_community.Com"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+max_skills = 3
+skills = skills.Spark.level_progress + skills.French.level_progress + skills.English.level_progress
+goal = goals.AB.completeness
+base_incentive = 1000
+
+goal_ratio = base_incentive * goal / 100
+
+skill_ratio = skills / max_skills
+com = goal_ratio * skill_ratio
+
+if 0.51 &lt;= skill_ratio &lt;= 0.55:
+  com *= 0.3
+elif 0.56 &lt;= skill_ratio &lt;= 0.60:
+  com *= 0.4
+elif 0.61 &lt;= skill_ratio &lt;= 0.9:
+   com *= 0.4
+elif 0 &lt;= skill_ratio &lt;= 0.50:
+   com *= 0
+
+result = com
+
+                     </field>
+    </record>
+
+
+<!--    Salary structure for commission-->
+    <record id="commission_structure" model="hr.payroll.structure">
+        <field name="code">CMS</field>
+        <field name="name">Base Commission Structure </field>
+        <field name="rule_ids" eval="[(6, 0, [
+                                                ref('hr_payroll_commission'),
+                                                ])]"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+</odoo>
+
+
+

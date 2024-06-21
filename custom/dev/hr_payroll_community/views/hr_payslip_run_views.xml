@@ -83,7 +83,7 @@
                             class="oe_highlight"/>
                     <button name="%(hr_payslip_by_employees_action)d"
                             type="action" invisible="state != 'draft'"
-                            string="Generate Payslips" class="oe_highlight"/>
+                            string="Generate Slips" class="oe_highlight"/>
                     <button string="Set to Draft" name="action_payslip_run"
                             type="object" invisible="state != 'close'"/>
                     <field name="state" widget="statusbar"/>
@@ -104,8 +104,12 @@
                         </div>
                         <field name="credit_note" readonly="state != 'draft'"/>
                     </group>
-                    <separator string="Payslips"/>
-                    <field name="slip_ids" readonly="state != 'draft'"/>
+                    <notebook>
+                        <page string="Payslips">
+                            <separator string="Payslips"/>
+                            <field name="slip_ids" readonly="state != 'draft'"/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

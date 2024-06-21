@@ -55,7 +55,7 @@ class HrAttendance(models.Model):
                     # rec_late_check_in_afternoon = rec.late_check_in_afternoon / 60
 
                     rec.days_work_include_late = (rec_work_hours + rec_late_check_in) / average_work_day
-                    print(rec.days_work_include_late)
+
                     if rec.days_work_include_late < ( 1 / 2 ) * 0.75:
                         rec.days_work_include_late = 0
                         if rec.late_check_in >= float(self.env['ir.config_parameter'].sudo().get_param(

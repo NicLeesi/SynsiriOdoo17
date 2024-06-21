@@ -69,6 +69,7 @@ class HrPayslip(models.Model):
         ('verify', 'Waiting'),
         ('done', 'Done'),
         ('cancel', 'Rejected'),
+        ('refund', 'Refund')
     ], string='Status', index=True, readonly=True, copy=False, default='draft',
         help="""* When the payslip is created the status is \'Draft\'
                 \n* If the payslip is under verification, 
@@ -151,9 +152,9 @@ class HrPayslip(models.Model):
         """Function for refund the Payslip sheet"""
         for payslip in self:
             copied_payslip = payslip.copy(
-                {'credit_note': True, 'name': _('Refund: ') + payslip.name})
+                {'credit_note': True})
             copied_payslip.action_compute_sheet()
-            copied_payslip.action_payslip_done()
+            payslip.write({'state': 'refund'})
         formview_ref = self.env.ref('hr_payroll_community.hr_payslip_view_form',
                                     False)
         treeview_ref = self.env.ref('hr_payroll_community.hr_payslip_view_tree',

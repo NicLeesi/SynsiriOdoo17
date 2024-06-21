@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gamification_value_form" model="ir.ui.view">
+        <field name="name">gamification.value.form</field>
+        <field name="model">gamification.value</field>
+        <field name="arch" type="xml">
+            <form string="Gamification Value">
+                <sheet>
+                    <group>
+                        <field name="name" widget="selection"/>
+                        <field name="apply_date"/>
+                        <field name="goal_id" />
+                        <field name="current_value"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_gamification_value_tree" model="ir.ui.view">
+        <field name="name">gamification.value.tree</field>
+        <field name="model">gamification.value</field>
+        <field name="arch" type="xml">
+            <tree string="Gamification Values" >
+                <header>
+                    <button string="Update Goal Value" type="object" name="action_update_goal_value" class="oe_highlight"/>
+                </header>
+                <field name="name" />
+                <field name="apply_date" />
+                <field name="goal_id" />
+                <field name="current_value"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_gamification_value_kanban" model="ir.ui.view">
+        <field name="name">gamification.value.kanban</field>
+        <field name="model">gamification.value</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_example" >
+                <field name="name"/>
+                <field name="goal_id"/>
+                <field name="current_value"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_card">
+                                <div class="oe_kanban_details">
+                                    <strong>
+                                        <field name="name"/>
+                                    </strong>
+                                    <div>
+                                        <span>Goal ID: </span>
+                                        <field name="goal_id"/>
+                                    </div>
+                                    <div>
+                                        <span>Current Value: </span>
+                                        <field name="current_value"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+</odoo>

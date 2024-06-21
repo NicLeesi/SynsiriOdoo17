@@ -1,0 +1,82 @@
+# -*- coding: utf-8 -*-
+#############################################################################
+#
+#    Cybrosys Technologies Pvt. Ltd.
+#
+#    Copyright (C) 2023-TODAY Cybrosys Technologies(<https://www.cybrosys.com>)
+#    Author: Mohamed Muzammil VP (odoo@cybrosys.com)
+#
+#    You can modify it under the terms of the GNU LESSER
+#    GENERAL PUBLIC LICENSE (LGPL v3), Version 3.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU LESSER GENERAL PUBLIC LICENSE (LGPL v3) for more details.
+#
+#    You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
+#    (LGPL v3) along with this program.
+#    If not, see <http://www.gnu.org/licenses/>.
+#
+############################################################################.
+from odoo import api, fields, models
+
+
+class ComPayslipLateCheckIn(models.Model):
+    """Inherit the model to add fields and functions"""
+    _inherit = 'hr.commission.payslip'
+
+    # Field used for writing attendance record in the payslip input
+    attendance_ids = fields.Many2many(
+        'hr.attendance', string='Attendance',
+        help='Attendance records of the employee')
+
+    late_check_in_ids = fields.Many2many(
+        'late.check.in', string='Late Check-in',
+        help='Late check-in records of the employee')
+
+    @api.model
+    def get_inputs(self, contracts, date_from, date_to):
+        """Function used for writing late check-in and days work records in the payslip input
+         tree."""
+        res = super(ComPayslipLateCheckIn, self).get_inputs(contracts, date_to,
+                                                         date_from)
+        late_check_in_type = self.env.ref(
+            'employee_late_check_in.late_check_in')
+        late_check_in_id = self.env['late.check.in'].search(
+            [('employee_id', '=', self.employee_id.id),
+             ('date', '<=', self.date_to), ('date', '>=', self.date_from),
+             ('state', '=', 'approved')])
+        if late_check_in_id:
+            self.late_check_in_ids = late_check_in_id
+            input_data = {
+                'name': late_check_in_type.name,
+                'code': late_check_in_type.code,
+                'amount': sum(late_check_in_id.mapped('penalty_amount')),
+                'contract_id': self.contract_id.id,
+            }
+            res.append(input_data)
+
+        attendance_type = self.env.ref(
+            'employee_late_check_in.hr_attendance')
+        attendance_id = self.env['hr.attendance'].search(
+            [('employee_id', '=', self.employee_id.id),
+             ('check_in', '<=', self.date_to), ('check_in', '>=', self.date_from)])
+        if attendance_id:
+            self.attendance_ids = attendance_id
+            input_data = {
+                'name': 'Days Work(late include)',
+                'code': attendance_type.code,
+                'amount': sum(attendance_id.mapped('days_work_include_late')),
+                'contract_id': self.contract_id.id,
+            }
+            res.append(input_data)
+
+        return res
+
+
+    def action_payslip_done(self):
+        """Function used for marking deducted Late check-in request."""
+        for rec in self.late_check_in_ids:
+            rec.state = 'deducted'
+        return super(ComPayslipLateCheckIn, self).action_payslip_done()

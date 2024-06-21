@@ -26,3 +26,4 @@ from . import hr_payslip
 from . import late_check_in
 from . import res_company
 from . import res_config_settings
+from . import hr_commission_payslip

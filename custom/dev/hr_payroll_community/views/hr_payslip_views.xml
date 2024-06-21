@@ -95,6 +95,7 @@
     <menuitem action="hr_payslip_action"
               id="menu_department_tree"
               parent="menu_hr_payroll_community_root"
+              sequence="1"
               groups="hr_payroll_community.group_hr_payroll_community_user"/>
     <record id="action_hr_payslip" model="ir.actions.act_window">
         <field name="res_model">hr.payslip</field>

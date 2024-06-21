@@ -54,6 +54,10 @@
             <field name="name">Other Allowance</field>
             <field name="code">Other</field>
         </record>
+        <record id="Com" model="hr.salary.rule.category">
+            <field name="name">Commission</field>
+            <field name="code">Com</field>
+        </record>
         <record id="hr_rule_basic" model="hr.salary.rule">
             <field name="name">Basic Salary</field>
             <field name="sequence" eval="1"/>

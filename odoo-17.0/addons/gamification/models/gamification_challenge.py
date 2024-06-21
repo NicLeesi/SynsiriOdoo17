@@ -405,6 +405,7 @@ class Challenge(models.Model):
                 values = {
                     'definition_id': line.definition_id.id,
                     'line_id': line.id,
+                    'code': line.code,
                     'target_goal': line.target_goal,
                     'state': 'inprogress',
                 }

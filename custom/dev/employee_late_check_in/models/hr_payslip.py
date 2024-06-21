@@ -57,17 +57,16 @@ class PayslipLateCheckIn(models.Model):
             }
             res.append(input_data)
 
-        # attendance_type = self.env.ref(
-        #     'employee_late_check_in.hr_attendance')
+        attendance_type = self.env.ref(
+            'employee_late_check_in.hr_attendance')
         attendance_id = self.env['hr.attendance'].search(
             [('employee_id', '=', self.employee_id.id),
              ('check_in', '<=', self.date_to), ('check_in', '>=', self.date_from)])
-
         if attendance_id:
             self.attendance_ids = attendance_id
             input_data = {
                 'name': "Days Work(late include)",
-                'code': "DW",
+                'code': attendance_type.code,
                 'amount': sum(attendance_id.mapped('days_work_include_late')),
                 'contract_id': self.contract_id.id,
             }

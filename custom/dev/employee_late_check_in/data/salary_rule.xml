@@ -17,13 +17,16 @@ except:
 result = -amount</field>
     </record>
 
+
     <record id="hr_attendance" model="hr.salary.rule">
         <field name="name">Absences</field>
         <field name="sequence" eval="7"/>
-        <field name="code">AB</field>
+        <field name="code">DW</field>
         <field name="category_id" ref="hr_payroll_community.DED"/>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
+
+
 days_work = 0
 try:
     if inputs.DW:
@@ -56,19 +59,6 @@ result = -amount
                        </field>
     </record>
 
-
-
-
-<!--&lt;!&ndash;    &lt;!&ndash;Salary structure for late check-in&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;    <record id="late_check_in_salary_structure" model="hr.payroll.structure">&ndash;&gt;-->
-<!--&lt;!&ndash;        <field name="code">LCS</field>&ndash;&gt;-->
-<!--&lt;!&ndash;        <field name="name">Base Salary Structure For Late Check-in</field>&ndash;&gt;-->
-<!--&lt;!&ndash;        <field name="rule_ids" eval="[(6, 0, [ref('hr_payroll_community.hr_rule_basic'),&ndash;&gt;-->
-<!--&lt;!&ndash;        ref('hr_payroll_community.hr_rule_net'),ref('hr_payroll_community.hr_rule_taxable'),&ndash;&gt;-->
-<!--&lt;!&ndash;        ref('late_check_in')])]"/>&ndash;&gt;-->
-<!--&lt;!&ndash;        <field name="company_id" ref="base.main_company"/>&ndash;&gt;-->
-<!--&lt;!&ndash;    </record>&ndash;&gt;-->
-<!--&lt;!&ndash;</odoo>&ndash;&gt;-->
 
  Salary structure for late check-in
     <record id="late_check_in_salary_structure" model="hr.payroll.structure">

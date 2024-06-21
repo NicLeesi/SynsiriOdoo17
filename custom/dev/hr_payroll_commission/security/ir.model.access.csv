@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_commission_payslip_manager,access.hr.commission.payslip.manager,model_hr_commission_payslip,hr.group_hr_manager,1,1,1,1
+access_hr_commission_payslip_officer,access.hr.commission.payslip.officer,model_hr_commission_payslip,hr.group_hr_user,1,1,1,1
+access_hr_commission_payslip_user,access.hr.commission.payslip.user,model_hr_commission_payslip,base.group_user,1,1,1,1
+access_hr_commission_payslip_skill,access.hr.commission.payslip.skill,hr_payroll_commission.model_hr_commission_payslip_skill,base.group_user,1,1,1,1
+access_hr_commission_payslip_goal,access.hr.commission.payslip.goal,hr_payroll_commission.model_hr_commission_payslip_goal,base.group_user,1,1,1,1
+access_hr_commission_payslip_line,access.hr.commission.payslip.line,hr_payroll_commission.model_hr_commission_payslip_line,base.group_user,1,1,1,1
+access_hr_commission_payslip_input,access.hr.commission.payslip.input,hr_payroll_commission.model_hr_commission_payslip_input,base.group_user,1,1,1,1
+access_hr_commission_payslip_worked_days,access.hr.commission.payslip.worked.days,hr_payroll_commission.model_hr_commission_payslip_worked_days,base.group_user,1,1,1,1
+

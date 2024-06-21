@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form string="Payslips by Employees">
                 <header>
-                    <button icon="fa-cogs" string="Generate"
+                    <button icon="fa-cogs" string="Payslips Generate"
                             name="action_compute_sheet" type="object"
                             class="oe_highlight"/>
                 </header>
