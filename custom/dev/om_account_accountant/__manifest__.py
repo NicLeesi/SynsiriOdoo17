@@ -25,7 +25,6 @@
         'om_fiscal_year',
         'om_recurring_payments',
         'om_account_daily_reports',
-        'om_account_followup',
     ],
     'data': [
         'security/group.xml',
