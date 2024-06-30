@@ -36,9 +36,9 @@ class HrPayslipEmployees(models.TransientModel):
         active_id = self.env.context.get('active_id')
         if active_id:
             [run_data] = self.env['hr.payslip.run'].browse(active_id).read(
-                ['date_start', 'date_end', 'credit_note'])
-        from_date = run_data.get('date_start')
-        to_date = run_data.get('date_end')
+                ['com_date_from', 'com_date_to', 'credit_note'])
+        from_date = run_data.get('com_date_from')
+        to_date = run_data.get('com_date_to')
         if not data['employee_ids']:
             raise UserError(
                 _("You must select employee(s) to generate payslip(s)."))

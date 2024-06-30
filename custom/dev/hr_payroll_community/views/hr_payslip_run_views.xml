@@ -94,7 +94,7 @@
                         <field name="name" readonly="state != 'draft'"/>
                     </h1>
                     <group col="4">
-                        <label for="date_start" string="Period"
+                        <label for="date_start" string="Payslips Period"
                                readonly="state != 'draft'"/>
                         <div>
                             <field name="date_start" class="oe_inline"/>

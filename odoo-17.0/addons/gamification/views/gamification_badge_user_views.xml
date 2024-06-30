@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo><data>
+<odoo>
+
 
     <record id="badge_user_kanban_view" model="ir.ui.view" >
         <field name="name">Badge User Kanban View</field>
@@ -35,4 +36,26 @@
         </field>
     </record>
 
-</data></odoo>
+    <record id="badge_user_tree_view" model="ir.ui.view">
+        <field name="name">Badge User tree View</field>
+        <field name="model">gamification.badge.user</field>
+        <field name="arch" type="xml">
+            <tree string="ba" >
+                <field name="badge_name"/>
+                <field name="badge_id"/>
+                <field name="user_id"/>
+                <field name="comment"/>
+                <field name="create_date"/>
+             </tree>
+        </field>
+    </record>
+
+    <record id="action_badge_user_kanban_view" model="ir.actions.act_window">
+        <field name="name">Badge User</field>
+        <field name="res_model">gamification.badge.user</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_id" ref="badge_user_tree_view"/>
+    </record>
+
+
+</odoo>

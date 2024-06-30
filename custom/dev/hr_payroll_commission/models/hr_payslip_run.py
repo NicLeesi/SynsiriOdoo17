@@ -21,7 +21,8 @@
 #
 #############################################################################
 from odoo import fields, models, _
-
+from datetime import date, datetime, time
+from dateutil.relativedelta import relativedelta
 
 class HrComPayslipRun(models.Model):
     """Create new model for getting Com Payslip Batches"""
@@ -33,3 +34,21 @@ class HrComPayslipRun(models.Model):
                                'payslip_run_id',
                                string='Com Payslips',
                                help="Choose Com Payslips for Batches")
+
+    com_date_from = fields.Date(
+        string='Date From',
+        required=True,
+        help="Start date for Payslip",
+        default=lambda self: fields.Date.to_string(
+            (date.today().replace(day=1) - relativedelta(months=1))
+        )
+    )
+
+    com_date_to = fields.Date(
+        string='Date To',
+        required=True,
+        help="End date for Payslip",
+        default=lambda self: fields.Date.to_string(
+            (date.today().replace(day=1) - relativedelta(days=1))
+        )
+    )

@@ -66,7 +66,8 @@ class Goal(models.Model):
         for goal in self:
             if goal.definition_condition == 'higher':
                 if goal.current >= goal.target_goal:
-                    goal.completeness = 100.0
+                    # goal.completeness = 100.0
+                    goal.completeness = (goal.current / goal.target_goal) * 100
                 else:
                     goal.completeness = round(100.0 * goal.current / goal.target_goal, 2) if goal.target_goal else 0
             elif goal.current < goal.target_goal:

@@ -59,15 +59,23 @@ class PayrollCommission(models.Model):
         compute='_compute_user_id',
     )
 
-    date_from = fields.Date(string='Date From', required=True,
-                            help="Start date for Payslip",
-                            default=lambda self: fields.Date.to_string(
-                                date.today().replace(day=1)))
-    date_to = fields.Date(string='Date To', required=True,
-                          help="End date for Payslip",
-                          default=lambda self: fields.Date.to_string(
-                              (datetime.now() + relativedelta(months=+1, day=1,
-                                                              days=-1)).date()))
+    date_from = fields.Date(
+        string='Date From',
+        required=True,
+        help="Start date for Payslip",
+        default=lambda self: fields.Date.to_string(
+            (date.today().replace(day=1) - relativedelta(months=1))
+        )
+    )
+
+    date_to = fields.Date(
+        string='Date To',
+        required=True,
+        help="End date for Payslip",
+        default=lambda self: fields.Date.to_string(
+            (date.today().replace(day=1) - relativedelta(days=1))
+        )
+    )
     # this is chaos: 4 states are defined, 3 are used ('verify' isn't)
     # and 5 exist ('confirm' seems to have existed)
     state = fields.Selection(selection=[

@@ -14,6 +14,16 @@
                         <field name="com_slip_ids" readonly="state != 'draft'"/>
                     </page>
                 </xpath>
+                <xpath expr="//sheet/group/div" position="after">
+                    <label for="com_date_from" string="Comslips Period"
+                               readonly="state != 'draft'"/>
+                        <div>
+                            <field name="com_date_from" class="oe_inline"/>
+                            -
+                            <field name="com_date_to" class="oe_inline"
+                                   readonly="state != 'draft'"/>
+                        </div>
+                </xpath>
             </field>
         </record>
     </data>

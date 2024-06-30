@@ -84,6 +84,22 @@ class HrResignation(models.Model):
                                           " to change the employee")
     employee_contract = fields.Char(String="Contract")
 
+    check_return_insurance = fields.Boolean(string="Return Insurance",
+                                     compute="_compute_change_employee", default=True,
+                                     help="Checks , for return insurance"
+                                          " to the employee")
+    return_insurance = fields.Float(string="Return Insurance Amount",
+                                           compute="get_deduced_amount",
+                                           help="Amount that is return from employee's insurance account")
+    check_other_deduction = fields.Boolean(string="Other Deduction",
+                                     compute="_compute_change_employee", default=False,
+                                     help="Checks , if the employee has other deduction")
+    other_deduction = fields.Float(string="Deduct other Amount",
+                                           compute="get_deduced_amount",
+                                           help="Amount that is deduct for other reasons, such as liability," 
+                                                        " company's asset damaged")
+
+
     @api.depends('employee_id')
     def _compute_change_employee(self):
         """ Check whether the user

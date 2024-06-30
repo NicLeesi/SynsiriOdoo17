@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="hr_com_payslip_line_view_tree" model="ir.ui.view">
+        <field name="name">hr.com.payslip.line.view.tree</field>
+        <field name="model">hr.commission.payslip.line</field>
+        <field name="arch" type="xml">
+            <tree string="Salary Structure" editable="bottom"
+                  decoration-info="total == 0">
+                <field name="category_id"/>
+                <field name="employee_id" invisible="1"/>
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="quantity"/>
+                <field name="rate"/>
+                <field name="amount"/>
+                <field name="total"/>
+                <field name="amount_select" invisible="1"/>
+                <field name="register_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
         removed src_model="hr.commission.payslip"
-    <record id="action_hr_payslip_line" model="ir.actions.act_window">
+    <record id="action_hr_com_payslip_line" model="ir.actions.act_window">
         <field name="name">Commission Payslip Computation Details</field>
-        <field name="res_model">hr.payslip.line</field>
+        <field name="res_model">hr.commission.payslip.line</field>
         <field name="context">{'default_slip_id':
             active_id,'search_default_slip_id': active_id}
         </field>
     </record>
+
     <record id="hr_commission_payslip_view_form" model="ir.ui.view">
         <field name="name">hr.commission.payslip.view.form</field>
         <field name="model">hr.commission.payslip</field>
@@ -34,7 +56,7 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="%(action_hr_payslip_line)d"
+                        <button name="%(action_hr_com_payslip_line)d"
                                 class="oe_stat_button"
                                 icon="fa-money"
                                 type="action">

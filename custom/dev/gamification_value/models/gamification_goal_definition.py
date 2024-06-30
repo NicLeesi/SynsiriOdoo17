@@ -11,5 +11,5 @@ class GoalDefinition(models.Model):
     _description = 'Gamification goal definition'
 
     # Define your fields here
-    code = fields.Char(string='Code', required=True, help='For reference in payslip compute')
+    code = fields.Char(string='Code', help='For reference in payslip compute')
 

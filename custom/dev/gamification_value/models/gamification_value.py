@@ -13,7 +13,7 @@ class GamificationValue(models.Model):
     name = fields.Many2one('gamification.goal.definition',string='Goal name', required=True)
     goal_id = fields.Char(string='Goal ID', required=True)
     current_value = fields.Integer(string='Current Value')
-    apply_date = fields.Date(help='If apply date is match payslip date update goal the value', compute="_compute_apply_date", inverse='_inverse_apply_date')
+    apply_date = fields.Date("(Use in payslip compute) Apply date",help='If apply date is match payslip date update goal the value', compute="_compute_apply_date", inverse='_inverse_apply_date')
     manual_apply_date = fields.Date(string='Manual Apply Date')
     challenge_id = fields.Many2one('gamification.challenge', string='Challenge')
 
