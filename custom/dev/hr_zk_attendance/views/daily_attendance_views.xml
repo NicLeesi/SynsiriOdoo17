@@ -12,6 +12,9 @@
                 <field name="attendance_type"/>
                 <field name="punching_time"/>
                 <field name="address_id"/>
+                <button name="unlink"
+                            string="Download Data"
+                            type="object" class="oe_highlight"/>
             </tree>
         </field>
     </record>

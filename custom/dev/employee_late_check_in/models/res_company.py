@@ -43,3 +43,21 @@ class ResCompany(models.Model):
         help='Type of deduction, (If Per Minutes is chosen then for each '
              'minutes given amount is deducted, if Per Total is chosen then '
              'given amount is deducted from the total salary)')
+    Lunch_break_time = fields.Integer(
+        config_parameter='employee_late_check_in.day_off_start_afternoon',
+        string='Lunch break time',
+        help='Setting Lunch break time for employee.', default=60)
+    late_check_in_not_count_after = fields.Char(
+        config_parameter='employee_late_check_in.late_check_in_not_count_after',
+        help='''When should the late check-in not count starts.If late check-in exceed the set time, 
+            employee is considered absent for that period and late check-in does not count''',
+        string="Late check-in not count after", default=300)
+    day_work_count_ratio = fields.Float(
+        config_parameter='employee_late_check_in.deduction_amount',
+        help='How much work hour to count a day work'
+             '(set 1 for 100% work-hour compare with average day-work from schedule to count as a day work)',
+        string="Day work count ratio", default=0.75)
+    day_off_start_morning = fields.Float(
+        config_parameter='employee_late_check_in.day_off_start_morning',
+        string='Day-off morning start time',
+        help='Setting day-off morning start time for employee who want to work in day-off.', default=8)

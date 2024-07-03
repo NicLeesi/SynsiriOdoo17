@@ -20,8 +20,10 @@
 #
 ############################################################################.
 import pytz
+from pytz import timezone
 from datetime import datetime, timedelta
 from odoo import fields, models, api
+from odoo.addons.resource.models.utils import Intervals
 import logging
 
 
@@ -41,6 +43,40 @@ class HrAttendance(models.Model):
         string="Late Afternoon Check-in(Minutes)", compute="_compute_late_check_in_afternoon",
         help="This indicates the duration of the employee's tardiness.")
 
+    @api.depends('check_in', 'check_out')
+    def _compute_worked_hours(self):
+        for attendance in self:
+            if attendance.check_out and attendance.check_in and attendance.employee_id:
+                calendar = attendance._get_employee_calendar()
+                resource = attendance.employee_id.resource_id
+                tz = timezone(calendar.tz)
+                check_in_tz = attendance.check_in.astimezone(tz)
+                check_out_tz = attendance.check_out.astimezone(tz)
+                for rec in self:
+                    if rec.employee_id.contract_id:
+                        for schedule in rec.sudo().employee_id.contract_id.resource_calendar_id.sudo().attendance_ids:
+                            if (schedule.dayofweek == str(
+                                    rec.sudo().check_in.weekday()) and
+                                    schedule.day_period == 'afternoon'):
+
+                                hour_to_time = datetime.strptime(
+                                                '{0:02.0f}:{1:02.0f}'.format(*divmod(
+                                                schedule.hour_to * 60, 60)), "%H:%M").time()
+
+                                hour_to_datetime = tz.localize(datetime.combine(check_in_tz.date(), hour_to_time))
+
+                                if check_out_tz > hour_to_datetime:
+                                    check_out_tz = hour_to_datetime
+                lunch_intervals = calendar._attendance_intervals_batch(
+                    check_in_tz, check_out_tz, resource, lunch=True)
+                attendance_intervals = Intervals([(check_in_tz, check_out_tz, attendance)]) - lunch_intervals[
+                    resource.id]
+                delta = sum((i[1] - i[0]).total_seconds() for i in attendance_intervals)
+                attendance.worked_hours = delta / 3600.0
+            else:
+                attendance.worked_hours = False
+
+
     def _compute_days_work(self):
         """Calculate days of work for each record in current model"""
         for rec in self:
@@ -51,22 +87,17 @@ class HrAttendance(models.Model):
                 if resource_calendar:
                     average_work_day = resource_calendar.hours_per_day
                     rec_work_hours = rec.worked_hours
-                    rec_late_check_in = rec.late_check_in / 60
-                    # rec_late_check_in_afternoon = rec.late_check_in_afternoon / 60
+                    days_work_total = rec_work_hours / average_work_day
+                    day_work_ration_config = float(self.env['ir.config_parameter'].sudo().get_param(
+                        'day_work_count_ratio'))
+                    if days_work_total < 0.5 * day_work_ration_config:
+                        rec.days_work_include_late += 0
+                    elif days_work_total >= 0.5 * day_work_ration_config and days_work_total <= 1 * day_work_ration_config:
+                        rec.days_work_include_late += 0.5
+                    elif days_work_total > 1 * day_work_ration_config:
+                        rec.days_work_include_late += 1
 
-                    rec.days_work_include_late = (rec_work_hours + rec_late_check_in) / average_work_day
 
-                    if rec.days_work_include_late < ( 1 / 2 ) * 0.75:
-                        rec.days_work_include_late = 0
-                        if rec.late_check_in >= float(self.env['ir.config_parameter'].sudo().get_param(
-                                'late_check_in_not_count_after')):
-                            rec.days_work_include_late = 0
-                    else:
-                        if rec.days_work_include_late >= ( 1 / 2 ) * 0.75 and rec.days_work_include_late <= 1 * 0.75:
-                            rec.days_work_include_late = 0.5
-
-                        elif rec.days_work_include_late <= 1 * 0.75 and rec.days_work_include_late >= ( 1 / 2 ) * 0.75:
-                            rec.days_work_include_late = 1
     def _compute_late_check_in(self):
         """Calculate late check-in minutes for each record in the current Odoo
         model.This method iterates through the records and calculates late
@@ -104,6 +135,9 @@ class HrAttendance(models.Model):
                             if rec.late_check_in >= float(self.env['ir.config_parameter'].sudo().get_param(
                                     'late_check_in_not_count_after')):
                                 rec.late_check_in = 0
+                                if rec.days_work_include_late == 1:
+                                    rec.days_work_include_late -= 0.5
+
                 if day_off_morning_check_in:
                         dt = rec.check_in
                         if self.env.user.tz in pytz.all_timezones:
@@ -128,6 +162,9 @@ class HrAttendance(models.Model):
                             if rec.late_check_in >= float(self.env['ir.config_parameter'].sudo().get_param(
                                     'late_check_in_not_count_after')):
                                 rec.late_check_in = 0
+                                if rec.days_work_include_late == 1:
+                                    rec.days_work_include_late -= 0.5
+
 
 
     def late_check_in_records(self):

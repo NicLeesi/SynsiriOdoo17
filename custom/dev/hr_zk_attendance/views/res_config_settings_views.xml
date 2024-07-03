@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    Adding fields in res.config.settings
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr.zk.attendance</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id"
+               ref="hr_attendance.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='hr_attendance']" position="inside">
+                <block title="Bio Device">
+                    <setting id="morning_start" company_dependent="1">
+                        <field name="morning_start" widget="float_time"/>
+                    </setting>
+                    <setting id="morning_end" company_dependent="1">
+                        <field name="morning_end" widget="float_time"/>
+                    </setting>
+                    <setting id="break_a_start" company_dependent="1">
+                        <field name="break_a_start" widget="float_time"/>
+                    </setting>
+                    <setting id="break_a_end" company_dependent="1">
+                        <field name="break_a_end" widget="float_time"/>
+                    </setting>
+                    <setting id="break_b_start" company_dependent="1">
+                        <field name="break_b_start" widget="float_time"/>
+                    </setting>
+                    <setting id="break_b_end" company_dependent="1">
+                        <field name="break_b_end" widget="float_time"/>
+                    </setting>
+                    <setting id="afternoon_start" company_dependent="1">
+                        <field name="afternoon_start" widget="float_time"/>
+                    </setting>
+                    <setting id="afternoon_end" company_dependent="1">
+                        <field name="afternoon_end" widget="float_time"/>
+                    </setting>
+
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
