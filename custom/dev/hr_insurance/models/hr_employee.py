@@ -63,9 +63,9 @@ class HrEmployee(models.Model):
                 if ins.date_from <= current_date:
                     if not ins.date_to or ins.date_to >= current_date:
                         if ins.policy_coverage in ['monthly', 'permanent']:
-                            if emp.insurance_account >= ins.fix_amount:
+                            if ins.policy_fix_amount and emp.insurance_account >= ins.fix_amount:
                                 ins_amount = 0
-                            elif ins.policy_fix_amount:
+                            elif not ins.policy_fix_amount:
                                 ins_amount += ins.amount * 12
                         else:
                             ins_amount += ins.amount
