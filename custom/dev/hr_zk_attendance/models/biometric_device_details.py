@@ -101,7 +101,7 @@ class BiometricDeviceDetails(models.Model):
                     clear_data = zk.get_attendance()
                     if clear_data:
                         # Clearing data in the device
-                        # conn.clear_attendance()
+                        conn.clear_attendance()
                         # Clearing data from attendance log
                         self._cr.execute(
                             """delete from zk_machine_attendance""")
