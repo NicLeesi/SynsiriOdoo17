@@ -185,7 +185,9 @@ class HrAttendance(models.Model):
                     ('check_out', '=', False),
                     ('id', '!=', attendance.id),
                 ], order='check_in desc', limit=1)
+
                 if no_check_out_attendances:
+
                     raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s",
                                                        empl_name=attendance.employee_id.name,
                                                        datetime=format_datetime(self.env, no_check_out_attendances.check_in, dt_format=False)))

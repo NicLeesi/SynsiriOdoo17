@@ -41,6 +41,8 @@ class HrComPayslipSkill(models.Model):
 
     skill_type = fields.Char(string='Skill type',
                                   )
+    skill_id = fields.Char(string='Skill name',
+                           )
     skill_level = fields.Char(string='Skill level',
                                   )
     level_progress = fields.Float(string='Level progress',

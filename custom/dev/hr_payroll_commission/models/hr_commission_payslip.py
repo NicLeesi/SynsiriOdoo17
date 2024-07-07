@@ -382,7 +382,8 @@ class PayrollCommission(models.Model):
         for skill in skills.filtered(lambda skill: skill.skill_id):
             skill_data = {
                 'skill_type': skill.skill_type_id.name,
-                'code': skill.skill_id.name,
+                'skill_id': skill.skill_id.name,
+                'code': 'SKILL',
                 'level_progress': skill.level_progress,
                 'skill_level': skill.skill_level,
             }
@@ -408,7 +409,7 @@ class PayrollCommission(models.Model):
             if goal.start_date >= day_from and goal.end_date <= day_to:
                 goal_data = {
                     'definition_id': goal.definition_id.name,
-                    'code': goal.code,
+                    'code': 'GOAL',
                     'current': goal.current,
                     'target_goal': goal.target_goal,
                     'completeness': goal.completeness,
@@ -758,7 +759,7 @@ class PayrollCommission(models.Model):
                                                          date_to)
         worked_days_lines = self.worked_days_line_ids.browse([])
 
-        print("Input Line IDs before assignment:", worked_days_line_ids)
+        # print("Input Line IDs before assignment:", worked_days_line_ids)
 
         for r in worked_days_line_ids:
             worked_days_lines += worked_days_lines.new(r)

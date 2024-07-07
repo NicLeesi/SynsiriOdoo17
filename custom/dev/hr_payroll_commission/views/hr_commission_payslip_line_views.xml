@@ -142,6 +142,7 @@
                                    readonly="state != 'draft'">
                                 <tree string="Skill" editable="bottom">
                                     <field name="skill_type"/>
+                                    <field name="skill_id"/>
                                     <field name="code"/>
                                     <field name="level_progress"/>
                                 </tree>

@@ -216,27 +216,27 @@ class BiometricDeviceDetails(models.Model):
     #             raise UserError(_('Unable to connect, please check the'
     #                               'parameters and network connections.'))
 
-    @api.model
-    def auto_update_attendance(self):
-        hr_attendance = self.env['hr.attendance'].search([('check_out', '=', False)])
-
-        for rec in hr_attendance:
-            if rec.check_out == False:  # Assuming check_out is a datetime field
-                # Calculate the new check_out time (5 minutes after check_in)
-                check_in_time = fields.Datetime.from_string(rec.check_in)
-                new_check_out_time = check_in_time + timedelta(minutes=5)
-
-                # Convert to UTC timezone
-                local_tz = timezone(self.env.user.partner_id.tz or 'GMT')
-                local_dt = local_tz.localize(new_check_out_time, is_dst=None)
-                utc_dt = local_dt.astimezone(timezone('UTC'))
-
-                # Update the record
-                rec.write({
-                    'check_out': fields.Datetime.to_string(utc_dt)
-                })
-
-        return True
+    # @api.model
+    # def auto_update_attendance(self):
+    #     hr_attendance = self.env['hr.attendance'].search([('check_out', '=', False)])
+    #
+    #     for rec in hr_attendance:
+    #         if rec.check_out == False:  # Assuming check_out is a datetime field
+    #             # Calculate the new check_out time (5 minutes after check_in)
+    #             check_in_time = fields.Datetime.from_string(rec.check_in)
+    #             new_check_out_time = check_in_time + timedelta(minutes=5)
+    #
+    #             # Convert to UTC timezone
+    #             local_tz = timezone(self.env.user.partner_id.tz or 'GMT')
+    #             local_dt = local_tz.localize(new_check_out_time, is_dst=None)
+    #             utc_dt = local_dt.astimezone(timezone('UTC'))
+    #
+    #             # Update the record
+    #             rec.write({
+    #                 'check_out': fields.Datetime.to_string(utc_dt)
+    #             })
+    #
+    #     return True
 
 
     def action_download_attendance(self):
@@ -284,7 +284,6 @@ class BiometricDeviceDetails(models.Model):
                                     if not duplicate_atten_ids:
                                         morning_start = float(self.env['ir.config_parameter'].sudo().get_param(
                                             'morning_start'))
-                                        print(morning_start)
                                         morning_end = float(self.env['ir.config_parameter'].sudo().get_param(
                                             'morning_end'))
                                         break_a_start = float(self.env['ir.config_parameter'].sudo().get_param(
@@ -362,6 +361,8 @@ class BiometricDeviceDetails(models.Model):
                                         'check_in': atten_time
                                     })
                     conn.disconnect()
+                    # Call auto_update_attendance method
+                    # self.auto_update_attendance()
                     return True
                 else:
                     raise UserError(_('Unable to get the attendance log, please try again later.'))

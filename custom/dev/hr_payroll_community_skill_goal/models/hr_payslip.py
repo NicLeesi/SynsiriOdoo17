@@ -44,7 +44,8 @@ class HrPayslip(models.Model):
         for skill in skills.filtered(lambda skill: skill.skill_id):
             skill_data = {
                 'skill_type': skill.skill_type_id.name,
-                'code': skill.skill_id.name,
+                'skill_id': skill.skill_id.name,
+                'code': 'SKILL',
                 'level_progress': skill.level_progress,
                 'skill_level': skill.skill_level,
             }
@@ -70,7 +71,7 @@ class HrPayslip(models.Model):
             if goal.start_date >= day_from and goal.end_date <= day_to:
                 goal_data = {
                     'definition_id': goal.definition_id.name,
-                    'code': goal.code,
+                    'code': 'GOAL',
                     'current': goal.current,
                     'target_goal': goal.target_goal,
                     'completeness': goal.completeness,

@@ -41,7 +41,7 @@ class HrComPayslipSkill(models.Model):
     code = fields.Char(required=True, string="Code",
                        help="The code that can be used in the salary rules")
 
-    skill_id = fields.Char(string='Skill ID',
+    skill_id = fields.Char(string='Skill name',
                                   )
     skill_type = fields.Char(string='Skill type',
                                   )

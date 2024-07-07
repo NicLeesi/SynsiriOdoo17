@@ -4,15 +4,15 @@
         <!--Calculate the amount for the 'Late Check-in' rule.-->
 
     <record id="hr_payroll_commission" model="hr.salary.rule">
-        <field name="name">Commission(Goals,Skills,Discipline)(Comslip-Only)</field>
+        <field name="name">Commission(Goals,Skills,Discipline)</field>
         <field name="sequence" eval="7"/>
         <field name="code">CSG</field>
         <field name="category_id" ref="hr_payroll_community.Com"/>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 max_skills = 3
-skills = skills.Spark.level_progress + skills.French.level_progress + skills.English.level_progress
-goal = goals.AB.completeness
+skills = skills.SKILL.level_progress
+goal = goals.GOAL.completeness
 base_incentive = 1000
 
 goal_ratio = base_incentive * goal / 100
@@ -24,10 +24,22 @@ if 0.51 &lt;= skill_ratio &lt;= 0.55:
   com *= 0.3
 elif 0.56 &lt;= skill_ratio &lt;= 0.60:
   com *= 0.4
-elif 0.61 &lt;= skill_ratio &lt;= 0.9:
-   com *= 0.4
-elif 0 &lt;= skill_ratio &lt;= 0.50:
-   com *= 0
+elif 0.61 &lt;= skill_ratio &lt;= 0.65:
+   com *= 0.5
+elif 0.66 &lt;= skill_ratio &lt;= 0.75:
+   com *= 0.6
+elif 0.66 &lt;= skill_ratio &lt;= 0.75:
+   com *= 0.7
+elif 0.76 &lt;= skill_ratio &lt;= 0.80:
+   com *= 0.8
+elif 0.81 &lt;= skill_ratio &lt;= 0.85:
+   com *= 0.9
+elif 0.86 &lt;= skill_ratio &lt;= 0.90:
+   com *= 1
+elif 0.91 &lt;= skill_ratio &lt;= 0.95:
+   com *= 1.05
+elif 0.96 &lt;= skill_ratio &lt;= 1:
+   com *= 1.1
 
 discipline = 1
 try:

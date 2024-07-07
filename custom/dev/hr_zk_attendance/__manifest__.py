@@ -20,15 +20,17 @@
 #
 ################################################################################
 {
-    'name': 'Biometric Device Integration',
+    'name': 'iometric Device (Auto Generate Punchtype) ',
     'version': '17.0.1.0.0',
     'category': 'Human Resources',
-    'summary': "Integrating Biometric Device, Biometric Device, ZKteco, uFace 202, HR Attendance, Odoo Biometric Device, Device Integration, Odoo17, Odoo Apps",
+    'summary': "Integrating Biometric Device, Biometric Device, ZKteco, uFace 202, uFace 800, "
+               "HR Attendance, Odoo Biometric Device, Device Integration, Odoo17, Odoo Apps auto "
+               "generate puchtype relate to time setting in configuration",
     'description': "This module integrates Odoo with the biometric"
                    "device(Model: ZKteco uFace 202),odoo17,odoo,hr,attendance",
-    'author': 'Cybrosys Techno Solutions',
-    'company': 'Cybrosys Techno Solutions',
-    'maintainer': 'Cybrosys Techno Solutions',
+    'author': 'Cybrosys Techno Solutions + Niclee Hard',
+    'company': 'Cybrosys Techno Solutions + Niclee Hard',
+    'maintainer': 'Cybrosys Techno Solutions +  Niclee Hard',
     'website': "https://www.cybrosys.com",
     'depends': ['base_setup', 'hr_attendance'],
     'data': [
@@ -37,8 +39,8 @@
         'views/hr_employee_views.xml',
         'views/daily_attendance_views.xml',
         'views/biometric_device_attendance_menus.xml',
-        'views/res_config_settings_views.xml',
-        'data/ir_cron_data.xml'
+        'views/res_config_settings_views.xml'
+        # 'data/ir_cron_data.xml'
     ],
     'images': ['static/description/banner.png'],
     'license': 'AGPL-3',
