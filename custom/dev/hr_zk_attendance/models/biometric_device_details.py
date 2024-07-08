@@ -331,6 +331,21 @@ class BiometricDeviceDetails(models.Model):
                                                     'employee_id': get_user_id.id,
                                                     'check_in': atten_time
                                                 })
+                                            if att_var:
+                                                last_punch = hr_attendance.search(
+                                                    [('employee_id', '=', get_user_id.id)],
+                                                    order='check_in desc', limit=1)
+                                                print("test")
+                                                last_punch_date = last_punch.check_in.date()
+                                                atten_time_date = fields.Datetime.from_string(atten_time).date()
+                                                print(atten_time_date)
+                                                print(last_punch_date)
+                                                if atten_time_date > last_punch_date:
+                                                    print("test2")
+                                                    hr_attendance.create({
+                                                        'employee_id': get_user_id.id,
+                                                        'check_in': atten_time
+                                                    })
                                         else:  # check-out
                                             if len(att_var) == 1:
                                                 att_var.write({
