@@ -21,7 +21,7 @@ result = -amount</field>
     <record id="hr_attendance" model="hr.salary.rule">
         <field name="name">Absences</field>
         <field name="sequence" eval="7"/>
-        <field name="code">DW</field>
+        <field name="code">AB</field>
         <field name="category_id" ref="hr_payroll_community.DED"/>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">

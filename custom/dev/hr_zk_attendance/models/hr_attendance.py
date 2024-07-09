@@ -38,6 +38,7 @@ class HrAttendance(models.Model):
                 ('check_in', '<=', attendance.check_in),
                 ('id', '!=', attendance.id),
             ], order='check_in desc', limit=1)
+            print("last:",last_attendance_before_check_in)
             if last_attendance_before_check_in and last_attendance_before_check_in.check_out and last_attendance_before_check_in.check_out > attendance.check_in:
                 raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
                                                    empl_name=attendance.employee_id.name,
@@ -61,18 +62,18 @@ class HrAttendance(models.Model):
                             'check_out': fields.Datetime.to_string(new_check_out_time)
                         })
 
-            else:
-                # we verify that the latest attendance with check_in time before our check_out time
-                # is the same as the one before our check_in time computed before, otherwise it overlaps
-                last_attendance_before_check_out = self.env['hr.attendance'].search([
-                    ('employee_id', '=', attendance.employee_id.id),
-                    ('check_in', '<', attendance.check_out),
-                    ('id', '!=', attendance.id),
-                ], order='check_in desc', limit=1)
-                if last_attendance_before_check_out and last_attendance_before_check_in != last_attendance_before_check_out:
-                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
-                                                       empl_name=attendance.employee_id.name,
-                                                       datetime=format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False)))
+            # else:
+            #     # we verify that the latest attendance with check_in time before our check_out time
+            #     # is the same as the one before our check_in time computed before, otherwise it overlaps
+            #     last_attendance_before_check_out = self.env['hr.attendance'].search([
+            #         ('employee_id', '=', attendance.employee_id.id),
+            #         ('check_in', '<', attendance.check_out),
+            #         ('id', '!=', attendance.id),
+            #     ], order='check_in desc', limit=1)
+            #     if last_attendance_before_check_out and last_attendance_before_check_in != last_attendance_before_check_out:
+            #         raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
+            #                                            empl_name=attendance.employee_id.name,
+            #                                            datetime=format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False)))
 
 @api.constrains('check_in', 'check_out')
 def _check_validity_check_in_check_out(self):

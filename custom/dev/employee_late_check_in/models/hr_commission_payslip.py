@@ -20,6 +20,12 @@
 #
 ############################################################################.
 from odoo import api, fields, models
+from datetime import date, datetime, time
+import babel
+from dateutil.relativedelta import relativedelta
+from pytz import timezone
+from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class ComPayslipLateCheckIn(models.Model):
@@ -41,6 +47,17 @@ class ComPayslipLateCheckIn(models.Model):
          tree."""
         res = super(ComPayslipLateCheckIn, self).get_inputs(contracts, date_to,
                                                          date_from)
+        # Convert date_from and date_to to datetime objects
+        if isinstance(date_from, datetime):
+            from_datetime = date_from
+        else:
+            from_datetime = datetime.combine(date_from, datetime.min.time())
+
+        if isinstance(date_to, datetime):
+            to_datetime = date_to
+        else:
+            to_datetime = datetime.combine(date_to, datetime.max.time())
+
         late_check_in_type = self.env.ref(
             'employee_late_check_in.late_check_in')
         late_check_in_id = self.env['late.check.in'].search(
@@ -57,20 +74,103 @@ class ComPayslipLateCheckIn(models.Model):
             }
             res.append(input_data)
 
-        attendance_type = self.env.ref(
-            'employee_late_check_in.hr_attendance')
+        # attendance_type = self.env.ref(
+        #     'employee_late_check_in.hr_attendance')
+        # attendance_id = self.env['hr.attendance'].search(
+        #     [('employee_id', '=', self.employee_id.id),
+        #      ('check_in', '<=', self.date_to), ('check_in', '>=', self.date_from)])
+        # if attendance_id:
+        #     self.attendance_ids = attendance_id
+        #     input_data = {
+        #         'name': 'Days Work(late include)',
+        #         'code': attendance_type.code,
+        #         'amount': sum(attendance_id.mapped('days_work_include_late')),
+        #         'contract_id': self.contract_id.id,
+        #     }
+        #     res.append(input_data)
+            # attendance_type = self.env.ref(
+            #     'employee_late_check_in.hr_attendance')
         attendance_id = self.env['hr.attendance'].search(
-            [('employee_id', '=', self.employee_id.id),
-             ('check_in', '<=', self.date_to), ('check_in', '>=', self.date_from)])
+              [('employee_id', '=', self.employee_id.id),
+              ('check_in', '<=', self.date_to), ('check_in', '>=', self.date_from)])
         if attendance_id:
             self.attendance_ids = attendance_id
             input_data = {
-                'name': 'Days Work(late include)',
-                'code': attendance_type.code,
+                'name': "Total Days Work",
+                'code': "DW",
                 'amount': sum(attendance_id.mapped('days_work_include_late')),
                 'contract_id': self.contract_id.id,
             }
             res.append(input_data)
+
+        if attendance_id:
+
+            calendar = self.employee_id
+            leave_dates = calendar.list_leave_dates(from_datetime, to_datetime)
+            leave_dates_list = leave_dates
+
+            attendance_ids_leave_filtered = attendance_id.filtered(
+                lambda att: att.check_in.date() in leave_dates_list and att.days_work_include_late != 0
+            )
+
+            attendance_ids_sick_filtered = attendance_id.filtered(
+                lambda att: (att.check_in.date(), 'SICK') in leave_dates_list and att.days_work_include_late != 0
+            )
+
+            #get weekend attendance
+            from_datetime = fields.Datetime.from_string(date_from)
+            to_datetime = fields.Datetime.from_string(date_to)
+            # Get weekend dates
+            weekend_dates = calendar.get_weekend_dates(from_datetime, to_datetime)
+            print(weekend_dates)
+            # Search for attendance records
+            attendance_ids = self.env['hr.attendance'].search(
+                [('employee_id', '=', self.employee_id.id),
+                 ('check_in', '>=', date_from), ('check_in', '<=', date_to)]
+            )
+            # Filter the attendance records
+            attendance_ids_weekend_filtered = attendance_ids.filtered(
+                lambda att: att.check_in.date() in weekend_dates and att.days_work_include_late != 0
+            )
+
+            if attendance_ids_leave_filtered:
+                self.attendance_ids = attendance_ids_leave_filtered
+                input_data = {
+                    'name': "Time off Days Work",
+                    'code': "ADW",
+                    'amount': sum(attendance_ids_leave_filtered.mapped('days_work_include_late')),
+                    'contract_id': self.contract_id.id,
+                }
+                res.append(input_data)
+
+            if attendance_ids_sick_filtered:
+                self.attendance_ids = attendance_ids_sick_filtered
+                input_data = {
+                    'name': "Sick Days Work",
+                    'code': "SDW",
+                    'amount': sum(attendance_ids_sick_filtered.mapped('days_work_include_late')),
+                    'contract_id': self.contract_id.id,
+                }
+                res.append(input_data)
+
+            # if attendance_ids_weekend_filtered:
+            #     self.attendance_ids = attendance_ids_weekend_filtered
+            #     input_data = {
+            #         'name': "Weekend Days Work",
+            #         'code': "WDW",
+            #         'amount': sum(attendance_ids_weekend_filtered.mapped('days_work_include_late')),
+            #         'contract_id': self.contract_id.id,
+            #     }
+            #     res.append(input_data)
+
+            if attendance_ids_weekend_filtered:
+                input_data = {
+                    'name': "Weekend Work",
+                    'code': 'WDW',
+                    'amount': sum(attendance_ids_weekend_filtered.mapped('days_work_include_late')),
+                    'contract_id': self.contract_id.id,
+                }
+                res.append(input_data)
 
         return res
 

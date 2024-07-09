@@ -20,7 +20,7 @@
 #
 ################################################################################
 {
-    'name': 'iometric Device (Auto Generate Punchtype) ',
+    'name': 'Biometric Device (Auto Generate Punchtype) ',
     'version': '17.0.1.0.0',
     'category': 'Human Resources',
     'summary': "Integrating Biometric Device, Biometric Device, ZKteco, uFace 202, uFace 800, "

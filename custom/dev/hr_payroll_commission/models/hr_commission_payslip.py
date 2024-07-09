@@ -280,6 +280,11 @@ class PayrollCommission(models.Model):
             day_leave_intervals = contract.employee_id.list_leaves(
                 day_from, day_to, calendar=contract.resource_calendar_id)
             multi_leaves = []
+
+            # day_leave_intervals_date = contract.employee_id.list_leave_dates(
+            #     day_from, day_to, calendar=contract.resource_calendar_id)
+            # print(day_leave_intervals_date)
+
             for day, hours, leave in day_leave_intervals:
                 work_hours = calendar.get_work_hours_count(
                     tz.localize(datetime.combine(day, time.min)),
@@ -550,8 +555,6 @@ class PayrollCommission(models.Model):
         blacklist = []
 
         com_payslip = self.env['hr.commission.payslip'].browse(com_payslip_id)
-        print("Number of input lines before assignment:", len(com_payslip.input_line_ids))
-
         for goal_line_id in com_payslip.goal_line_ids:
             goals_dict[goal_line_id.code] = goal_line_id
         for employee_skill_line_id in com_payslip.employee_skill_line_ids:
@@ -560,10 +563,6 @@ class PayrollCommission(models.Model):
             worked_days_dict[worked_days_line.code] = worked_days_line
         for input_line in com_payslip.input_line_ids:
             inputs_dict[input_line.code] = input_line
-            print("Input line:", input_line.code, input_line.name)
-
-        print("inputs_dict after assignment:", inputs_dict)
-
 
         skills = Skills(com_payslip.employee_id.id, skills_dict, self.env)
         goals = Goals(com_payslip.employee_id.id, goals_dict, self.env)
@@ -578,7 +577,6 @@ class PayrollCommission(models.Model):
                          'payslip': payslips, 'worked_days': worked_days,
                          'inputs': inputs, 'skills': skills, 'goals': goals}
 
-        print(inputs_dict)
         # get the ids of the structures on the contracts and their
 
         # get the ids of the structures on the contracts and their
@@ -759,15 +757,10 @@ class PayrollCommission(models.Model):
                                                          date_to)
         worked_days_lines = self.worked_days_line_ids.browse([])
 
-        # print("Input Line IDs before assignment:", worked_days_line_ids)
 
         for r in worked_days_line_ids:
             worked_days_lines += worked_days_lines.new(r)
         self.worked_days_line_ids = worked_days_lines
-        print("Input Lines after assignment:")
-        for line in self.worked_days_line_ids:
-            print(
-                f"Name: {line.name}, Amount: {line.number_of_days}, Contract ID: {line.contract_id}, Commission Payslip ID: {line.com_payslip_id}")
 
         input_line_ids = self.get_inputs(contracts, date_from, date_to)
         input_lines = self.input_line_ids.browse([])

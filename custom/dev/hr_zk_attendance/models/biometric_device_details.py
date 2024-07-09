@@ -101,7 +101,7 @@ class BiometricDeviceDetails(models.Model):
                     clear_data = zk.get_attendance()
                     if clear_data:
                         # Clearing data in the device
-                        conn.clear_attendance()
+                        # conn.clear_attendance()
                         # Clearing data from attendance log
                         self._cr.execute(
                             """delete from zk_machine_attendance""")
@@ -301,7 +301,7 @@ class BiometricDeviceDetails(models.Model):
                                         # Determine punch type based on time of day
                                         punch_type = '1'
                                         if morning_start <= float(local_dt.hour) < morning_end:
-                                            print(local_dt.hour)
+
                                             punch_type = '0'
                                         elif break_a_start <= float(local_dt.hour) < break_a_end or break_b_start <= float(local_dt.hour) < break_b_end:
                                             last_punch = zk_attendance.search(
@@ -335,13 +335,12 @@ class BiometricDeviceDetails(models.Model):
                                                 last_punch = hr_attendance.search(
                                                     [('employee_id', '=', get_user_id.id)],
                                                     order='check_in desc', limit=1)
-                                                print("test")
+
                                                 last_punch_date = last_punch.check_in.date()
                                                 atten_time_date = fields.Datetime.from_string(atten_time).date()
-                                                print(atten_time_date)
-                                                print(last_punch_date)
+
                                                 if atten_time_date > last_punch_date:
-                                                    print("test2")
+
                                                     hr_attendance.create({
                                                         'employee_id': get_user_id.id,
                                                         'check_in': atten_time

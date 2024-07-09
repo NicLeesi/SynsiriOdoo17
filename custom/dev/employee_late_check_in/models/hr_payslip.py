@@ -57,8 +57,8 @@ class PayslipLateCheckIn(models.Model):
             }
             res.append(input_data)
 
-        attendance_type = self.env.ref(
-            'employee_late_check_in.hr_attendance')
+        # attendance_type = self.env.ref(
+        #     'employee_late_check_in.hr_attendance')
         attendance_id = self.env['hr.attendance'].search(
             [('employee_id', '=', self.employee_id.id),
              ('check_in', '<=', self.date_to), ('check_in', '>=', self.date_from)])
@@ -66,11 +66,32 @@ class PayslipLateCheckIn(models.Model):
             self.attendance_ids = attendance_id
             input_data = {
                 'name': "Days Work(late include)",
-                'code': attendance_type.code,
+                'code': "DW",
                 'amount': sum(attendance_id.mapped('days_work_include_late')),
                 'contract_id': self.contract_id.id,
             }
             res.append(input_data)
+
+        if attendance_id:
+            calendar = self.employee_id.resource_calendar_id
+            leave_dates = calendar.list_leave_dates(date_from, date_to)
+            leave_dates_list = [leave[0] for leave in leave_dates]
+
+            attendance_ids_filtered = attendance_id.filtered(
+                lambda att: att.check_in.date() in leave_dates_list and att.days_work_include_late != 0
+            )
+
+            if attendance_ids_filtered:
+                self.attendance_ids = attendance_ids_filtered
+                input_data = {
+                    'name': "Absence Days Work",
+                    'code': "ADW",
+                    'amount': sum(attendance_ids_filtered.mapped('days_work_include_late')),
+                    'contract_id': self.contract_id.id,
+                }
+                res.append(input_data)
+
+
 
         return res
 

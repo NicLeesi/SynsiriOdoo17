@@ -249,7 +249,6 @@ class HrPayslip(models.Model):
             tz = timezone(calendar.tz)
             day_leave_intervals = contract.employee_id.list_leaves(
                 day_from, day_to, calendar=contract.resource_calendar_id)
-            multi_leaves = []
             for day, hours, leave in day_leave_intervals:
                 work_hours = calendar.get_work_hours_count(
                     tz.localize(datetime.combine(day, time.min)),
