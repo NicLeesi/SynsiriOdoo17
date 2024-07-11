@@ -26,6 +26,49 @@ result = -amount</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 
+total_leave_work = 0
+
+try:
+    sick_work = inputs.SDW.amount if inputs.SDW else 0
+except AttributeError:
+    sick_work = 0
+
+try:
+    weekend_work = inputs.WDW.amount if inputs.WDW else 0
+except AttributeError:
+    weekend_work = 0
+
+try:
+    holiday_work = inputs.ADW.amount if inputs.ADW else 0
+except AttributeError:
+    holiday_work = 0
+
+try:
+    if inputs.DW:
+        days_work = inputs.DW.amount
+        try:
+                 if inputs.ADW or inputs.SDW or inputs.WDW :
+                    total_leave_work = sick_work + weekend_work + holiday_work
+                 if total_leave_work &gt; 0:
+                     days_work = days_work - total_leave_work + 1
+                     total_leave_work = total_leave_work - 1
+        except:
+                   total_leave_work = 0
+
+
+except:
+      days_work = 0
+
+if worked_days.WORK100.number_of_days - days_work &gt; 1:
+     net_amount =((worked_days.WORK100.number_of_days - days_work)  - (total_leave_work / 2)) * (categories.BASIC + categories.ALW) / 26
+else:
+     net_amount =((worked_days.WORK100.number_of_days - days_work)  - (total_leave_work)) * (categories.BASIC + categories.ALW) / 26
+
+result = -net_amount
+
+
+
+
 
 days_work = 0
 try:

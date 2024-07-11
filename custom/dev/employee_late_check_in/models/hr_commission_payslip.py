@@ -108,9 +108,9 @@ class ComPayslipLateCheckIn(models.Model):
             calendar = self.employee_id
             leave_dates = calendar.list_leave_dates(from_datetime, to_datetime)
             leave_dates_list = leave_dates
-
+            print(leave_dates_list)
             attendance_ids_leave_filtered = attendance_id.filtered(
-                lambda att: att.check_in.date() in leave_dates_list and att.days_work_include_late != 0
+                lambda att: (att.check_in.date(), False) in leave_dates_list and att.days_work_include_late != 0
             )
 
             attendance_ids_sick_filtered = attendance_id.filtered(
@@ -122,7 +122,6 @@ class ComPayslipLateCheckIn(models.Model):
             to_datetime = fields.Datetime.from_string(date_to)
             # Get weekend dates
             weekend_dates = calendar.get_weekend_dates(from_datetime, to_datetime)
-            print(weekend_dates)
             # Search for attendance records
             attendance_ids = self.env['hr.attendance'].search(
                 [('employee_id', '=', self.employee_id.id),
@@ -152,16 +151,6 @@ class ComPayslipLateCheckIn(models.Model):
                     'contract_id': self.contract_id.id,
                 }
                 res.append(input_data)
-
-            # if attendance_ids_weekend_filtered:
-            #     self.attendance_ids = attendance_ids_weekend_filtered
-            #     input_data = {
-            #         'name': "Weekend Days Work",
-            #         'code': "WDW",
-            #         'amount': sum(attendance_ids_weekend_filtered.mapped('days_work_include_late')),
-            #         'contract_id': self.contract_id.id,
-            #     }
-            #     res.append(input_data)
 
             if attendance_ids_weekend_filtered:
                 input_data = {
