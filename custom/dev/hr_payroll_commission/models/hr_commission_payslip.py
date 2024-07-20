@@ -414,7 +414,7 @@ class PayrollCommission(models.Model):
             if goal.start_date >= day_from and goal.end_date <= day_to:
                 goal_data = {
                     'definition_id': goal.definition_id.name,
-                    'code': 'GOAL',
+                    'code': goal.code or 'GOAL',
                     'current': goal.current,
                     'target_goal': goal.target_goal,
                     'completeness': goal.completeness,

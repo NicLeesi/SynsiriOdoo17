@@ -24,3 +24,4 @@ from . import disciplinary_action
 from . import discipline_category
 from . import hr_employee
 from . import hr_commission_payslip
+from . import hr_payslip

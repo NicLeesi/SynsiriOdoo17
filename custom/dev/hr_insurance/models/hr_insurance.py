@@ -44,7 +44,7 @@ class HrInsurance(models.Model):
     fix_amount = fields.Float(string='Fix Amount', help="Total amount for Premium payable")
 
     date_from = fields.Date(string='Date From',
-                            default=fields.date.today(), readonly=True,
+                            default=fields.date.today(),
                             help="Start date")
     date_to = fields.Date(string='Date To', help="End date")
     state = fields.Selection([('active', 'Active'),

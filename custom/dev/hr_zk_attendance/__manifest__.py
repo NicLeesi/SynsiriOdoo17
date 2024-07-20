@@ -39,7 +39,8 @@
         'views/hr_employee_views.xml',
         'views/daily_attendance_views.xml',
         'views/biometric_device_attendance_menus.xml',
-        'views/res_config_settings_views.xml'
+        'views/res_config_settings_views.xml',
+        'views/hr_attendance_view.xml',
         # 'data/ir_cron_data.xml'
     ],
     'images': ['static/description/banner.png'],

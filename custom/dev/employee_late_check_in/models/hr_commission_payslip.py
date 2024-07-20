@@ -19,18 +19,15 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ############################################################################.
-from odoo import api, fields, models
+
 from datetime import date, datetime, time
-import babel
-from dateutil.relativedelta import relativedelta
-from pytz import timezone
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import UserError, ValidationError
 
 
 class ComPayslipLateCheckIn(models.Model):
     """Inherit the model to add fields and functions"""
     _inherit = 'hr.commission.payslip'
+    # _order = 'create_date desc, id desc'
 
     # Field used for writing attendance record in the payslip input
     attendance_ids = fields.Many2many(
@@ -43,10 +40,15 @@ class ComPayslipLateCheckIn(models.Model):
 
     @api.model
     def get_inputs(self, contracts, date_from, date_to):
+        print("first extension called")
         """Function used for writing late check-in and days work records in the payslip input
          tree."""
-        res = super(ComPayslipLateCheckIn, self).get_inputs(contracts, date_to,
-                                                         date_from)
+        res = super(ComPayslipLateCheckIn, self).get_inputs(contracts, date_from, date_to)
+
+        attendance_id = self.env['hr.attendance'].search(
+            [('employee_id', '=', self.employee_id.id),
+             ('check_in', '<=', self.date_to), ('check_in', '>=', self.date_from)])
+
         # Convert date_from and date_to to datetime objects
         if isinstance(date_from, datetime):
             from_datetime = date_from
@@ -57,6 +59,30 @@ class ComPayslipLateCheckIn(models.Model):
             to_datetime = date_to
         else:
             to_datetime = datetime.combine(date_to, datetime.max.time())
+
+        calendar = self.employee_id
+        leave_dates = calendar.list_leave_dates(from_datetime, to_datetime)
+        leave_dates_list = leave_dates
+        print(f"leave_dates_list: {leave_dates_list}")
+
+        attendance_ids_leave_filtered = attendance_id.filtered(
+            lambda att: (att.check_in.date(), False) in leave_dates_list and att.days_work_include_late != 0
+        )
+        print(f"attendance_ids_leave_filtered: {attendance_ids_leave_filtered}")
+
+        attendance_ids_sick_filtered = attendance_id.filtered(
+            lambda att: (att.check_in.date(), 'SICK') in leave_dates_list and att.days_work_include_late != 0
+        )
+        print(f"attendance_ids_sick_filtered: {attendance_ids_sick_filtered}")
+
+        # Get weekend attendance
+        weekend_dates = calendar.get_weekend_dates(from_datetime, to_datetime)
+        print(f"weekend_dates: {weekend_dates}")
+
+        attendance_ids_weekend_filtered = attendance_id.filtered(
+            lambda att: att.check_in.date() in weekend_dates and att.days_work_include_late != 0
+        )
+        print(f"attendance_ids_weekend_filtered: {attendance_ids_weekend_filtered}")
 
         late_check_in_type = self.env.ref(
             'employee_late_check_in.late_check_in')
@@ -74,25 +100,7 @@ class ComPayslipLateCheckIn(models.Model):
             }
             res.append(input_data)
 
-        # attendance_type = self.env.ref(
-        #     'employee_late_check_in.hr_attendance')
-        # attendance_id = self.env['hr.attendance'].search(
-        #     [('employee_id', '=', self.employee_id.id),
-        #      ('check_in', '<=', self.date_to), ('check_in', '>=', self.date_from)])
-        # if attendance_id:
-        #     self.attendance_ids = attendance_id
-        #     input_data = {
-        #         'name': 'Days Work(late include)',
-        #         'code': attendance_type.code,
-        #         'amount': sum(attendance_id.mapped('days_work_include_late')),
-        #         'contract_id': self.contract_id.id,
-        #     }
-        #     res.append(input_data)
-            # attendance_type = self.env.ref(
-            #     'employee_late_check_in.hr_attendance')
-        attendance_id = self.env['hr.attendance'].search(
-              [('employee_id', '=', self.employee_id.id),
-              ('check_in', '<=', self.date_to), ('check_in', '>=', self.date_from)])
+
         if attendance_id:
             self.attendance_ids = attendance_id
             input_data = {
@@ -103,69 +111,36 @@ class ComPayslipLateCheckIn(models.Model):
             }
             res.append(input_data)
 
-        if attendance_id:
 
-            calendar = self.employee_id
-            leave_dates = calendar.list_leave_dates(from_datetime, to_datetime)
-            leave_dates_list = leave_dates
-            print(leave_dates_list)
-            attendance_ids_leave_filtered = attendance_id.filtered(
-                lambda att: (att.check_in.date(), False) in leave_dates_list and att.days_work_include_late != 0
-            )
 
-            attendance_ids_sick_filtered = attendance_id.filtered(
-                lambda att: (att.check_in.date(), 'SICK') in leave_dates_list and att.days_work_include_late != 0
-            )
+        if attendance_ids_leave_filtered:
+            self.attendance_ids = attendance_ids_leave_filtered
+            input_data = {
+                'name': "Time off Days Work",
+                'code': "ADW",
+                'amount': sum(attendance_ids_leave_filtered.mapped('days_work_include_late')),
+                'contract_id': self.contract_id.id,
+            }
+            res.append(input_data)
 
-            #get weekend attendance
-            from_datetime = fields.Datetime.from_string(date_from)
-            to_datetime = fields.Datetime.from_string(date_to)
-            # Get weekend dates
-            weekend_dates = calendar.get_weekend_dates(from_datetime, to_datetime)
-            # Search for attendance records
-            attendance_ids = self.env['hr.attendance'].search(
-                [('employee_id', '=', self.employee_id.id),
-                 ('check_in', '>=', date_from), ('check_in', '<=', date_to)]
-            )
-            # Filter the attendance records
-            attendance_ids_weekend_filtered = attendance_ids.filtered(
-                lambda att: att.check_in.date() in weekend_dates and att.days_work_include_late != 0
-            )
+        if attendance_ids_sick_filtered:
+            self.attendance_ids = attendance_ids_sick_filtered
+            input_data = {
+                'name': "Sick Days Work",
+                'code': "SDW",
+                'amount': sum(attendance_ids_sick_filtered.mapped('days_work_include_late')),
+                'contract_id': self.contract_id.id,
+            }
+            res.append(input_data)
 
-            if attendance_ids_leave_filtered:
-                self.attendance_ids = attendance_ids_leave_filtered
-                input_data = {
-                    'name': "Time off Days Work",
-                    'code': "ADW",
-                    'amount': sum(attendance_ids_leave_filtered.mapped('days_work_include_late')),
-                    'contract_id': self.contract_id.id,
-                }
-                res.append(input_data)
-
-            if attendance_ids_sick_filtered:
-                self.attendance_ids = attendance_ids_sick_filtered
-                input_data = {
-                    'name': "Sick Days Work",
-                    'code': "SDW",
-                    'amount': sum(attendance_ids_sick_filtered.mapped('days_work_include_late')),
-                    'contract_id': self.contract_id.id,
-                }
-                res.append(input_data)
-
-            if attendance_ids_weekend_filtered:
-                input_data = {
-                    'name': "Weekend Work",
-                    'code': 'WDW',
-                    'amount': sum(attendance_ids_weekend_filtered.mapped('days_work_include_late')),
-                    'contract_id': self.contract_id.id,
-                }
-                res.append(input_data)
-
+        if attendance_ids_weekend_filtered:
+            input_data = {
+                'name': "Weekend Work",
+                'code': 'WDW',
+                'amount': sum(attendance_ids_weekend_filtered.mapped('days_work_include_late')),
+                'contract_id': self.contract_id.id,
+            }
+            res.append(input_data)
+        print(f"final res: {res}")
         return res
 
-
-    def action_payslip_done(self):
-        """Function used for marking deducted Late check-in request."""
-        for rec in self.late_check_in_ids:
-            rec.state = 'deducted'
-        return super(ComPayslipLateCheckIn, self).action_payslip_done()

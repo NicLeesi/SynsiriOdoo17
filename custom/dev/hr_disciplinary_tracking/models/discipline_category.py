@@ -29,7 +29,7 @@ class DisciplineCategory(models.Model):
     _description = 'Discipline Category'
 
     code = fields.Char(string="Code", required=True,
-                       help="Discipline category code")
+                       help="Discipline category code", default="DISC")
     name = fields.Char(string="Name", required=True,
                        help=" Discipline category name")
     category_type = fields.Selection([('disciplinary', 'Disciplinary Category'),

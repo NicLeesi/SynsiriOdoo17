@@ -24,6 +24,54 @@
                    position="after">
                 <field name="schedule_pay"/>
             </xpath>
+            <xpath expr="//page[@name='information']" position="after">
+                <page string="Commission Information" name="Commission" groups="hr_contract.group_hr_contract_manager">
+                    <group string="Commission income" name='Commission income'>
+                        <label for="commission_start"/>
+                        <div class="o_row mw-50" name="commission_start">
+                            <field name="commission_start" class="oe_inline o_hr_narrow_field" nolabel="1"/>
+                            <div class="mb-3" name="wage_period_label">/ month</div>
+                        </div>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//div[@name='wage']" position="after">
+                <label for="job_position_extra"/>
+                <div class="o_row mw-50" name="job_position_extra">
+                    <field name="job_position_extra" class="oe_inline o_hr_narrow_field" nolabel="1"/>
+                    <div class="mb-3" name="wage_period_label">/ month</div>
+                </div>
+                <label for="hard_working_extra"/>
+                <div class="o_row mw-50" name="hard_working_extra">
+                    <field name="hard_working_extra" class="oe_inline o_hr_narrow_field" nolabel="1"/>
+                    <div class="mb-3" name="wage_period_label">/ month</div>
+                </div>
+                <label for="transport_extra"/>
+                <div class="o_row mw-50" name="transport_extra">
+                    <field name="transport_extra" class="oe_inline o_hr_narrow_field" nolabel="1"/>
+                    <div class="mb-3" name="wage_period_label">/ month</div>
+                </div>
+                <label for="management_extra"/>
+                <div class="o_row mw-50" name="management_extra">
+                    <field name="management_extra" class="oe_inline o_hr_narrow_field" nolabel="1"/>
+                    <div class="mb-3" name="wage_period_label">/ month</div>
+                </div>
+                <label for="development_extra"/>
+                <div class="o_row mw-50" name="development_extra">
+                    <field name="development_extra" class="oe_inline o_hr_narrow_field" nolabel="1"/>
+                    <div class="mb-3" name="wage_period_label">/ month</div>
+                </div>
+                <label for="shelf_management_extra"/>
+                <div class="o_row mw-50" name="shelf_management_extra">
+                    <field name="shelf_management_extra" class="oe_inline o_hr_narrow_field" nolabel="1"/>
+                    <div class="mb-3" name="wage_period_label">/ month</div>
+                </div>
+                <label for="skill_extra"/>
+                <div class="o_row mw-50" name="skill_extra">
+                    <field name="skill_extra" class="oe_inline o_hr_narrow_field" nolabel="1"/>
+                    <div class="mb-3" name="wage_period_label">/ month</div>
+                </div>
+            </xpath>
             <xpath expr="//group[@name='salary']" position="after">
                 <group string="Monthly Advantages in Cash" name='allowances'>
                     <label for="hra"/>

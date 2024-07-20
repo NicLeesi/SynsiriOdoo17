@@ -1,20 +1,33 @@
 import pytz
 
-from collections import defaultdict
 from datetime import datetime, timedelta
-from operator import itemgetter
-from pytz import timezone
 
 from odoo import models, fields, api, exceptions, _
-from odoo.addons.resource.models.utils import Intervals
+
 from odoo.tools import format_datetime
-from odoo.osv.expression import AND, OR
-from odoo.tools.float_utils import float_is_zero
-from odoo.exceptions import AccessError
-from odoo.tools import format_duration
+
 
 class HrAttendance(models.Model):
     _inherit = "hr.attendance"
+
+    is_bio_device = fields.Boolean(string='Created/Edited by Bio Device', default=False, readonly=True)
+    edit_source = fields.Selection([
+        ('user', 'User'),
+        ('bio_device', 'Bio Device')
+        ], string="Edit Source", compute='_compute_edit_source', store=True, readonly=True)
+
+    def write(self, vals):
+        if 'is_bio_device' not in vals:
+            vals['is_bio_device'] = False
+        return super(HrAttendance, self).write(vals)
+
+    @api.depends('create_uid', 'write_uid', 'is_bio_device')
+    def _compute_edit_source(self):
+        for record in self:
+            if record.is_bio_device:
+                record.edit_source = 'bio_device'
+            else:
+                record.edit_source = 'user'
 
     def _compute_color(self):
         for attendance in self:
@@ -68,21 +81,22 @@ class HrAttendance(models.Model):
                         new_check_out_time = fields.Datetime.from_string(check_in_time) + timedelta(minutes=5)
                         # Update the record
                         no_check_out_attendance.write({
-                            'check_out': fields.Datetime.to_string(new_check_out_time)
+                            'check_out': fields.Datetime.to_string(new_check_out_time),
+                            'is_bio_device': True
                         })
 
-            else:
-                # we verify that the latest attendance with check_in time before our check_out time
-                # is the same as the one before our check_in time computed before, otherwise it overlaps
-                last_attendance_before_check_out = self.env['hr.attendance'].search([
-                    ('employee_id', '=', attendance.employee_id.id),
-                    ('check_in', '<', attendance.check_out),
-                    ('id', '!=', attendance.id),
-                ], order='check_in desc', limit=1)
-                if last_attendance_before_check_out and last_attendance_before_check_in != last_attendance_before_check_out:
-                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
-                                                       empl_name=attendance.employee_id.name,
-                                                       datetime=format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False)))
+            # else:
+            #     # we verify that the latest attendance with check_in time before our check_out time
+            #     # is the same as the one before our check_in time computed before, otherwise it overlaps
+            #     last_attendance_before_check_out = self.env['hr.attendance'].search([
+            #         ('employee_id', '=', attendance.employee_id.id),
+            #         ('check_in', '<', attendance.check_out),
+            #         ('id', '!=', attendance.id),
+            #     ], order='check_in desc', limit=1)
+            #     if last_attendance_before_check_out and last_attendance_before_check_in != last_attendance_before_check_out:
+            #         raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
+            #                                            empl_name=attendance.employee_id.name,
+            #                                            datetime=format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False)))
 
 @api.constrains('check_in', 'check_out')
 def _check_validity_check_in_check_out(self):

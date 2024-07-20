@@ -65,6 +65,8 @@ class HrEmployee(models.Model):
                         if ins.policy_coverage in ['monthly', 'permanent']:
                             if ins.policy_fix_amount and emp.insurance_account >= ins.fix_amount:
                                 ins_amount = 0
+                            elif ins.policy_fix_amount and emp.insurance_account < ins.fix_amount:
+                                ins_amount += ins.amount * 12
                             elif not ins.policy_fix_amount:
                                 ins_amount += ins.amount * 12
                         else:

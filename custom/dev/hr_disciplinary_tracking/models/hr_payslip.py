@@ -20,14 +20,14 @@
 #
 ############################################################################.
 from odoo import api, fields, models
-from datetime import date, datetime, time
+from datetime import datetime
 
-class ComPayslipDiscipline(models.Model):
+
+class PayslipLateDiscipline(models.Model):
     """Inherit the model to add fields and functions"""
-    _inherit = 'hr.commission.payslip'
-    # _order = 'create_date desc, id desc'
+    _inherit = 'hr.payslip'
 
-    # Field used for writing attendance record in the comslip input
+    # Field used for writing attendance record in the payslip input
     discipline_ids = fields.Many2many(
         'disciplinary.action', string='discipline',
         help='Discipline records of the employee')
@@ -37,7 +37,7 @@ class ComPayslipDiscipline(models.Model):
         print("sec extension called")
         """Function used for writing late check-in and days work records in the payslip input
          tree."""
-        res = super(ComPayslipDiscipline, self).get_inputs(contracts, date_from, date_to)
+        res = super(PayslipLateDiscipline, self).get_inputs(contracts, date_from, date_to)
 
         discipline_id = self.env['disciplinary.action'].search(
             [('employee_name', '=', self.employee_id.id),
@@ -55,5 +55,5 @@ class ComPayslipDiscipline(models.Model):
                 }
                 res.append(input_data)
         print(f"second extension {res}")
-        return res
 
+        return res

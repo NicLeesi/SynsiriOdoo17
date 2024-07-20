@@ -37,7 +37,7 @@
     'company': 'Cybrosys Techno Solutions',
     'maintainer': 'Cybrosys Techno Solutions',
     'website': 'https://www.cybrosys.com',
-    'depends': ['hr_attendance', 'hr_payroll_community', 'hr_contract','hr_payroll_commission' ],
+    'depends': ['hr_attendance', 'hr_payroll_community', 'hr_contract','hr_payroll_commission'],
     'data': [
         'security/ir.model.access.csv',
         'data/ir_cron_data.xml',

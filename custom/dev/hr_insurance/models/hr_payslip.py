@@ -18,22 +18,48 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 #############################################################################
-from odoo import models
+from odoo import models, api
 
 
 class HrPayslip(models.Model):
     """inherited to add fields"""
     _inherit = 'hr.payslip'
 
+    # def get_inputs(self, contract_ids, date_from, date_to):
+    #     """used get inputs , to add datas"""
+    #     res = super().get_inputs(contract_ids, date_from, date_to)
+    #     contract_obj = self.env['hr.contract']
+    #     for record in contract_ids:
+    #         if contract_ids[0]:
+    #             emp_id = contract_obj.browse(record[0].id).employee_id
+    #             for result in res:
+    #                 if emp_id.deduced_amount_per_month != 0:
+    #                     if result.get('code') == 'INSUR':
+    #                         result['amount'] = emp_id.deduced_amount_per_month
+    #                         result['name'] = emp_id.insurance_ids.policy_id.name[0]
+    #     return res
+
+    @api.model
     def get_inputs(self, contract_ids, date_from, date_to):
         """used get inputs , to add datas"""
         res = super().get_inputs(contract_ids, date_from, date_to)
         contract_obj = self.env['hr.contract']
-        for record in contract_ids:
-            if contract_ids[0]:
-                emp_id = contract_obj.browse(record[0].id).employee_id
-                for result in res:
-                    if emp_id.deduced_amount_per_month != 0:
-                        if result.get('code') == 'INSUR':
-                            result['amount'] = emp_id.deduced_amount_per_month
+
+        for contract in contract_ids:
+            contract_record = contract_obj.browse(contract.id)
+            emp_id = contract_record.employee_id
+
+            if emp_id.deduced_amount_per_month != 0:
+                for insurance in emp_id.insurance_ids:
+                    insurance_policy_name = insurance.policy_id.name
+                    insurance_policy_amount = emp_id.deduced_amount_per_month  # Adjust this logic if the amount is per policy
+
+                    input_data = {
+                        'name': insurance_policy_name,
+                        'code': 'INSUR',
+                        'amount': insurance_policy_amount,
+                        'contract_id': contract.id,
+                    }
+                    res.append(input_data)
+
         return res

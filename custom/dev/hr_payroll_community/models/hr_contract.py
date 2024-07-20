@@ -58,6 +58,25 @@ class HrContract(models.Model):
                                         help="Medical allowance")
     other_allowance = fields.Monetary(string="Other Allowance",
                                       help="Other allowances")
+    job_position_extra = fields.Monetary('Job position extra', tracking=True, help="Employee's monthly gross wage."
+                                        , group_operator="avg")
+    hard_working_extra = fields.Monetary('Hard working extra', tracking=True, help="Employee's monthly gross wage."
+                                        , group_operator="avg")
+    transport_extra = fields.Monetary('Transport extra', tracking=True, help="Employee's monthly gross wage."
+                                        , group_operator="avg")
+    management_extra = fields.Monetary('Management extra', tracking=True, help="Employee's monthly gross wage."
+                                      , group_operator="avg")
+    development_extra = fields.Monetary('Development extra', tracking=True, help="Employee's monthly gross wage."
+                                      , group_operator="avg")
+    shelf_management_extra = fields.Monetary('Shelf management extra', tracking=True, help="Employee's monthly gross wage."
+                                      , group_operator="avg")
+    skill_extra = fields.Monetary('Skill extra', tracking=True, help="Employee's monthly gross wage."
+                                      , group_operator="avg")
+    commission_start = fields.Monetary('Commission start', tracking=True, help="Employee's monthly gross wage."
+                                      , group_operator="avg")
+
+
+
 
     def get_all_structures(self):
         """

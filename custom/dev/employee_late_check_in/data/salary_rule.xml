@@ -68,20 +68,6 @@ result = -net_amount
 
 
 
-
-
-days_work = 0
-try:
-    if inputs.DW:
-        days_work = inputs.DW.amount
-except:
-    days_work = 0
-
-net_amount = (worked_days.WORK100.number_of_days - days_work ) * (categories.BASIC + categories.ALW) / 26
-if net_amount &lt; 0:
-   result = 0
-else:
- result = -net_amount
                        </field>
     </record>
 

@@ -10,14 +10,14 @@
         <field name="category_id" ref="hr_payroll_community.Com"/>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-max_skills = 3
-skills = skills.SKILL.level_progress
+
+skills = employee.get_total_skill_level() / 100
 goal = goals.GOAL.completeness
-base_incentive = 1000
+base_incentive = contract.commission_start
 
 goal_ratio = base_incentive * goal / 100
 
-skill_ratio = skills / max_skills
+skill_ratio = skills
 com = goal_ratio * skill_ratio
 
 if 0.51 &lt;= skill_ratio &lt;= 0.55:
