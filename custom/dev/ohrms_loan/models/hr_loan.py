@@ -164,15 +164,18 @@ class HrLoan(models.Model):
             else:
                 self.write({'state': 'approve'})
 
-    def unlink(self):
-        """ Function which restrict the deletion of approved or submitted
-                loan request"""
-        for loan in self:
-            if loan.state not in ('draft', 'cancel'):
-                raise UserError(_(
-                    'You cannot delete a loan which is not in draft '
-                    'or cancelled state'))
-        return super(HrLoan, self).unlink()
+
+    # def unlink(self):
+    #     """ Function which restrict the deletion of approved or submitted
+    #             loan request"""
+    #     for loan in self:
+    #         if loan.state not in ('draft', 'cancel'):
+    #             raise UserError(_(
+    #                 'You cannot delete a loan which is not in draft '
+    #                 'or cancelled state'))
+    #     return super(HrLoan, self).unlink()
+
+
 
 
 class HrLoanLine(models.Model):
