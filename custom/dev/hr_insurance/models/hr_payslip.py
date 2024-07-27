@@ -25,23 +25,9 @@ class HrPayslip(models.Model):
     """inherited to add fields"""
     _inherit = 'hr.payslip'
 
-    # def get_inputs(self, contract_ids, date_from, date_to):
-    #     """used get inputs , to add datas"""
-    #     res = super().get_inputs(contract_ids, date_from, date_to)
-    #     contract_obj = self.env['hr.contract']
-    #     for record in contract_ids:
-    #         if contract_ids[0]:
-    #             emp_id = contract_obj.browse(record[0].id).employee_id
-    #             for result in res:
-    #                 if emp_id.deduced_amount_per_month != 0:
-    #                     if result.get('code') == 'INSUR':
-    #                         result['amount'] = emp_id.deduced_amount_per_month
-    #                         result['name'] = emp_id.insurance_ids.policy_id.name[0]
-    #     return res
-
     @api.model
     def get_inputs(self, contract_ids, date_from, date_to):
-        """used get inputs , to add datas"""
+        """used get inputs, to add datas"""
         res = super().get_inputs(contract_ids, date_from, date_to)
         contract_obj = self.env['hr.contract']
 
@@ -49,14 +35,14 @@ class HrPayslip(models.Model):
             contract_record = contract_obj.browse(contract.id)
             emp_id = contract_record.employee_id
 
-            if emp_id.deduced_amount_per_month != 0:
+            if emp_id.insurance_ids:
                 for insurance in emp_id.insurance_ids:
                     insurance_policy_name = insurance.policy_id.name
-                    insurance_policy_amount = emp_id.deduced_amount_per_month  # Adjust this logic if the amount is per policy
+                    insurance_policy_amount = insurance.policy_amount  # Use the specific amount per policy
 
                     input_data = {
                         'name': insurance_policy_name,
-                        'code': 'INSUR',
+                        'code': insurance.code,
                         'amount': insurance_policy_amount,
                         'contract_id': contract.id,
                     }

@@ -40,7 +40,6 @@ class ComPayslipLateCheckIn(models.Model):
 
     @api.model
     def get_inputs(self, contracts, date_from, date_to):
-        print("first extension called")
         """Function used for writing late check-in and days work records in the payslip input
          tree."""
         res = super(ComPayslipLateCheckIn, self).get_inputs(contracts, date_from, date_to)
@@ -63,26 +62,21 @@ class ComPayslipLateCheckIn(models.Model):
         calendar = self.employee_id
         leave_dates = calendar.list_leave_dates(from_datetime, to_datetime)
         leave_dates_list = leave_dates
-        print(f"leave_dates_list: {leave_dates_list}")
 
         attendance_ids_leave_filtered = attendance_id.filtered(
             lambda att: (att.check_in.date(), False) in leave_dates_list and att.days_work_include_late != 0
         )
-        print(f"attendance_ids_leave_filtered: {attendance_ids_leave_filtered}")
 
         attendance_ids_sick_filtered = attendance_id.filtered(
             lambda att: (att.check_in.date(), 'SICK') in leave_dates_list and att.days_work_include_late != 0
         )
-        print(f"attendance_ids_sick_filtered: {attendance_ids_sick_filtered}")
 
         # Get weekend attendance
         weekend_dates = calendar.get_weekend_dates(from_datetime, to_datetime)
-        print(f"weekend_dates: {weekend_dates}")
 
         attendance_ids_weekend_filtered = attendance_id.filtered(
             lambda att: att.check_in.date() in weekend_dates and att.days_work_include_late != 0
         )
-        print(f"attendance_ids_weekend_filtered: {attendance_ids_weekend_filtered}")
 
         late_check_in_type = self.env.ref(
             'employee_late_check_in.late_check_in')
@@ -141,6 +135,6 @@ class ComPayslipLateCheckIn(models.Model):
                 'contract_id': self.contract_id.id,
             }
             res.append(input_data)
-        print(f"final res: {res}")
+
         return res
 

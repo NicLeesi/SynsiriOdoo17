@@ -281,9 +281,6 @@ class PayrollCommission(models.Model):
                 day_from, day_to, calendar=contract.resource_calendar_id)
             multi_leaves = []
 
-            # day_leave_intervals_date = contract.employee_id.list_leave_dates(
-            #     day_from, day_to, calendar=contract.resource_calendar_id)
-            # print(day_leave_intervals_date)
 
             for day, hours, leave in day_leave_intervals:
                 work_hours = calendar.get_work_hours_count(

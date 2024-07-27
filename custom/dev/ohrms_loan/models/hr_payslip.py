@@ -36,28 +36,58 @@ class HrPayslip(models.Model):
         :param date_to: End date of the payslip.
         :return: List of dictionaries representing additional inputs for
         the payslip."""
-        res = super(HrPayslip, self).get_inputs(contract_ids, date_from,
-                                                date_to)
+
+        res = super(HrPayslip, self).get_inputs(contract_ids, date_from, date_to)
+
         employee_id = self.env['hr.contract'].browse(
-            contract_ids[0].id).employee_id if contract_ids \
-            else self.employee_id
+            contract_ids[0].id).employee_id if contract_ids else self.employee_id
+
         loan_id = self.env['hr.loan'].search(
             [('employee_id', '=', employee_id.id), ('state', '=', 'approve')])
+
         for loan in loan_id:
             for loan_line in loan.loan_lines:
-                if (date_from <= loan_line.date <= date_to and
-                        not loan_line.paid):
+
+                if date_from <= loan_line.date <= date_to and not loan_line.paid:
+
+                    loan_found = False
                     for result in res:
+
                         if result.get('code') == 'LO':
                             result['amount'] = loan_line.amount
                             result['loan_line_id'] = loan_line.id
+                            loan_found = True
+
+                    if not loan_found:
+                        loan_detail = loan_id.detail
+                        # Add a new input for the loan if not found
+                        loan_input = {
+                            'name': loan_detail,
+                            'code': 'LO',
+                            'amount': loan_line.amount,
+                            'loan_line_id': loan_line.id,
+                            'contract_id': contract_ids[0].id
+                        }
+                        res.append(loan_input)
+
         return res
 
     def action_payslip_done(self):
         """ Compute the loan amount and remaining amount while confirming
             the payslip"""
+        super(HrPayslip, self).action_payslip_done()
         for line in self.input_line_ids:
             if line.loan_line_id:
                 line.loan_line_id.paid = True
                 line.loan_line_id.loan_id._compute_total_amount()
-        return super(HrPayslip, self).action_payslip_done()
+        return True
+
+    def action_payslip_cancel(self):
+        """ Compute the loan amount and remaining amount while cancel
+            the payslip"""
+
+        for line in self.input_line_ids:
+            line.loan_line_id.paid = False
+            line.loan_line_id.loan_id._compute_total_amount()
+
+        return super(HrPayslip, self).action_payslip_cancel()

@@ -54,6 +54,10 @@ class HrInsurance(models.Model):
     company_id = fields.Many2one('res.company', string='Company',
                                  required=True, help="Company",
                                  default=lambda self: self.env.user.company_id)
+    policy_amount = fields.Float(string="Policy Amount")
+    code = fields.Selection([('INSUR', 'Working Insurance'),
+                              ('SINS', 'Social Insurance'), ],
+                             default='INSUR', string="code")
 
     @api.depends('policy_coverage')
     def get_status(self):

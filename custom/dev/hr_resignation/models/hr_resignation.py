@@ -85,20 +85,29 @@ class HrResignation(models.Model):
     employee_contract = fields.Char(String="Contract")
 
     check_return_insurance = fields.Boolean(string="Return Insurance",
-                                     compute="_compute_change_employee", default=True,
+                                    default=True,
                                      help="Checks , for return insurance"
                                           " to the employee")
     return_insurance = fields.Float(string="Return Insurance Amount",
-                                           compute="get_deduced_amount",
+                                           compute="_compute_return_insurance",
                                            help="Amount that is return from employee's insurance account")
     check_other_deduction = fields.Boolean(string="Other Deduction",
-                                     compute="_compute_change_employee", default=False,
-                                     help="Checks , if the employee has other deduction")
+                                            default=False,
+                                            help="Checks , if the employee has other deduction")
     other_deduction = fields.Float(string="Deduct other Amount",
-                                           compute="get_deduced_amount",
-                                           help="Amount that is deduct for other reasons, such as liability," 
-                                                        " company's asset damaged")
+                                         help="Amount that is deduct for other reasons, such as liability," 
+                                         " company's asset damaged")
 
+    @api.depends('employee_id','check_return_insurance','check_other_deduction','other_deduction')
+    def _compute_return_insurance(self):
+        """ Compute the insurance amount to be returned to the employee """
+        for rec in self:
+            if rec.employee_id and rec.check_return_insurance:
+                if rec.check_other_deduction == 0:
+                    rec.other_deduction = 0
+                rec.return_insurance = rec.employee_id.insurance_account - rec.other_deduction
+            else:
+                rec.return_insurance = 0.0
 
     @api.depends('employee_id')
     def _compute_change_employee(self):
@@ -186,6 +195,20 @@ class HrResignation(models.Model):
             resignation.state = 'confirm'
             resignation.resign_confirm_date = str(fields.Datetime.now())
 
+            resignation.employee_id.get_paid_insurance()
+            resignation.employee_id.get_deduced_amount()
+
+    # def _refund_insurance_amount(self, employee):
+    #     """ Method to refund the insurance amount to the employee """
+    #     if employee and employee.insurance_account > 0:
+    #         employee.previous_insurance_account = employee.insurance_account
+    #         for ins in employee.insurance_ids:
+    #             ins.amount = 0
+    #
+    #         employee.insurance_account = 0
+    #         employee.get_deduced_amount()
+    #         # Here you could add logic to process the actual refund if needed
+
     def action_cancel_resignation(self):
         """
         Method triggered by the 'Cancel' button to cancel the
@@ -194,6 +217,7 @@ class HrResignation(models.Model):
         for resignation in self:
             resignation.state = 'cancel'
 
+
     def action_reject_resignation(self):
         """
             Method triggered by the 'Reject' button to reject the
@@ -201,7 +225,7 @@ class HrResignation(models.Model):
         """
         for resignation in self:
             resignation.state = 'cancel'
-
+            resignation.employee_id.insurance_account = resignation.employee_id.previous_insurance_account
     def action_reset_to_draft(self):
         """
         Method triggered by the 'Set to Draft' button to reset the

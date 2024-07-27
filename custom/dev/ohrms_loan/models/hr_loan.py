@@ -48,6 +48,8 @@ class HrLoan(models.Model):
 
     name = fields.Char(string="Loan Name", default="New", readonly=True,
                        help="Name of the loan")
+    detail = fields.Char(string="Loan Detail",
+                       help="Detail of the loan")
     date = fields.Date(string="Date", default=fields.Date.today(),
                        readonly=True, help="Date of the loan request")
     employee_id = fields.Many2one('hr.employee', string="Employee",
@@ -100,16 +102,12 @@ class HrLoan(models.Model):
                                                   "loan request.", copy=False)
 
     def _compute_total_amount(self):
-        """ Compute total loan amount,balance amount and total paid amount"""
-        total_paid = 0.0
+        """ Compute the total loan amount and the total paid amount """
         for loan in self:
-            for line in loan.loan_lines:
-                if line.paid:
-                    total_paid += line.amount
-            balance_amount = loan.loan_amount - total_paid
+            total_paid_amount = sum(line.amount for line in loan.loan_lines if line.paid)
             loan.total_amount = loan.loan_amount
-            loan.balance_amount = balance_amount
-            loan.total_paid_amount = total_paid
+            loan.total_paid_amount = total_paid_amount
+            loan.balance_amount = loan.loan_amount - total_paid_amount
 
     @api.model
     def create(self, values):
@@ -139,6 +137,7 @@ class HrLoan(models.Model):
                 self.env['hr.loan.line'].create({
                     'date': date_start,
                     'amount': amount,
+                    'code': 'LO',
                     'employee_id': loan.employee_id.id,
                     'loan_id': loan.id})
                 date_start = date_start + relativedelta(months=1)
@@ -193,3 +192,5 @@ class HrLoanLine(models.Model):
     payslip_id = fields.Many2one('hr.payslip', string="Payslip Ref.",
                                  help="Reference to the associated "
                                       "payslip, if any.")
+    code = fields.Char(string="Code", default="LO",
+                       help="Code use in payslip input")

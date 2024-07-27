@@ -81,6 +81,16 @@
                             <field name="reason"
                                    readonly="state == 'approved'"/>
                         </group>
+                        <group string="Return Insurance Details">
+                            <field name="check_return_insurance"
+                                   readonly="state == 'approved'"/>
+                            <field name="return_insurance" string="return_insurance"
+                                   readonly="state == 'approved'"/>
+                            <field name="check_other_deduction"
+                                   readonly="state == 'approved'"/>
+                            <field name="other_deduction" invisible="check_other_deduction == 0"
+                                   readonly="state == 'approved'"/>
+                        </group>
                     </group>
                 </sheet>
                 <div class="oe_chatter">

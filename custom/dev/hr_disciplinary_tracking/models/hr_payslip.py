@@ -34,7 +34,6 @@ class PayslipLateDiscipline(models.Model):
 
     @api.model
     def get_inputs(self, contracts, date_from, date_to):
-        print("sec extension called")
         """Function used for writing late check-in and days work records in the payslip input
          tree."""
         res = super(PayslipLateDiscipline, self).get_inputs(contracts, date_from, date_to)
@@ -54,6 +53,5 @@ class PayslipLateDiscipline(models.Model):
                     'contract_id': self.contract_id.id,
                 }
                 res.append(input_data)
-        print(f"second extension {res}")
 
         return res

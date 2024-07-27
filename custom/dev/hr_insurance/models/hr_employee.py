@@ -30,11 +30,11 @@ class HrEmployee(models.Model):
     deduced_amount_per_month = fields.Float(string="Salary deduced per month",
                                             compute="get_deduced_amount",
                                             help="Amount that is deduced from "
-                                                 "the salary per month")
+                                                 "the salary per month", store=True)
     deduced_amount_per_year = fields.Float(string="Salary deduced per year",
                                            compute="get_deduced_amount",
                                            help="Amount that is deduced from "
-                                                "the salary per year")
+                                                "the salary per year", store=True)
     insurance_ids = fields.One2many('hr.insurance',
                                     'employee_id',
                                     string="Insurance", help="Insurance",
@@ -43,6 +43,8 @@ class HrEmployee(models.Model):
                                     string="payroll_id",)
     insurance_account = fields.Float(string="insurance_account",help="Total Amount that employee has paid"
                                      ,compute="get_paid_insurance")
+    previous_insurance_account = fields.Float(string="Previous Insurance Account",
+                                              help="Stores the previous insurance account before refund", store=False)
     insurance_fix_amount_total = fields.Float(string="Total Premium Fix Amount",
                                               compute="_compute_insurance_fix_amount_total", store=True,
                                               help="Total sum of Premium fix amounts for the employee", readonly=True)
@@ -58,21 +60,29 @@ class HrEmployee(models.Model):
         """Calculate deduced amount per month and per year"""
         current_date = fields.Date.today()
         for emp in self:
-            ins_amount = 0
+            total_yearly_amount = 0
             for ins in emp.insurance_ids:
                 if ins.date_from <= current_date:
                     if not ins.date_to or ins.date_to >= current_date:
                         if ins.policy_coverage in ['monthly', 'permanent']:
-                            if ins.policy_fix_amount and emp.insurance_account >= ins.fix_amount:
-                                ins_amount = 0
-                            elif ins.policy_fix_amount and emp.insurance_account < ins.fix_amount:
-                                ins_amount += ins.amount * 12
-                            elif not ins.policy_fix_amount:
-                                ins_amount += ins.amount * 12
+                            if ins.policy_fix_amount:
+                                if emp.insurance_account >= ins.fix_amount:
+                                    policy_amount = 0
+                                else:
+                                    yearly_amount = ins.amount * 12
+                                    policy_amount = yearly_amount - ((yearly_amount * emp.insurance_percentage) / 100)
+                            else:
+                                yearly_amount = ins.amount * 12
+                                policy_amount = yearly_amount - ((yearly_amount * emp.insurance_percentage) / 100)
                         else:
-                            ins_amount += ins.amount
-            emp.deduced_amount_per_year = ins_amount - ((ins_amount * emp.insurance_percentage) / 100)
-            emp.deduced_amount_per_month = emp.deduced_amount_per_year / 12
+                            yearly_amount = ins.amount
+                            policy_amount = yearly_amount - ((yearly_amount * emp.insurance_percentage) / 100)
+
+                        total_yearly_amount += policy_amount
+                        ins.policy_amount = policy_amount / 12
+
+            emp.deduced_amount_per_year = total_yearly_amount
+            emp.deduced_amount_per_month = total_yearly_amount / 12 if total_yearly_amount else 0
 
     @api.depends('payroll_id')
     def get_paid_insurance(self):
@@ -94,8 +104,36 @@ class HrEmployee(models.Model):
             ]).mapped('amount')
 
             # Sum the insurance amounts
-            rec.insurance_account = sum(insurance_amounts)
+            insurance_account = sum(insurance_amounts)
+            if insurance_account > rec.insurance_fix_amount_total:
+                rec.insurance_account = rec.insurance_fix_amount_total
+            else:
+                rec.insurance_account = insurance_account
 
 
 
 
+
+
+    # @api.depends('insurance_ids', 'insurance_account')
+    # def get_deduced_amount(self):
+    #     """Calculate deduced amount per month and per year"""
+    #     current_date = fields.Date.today()
+    #     for emp in self:
+    #         ins_amount = 0
+    #         for ins in emp.insurance_ids:
+    #             if ins.date_from <= current_date:
+    #                 if not ins.date_to or ins.date_to >= current_date:
+    #                     if ins.policy_coverage in ['monthly', 'permanent']:
+    #                         if ins.policy_fix_amount and emp.insurance_account >= ins.fix_amount:
+    #                             ins_amount = 0
+    #                             policy_amount = ins_amount - ((ins_amount * emp.insurance_percentage) / 100)
+    #                         elif ins.policy_fix_amount and emp.insurance_account < ins.fix_amount:
+    #                             ins_amount += ins.amount * 12
+    #                         elif not ins.policy_fix_amount:
+    #                             ins_amount += ins.amount * 12
+    #                     else:
+    #                         ins_amount += ins.amount
+    #
+    #         emp.deduced_amount_per_year = ins_amount - ((ins_amount * emp.insurance_percentage) / 100)
+    #         emp.deduced_amount_per_month = emp.deduced_amount_per_year / 12

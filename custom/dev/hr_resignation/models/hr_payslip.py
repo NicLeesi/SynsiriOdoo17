@@ -20,40 +20,38 @@
 #
 ############################################################################.
 from odoo import api, fields, models
-from datetime import date, datetime, time
+from datetime import datetime
 
-class ComPayslipDiscipline(models.Model):
+
+class PayslipLateDiscipline(models.Model):
     """Inherit the model to add fields and functions"""
-    _inherit = 'hr.commission.payslip'
-    # _order = 'create_date desc, id desc'
+    _inherit = 'hr.payslip'
 
-    # Field used for writing attendance record in the comslip input
-    discipline_ids = fields.Many2many(
-        'disciplinary.action', string='discipline',
-        help='Discipline records of the employee')
+    # Field used for writing attendance record in the payslip input
+    resignation_ids = fields.Many2many(
+        'hr.resignation', string='resignation return insurance',
+        help='Resignation records of the employee')
 
     @api.model
     def get_inputs(self, contracts, date_from, date_to):
-
-        """Function used for writing late check-in and days work records in the payslip input
+        """Function used for writing return insurance records in the payslip input
          tree."""
-        res = super(ComPayslipDiscipline, self).get_inputs(contracts, date_from, date_to)
+        res = super(PayslipLateDiscipline, self).get_inputs(contracts, date_from, date_to)
 
-        discipline_id = self.env['disciplinary.action'].search(
-            [('employee_name', '=', self.employee_id.id),
-             ('state', '=', 'action'),
-             ('activate_date', '<=', self.date_to), ('activate_date', '>=', self.date_from)])
-        if discipline_id:
-            self.discipline_ids = discipline_id
-            for discipline in discipline_id:
-                discipline_type = discipline.action
+        resignation_id = self.env['hr.resignation'].search(
+            [('employee_id', '=', self.employee_id.id),
+             ('state', '=', 'confirm'),
+             ('resign_confirm_date', '<=', self.date_to), ('resign_confirm_date', '>=', self.date_from)])
+        if resignation_id:
+            self.resignation_ids = resignation_id
+            for resignation in resignation_id:
+                # resignation_type = resignation.confirm
                 input_data = {
-                    'name': f'Discipline: {discipline_type.name} ',
-                    'code': discipline_type.code,
-                    'amount': sum(discipline_type.mapped('punishment')),
+                    'name': 'Return Insurance',
+                    'code': 'RIN',
+                    'amount': resignation.return_insurance,
                     'contract_id': self.contract_id.id,
                 }
                 res.append(input_data)
 
         return res
-
