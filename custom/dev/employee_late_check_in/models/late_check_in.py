@@ -47,6 +47,13 @@ class LateCheckIn(models.Model):
     attendance_id = fields.Many2one('hr.attendance', string='Attendance',
                                     help='Attendence of the employee')
 
+
+    def approve_all_records(self):
+        """Approve all late check-in records."""
+        for rec in self:
+            rec.search([('state', '=', 'draft')])
+            rec.state = 'approved'
+
     @api.model
     def create(self, vals_list):
         """Create a sequence for the model"""

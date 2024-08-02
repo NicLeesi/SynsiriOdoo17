@@ -69,6 +69,11 @@
         <field name="model">late.check.in</field>
         <field name="arch" type="xml">
             <tree string="Late Check-in">
+                <header>
+                    <button name="approve_all_records" string="Approve"
+                            type="object" class="btn-primary"
+                            groups="hr.group_hr_manager"/>
+                </header>
                 <field name="name"/>
                 <field name="employee_id"/>
                 <field name="late_minutes"/>
@@ -77,6 +82,8 @@
             </tree>
         </field>
     </record>
+
+
     <!-- Actions -->
     <record id="late_check_in_action" model="ir.actions.act_window">
         <field name="name">Late Check-in</field>
