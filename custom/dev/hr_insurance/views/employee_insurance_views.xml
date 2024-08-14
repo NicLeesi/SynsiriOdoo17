@@ -8,14 +8,14 @@
             <form string="Employee Insurance">
                 <header>
                     <field name="state" widget="statusbar"
-                           statusbar_visible="active,expired"/>
+                           statusbar_visible="active,expired,resignation_confirm"/>
                 </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="employee_id"/>
                             <field name="policy_coverage"/>
-                            <label for="date_from" string="Policy Period"/>
+                            <label for="date_from"/>
                             <div>
                                 <field name="date_from" class="oe_inline"
                                        on_change="1"
@@ -32,7 +32,6 @@
                             <field name="sum_insured"/>
                             <field name="amount"/>
                             <field name="company_id"/>
-                            <field name="code"/>
                         </group>
                     </group>
 

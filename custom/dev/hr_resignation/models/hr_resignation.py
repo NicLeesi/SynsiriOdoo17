@@ -53,11 +53,11 @@ class HrResignation(models.Model):
     resign_confirm_date = fields.Date(string="Confirmed Date",
                                       help='Date on which the request '
                                            'is confirmed by the employee.',
-                                      track_visibility="always")
+                                      tracking=True)
     approved_revealing_date = fields.Date(
         string="Approved Last Day Of Employee",
         help='Date on which the request is confirmed by the manager.',
-        track_visibility="always")
+        tracking=True)
     joined_date = fields.Date(string="Join Date",
                               help='Joining date of the employee.'
                                    'i.e Start date of the first contract')
@@ -73,7 +73,7 @@ class HrResignation(models.Model):
     state = fields.Selection(
         [('draft', 'Draft'), ('confirm', 'Confirm'), ('approved', 'Approved'),
          ('cancel', 'Rejected')],
-        string='Status', default='draft', track_visibility="always")
+        string='Status', default='draft', tracking=True, store=True)
     resignation_type = fields.Selection(selection=RESIGNATION_TYPE,
                                         help="Select the type of resignation: "
                                              "normal resignation or "
@@ -82,7 +82,7 @@ class HrResignation(models.Model):
                                      compute="_compute_change_employee",
                                      help="Checks , if the user has permission"
                                           " to change the employee")
-    employee_contract = fields.Char(String="Contract")
+    employee_contract = fields.Char(string="Contract")
 
     check_return_insurance = fields.Boolean(string="Return Insurance",
                                     default=True,
@@ -97,6 +97,19 @@ class HrResignation(models.Model):
     other_deduction = fields.Float(string="Deduct other Amount",
                                          help="Amount that is deduct for other reasons, such as liability," 
                                          " company's asset damaged")
+
+    def write(self, vals):
+        # Call the original write method
+        res = super(HrResignation, self).write(vals)
+
+        # Check if the state has changed
+        if 'state' in vals:
+            for record in self:
+                # Get all related insurance records and trigger get_status
+                related_insurance = self.env['hr.insurance'].search([('employee_id.name', '=', record.employee_id.name)])
+                related_insurance.get_status()
+                record.employee_id.get_deduced_amount()
+        return res
 
     @api.depends('employee_id','check_return_insurance','check_other_deduction','other_deduction')
     def _compute_return_insurance(self):
@@ -167,7 +180,7 @@ class HrResignation(models.Model):
                     self.employee_contract = contracts.name
                     self.notice_period = contracts.notice_days
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         """
             Override of the create method to assign a sequence for the record.

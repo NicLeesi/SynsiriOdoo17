@@ -54,7 +54,7 @@ class SalaryAdvance(models.Model):
                                  help='Company of the employee,',
                                  default=lambda self: self.env.user.company_id)
     advance = fields.Float(string='Advance', required=True,
-                           help='The requested money.')
+                           help='The requested money.', default=2000)
     payment_method = fields.Many2one('account.journal',
                                      string='Payment Method',
                                      help='Pyment method of the salary'
@@ -72,7 +72,7 @@ class SalaryAdvance(models.Model):
                               ('approve', 'Approved'),
                               ('cancel', 'Cancelled'),
                               ('reject', 'Rejected')], string='Status',
-                             default='draft', track_visibility='onchange',
+                             default='draft', tracking=True,
                              help='State of the salary advance.')
     debit = fields.Many2one('account.account', string='Debit Account',
                             help='Debit account of the salary advance.')
@@ -109,7 +109,7 @@ class SalaryAdvance(models.Model):
         """Method of a button. Changing the state of the salary advance."""
         self.state = 'reject'
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         """Supering the create method to generate sequence for the salary
          advance."""

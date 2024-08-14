@@ -41,7 +41,7 @@ class PayslipLateDiscipline(models.Model):
         resignation_id = self.env['hr.resignation'].search(
             [('employee_id', '=', self.employee_id.id),
              ('state', '=', 'confirm'),
-             ('resign_confirm_date', '<=', self.date_to), ('resign_confirm_date', '>=', self.date_from)])
+             ('expected_revealing_date', '<=', self.date_to), ('expected_revealing_date', '>=', self.date_from)])
         if resignation_id:
             self.resignation_ids = resignation_id
             for resignation in resignation_id:

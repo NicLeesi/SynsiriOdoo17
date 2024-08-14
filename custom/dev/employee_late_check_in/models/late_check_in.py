@@ -54,7 +54,7 @@ class LateCheckIn(models.Model):
             rec.search([('state', '=', 'draft')])
             rec.state = 'approved'
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals_list):
         """Create a sequence for the model"""
         vals_list['name'] = self.env['ir.sequence'].next_by_code(

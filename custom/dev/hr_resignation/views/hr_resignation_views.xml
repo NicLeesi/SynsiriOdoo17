@@ -75,7 +75,7 @@
                             <field name="notice_period"/>
                         </group>
                         <group string="Resignation Details">
-                            <field name="resignation_type" string="Type"
+                            <field name="resignation_type"
                                    groups="hr.group_hr_user"
                                    readonly="state == 'approved'"/>
                             <field name="reason"
@@ -84,7 +84,7 @@
                         <group string="Return Insurance Details">
                             <field name="check_return_insurance"
                                    readonly="state == 'approved'"/>
-                            <field name="return_insurance" string="return_insurance"
+                            <field name="return_insurance"
                                    readonly="state == 'approved'"/>
                             <field name="check_other_deduction"
                                    readonly="state == 'approved'"/>

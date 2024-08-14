@@ -48,30 +48,97 @@ class HrInsurance(models.Model):
                             help="Start date")
     date_to = fields.Date(string='Date To', help="End date")
     state = fields.Selection([('active', 'Active'),
-                              ('expired', 'Expired'), ],
+                              ('expired', 'Expired'),
+                              ('resignation_confirm', 'Resignation Confirm')],
                              default='active', string="State",
-                             compute='get_status')
+                             compute='get_status',  store=True)
     company_id = fields.Many2one('res.company', string='Company',
                                  required=True, help="Company",
                                  default=lambda self: self.env.user.company_id)
     policy_amount = fields.Float(string="Policy Amount")
-    code = fields.Selection([('INSUR', 'Working Insurance'),
-                              ('SINS', 'Social Insurance'), ],
-                             default='INSUR', string="code")
 
-    @api.depends('policy_coverage')
+
+    # @api.depends('policy_coverage','resignation_id')
+    # def get_status(self):
+    #     """this function is get and set state"""
+    #     current_date = fields.date.today()
+    #
+    #     for rec in self:
+    #         confirmed_resignation = self.env['hr.resignation'].search([
+    #             ('employee_id', '=', rec.id),
+    #             ('state', '=', 'confirm')
+    #         ])
+    #         last_approved_revealing_date = self.env['hr.resignation'].search([
+    #             ('employee_id', '=', rec.id)
+    #         ], order='approved_revealing_date desc', limit=1)
+    #         if last_approved_revealing_date:
+    #             last_approved_date = last_approved_revealing_date.approved_revealing_date
+    #         else:
+    #             last_approved_date = False
+    #
+    #         if rec.policy_coverage == 'monthly':
+    #             rec.date_to = fields.Date.end_of(self.date_from, 'month')
+    #         elif rec.policy_coverage == 'yearly':
+    #             rec.date_to = fields.Date.end_of(self.date_from, 'year')
+    #         elif rec.policy_coverage == 'Permanent':
+    #             rec.date_to = False
+    #
+    #         # Determine the state of the insurance
+    #         if rec.date_from <= current_date:
+    #             if not rec.date_to or rec.date_to >= current_date:
+    #                 rec.state = 'active'
+    #                 if confirmed_resignation:
+    #                     rec.state = 'resignation_confirm'
+    #                 if last_approved_date and rec.date_from <= last_approved_date:
+    #                     rec.state = 'expired'
+    #         else:
+    #             rec.state = 'expired'
+
+    @api.depends('policy_coverage', 'date_from')
     def get_status(self):
-        """this function is get and set state"""
-        current_date = fields.date.today()
+        """This function gets and sets the state."""
+        current_date = fields.Date.today()
+        print(f"Current Date: {current_date}")
+
         for rec in self:
+            print(f"\nProcessing Record: {rec.id}")
+
+            confirmed_resignation = self.env['hr.resignation'].search([
+                ('employee_id.name', '=', rec.employee_id.name),
+                ('state', '=', 'confirm')
+            ])
+            print(f"Confirmed Resignation: {confirmed_resignation}")
+
+            last_approved_revealing_date = self.env['hr.resignation'].search([
+                ('employee_id.name', '=', rec.employee_id.name),
+                ('state', '=', 'approved')
+            ], order='approved_revealing_date desc', limit=1)
+            print(f"Last Approved Revealing Date Record: {last_approved_revealing_date}")
+
+            if last_approved_revealing_date:
+                last_approved_date = last_approved_revealing_date.approved_revealing_date
+            else:
+                last_approved_date = False
+            print(f"Last Approved Date: {last_approved_date}")
+
             if rec.policy_coverage == 'monthly':
-                rec.date_to = fields.Date.end_of(self.date_from, 'month')
+                rec.date_to = fields.Date.end_of(rec.date_from, 'month')
             elif rec.policy_coverage == 'yearly':
-                rec.date_to = fields.Date.end_of(self.date_from, 'year')
+                rec.date_to = fields.Date.end_of(rec.date_from, 'year')
             elif rec.policy_coverage == 'Permanent':
                 rec.date_to = False
+            print(f"Date From: {rec.date_from}, Date To: {rec.date_to}")
+
+            # Determine the state of the insurance
             if rec.date_from <= current_date:
-                if rec.date_to and rec.date_to >= current_date:
+                if not rec.date_to or rec.date_to >= current_date:
                     rec.state = 'active'
+                    if last_approved_date and rec.date_from <= last_approved_date:
+                        rec.state = 'expired'
+                    if confirmed_resignation and not rec.state == 'expired':
+                        rec.state = 'resignation_confirm'
                 else:
                     rec.state = 'expired'
+            else:
+                rec.state = 'active'
+            print(f"Final State: {rec.state}")

@@ -42,9 +42,19 @@ class HrEmployee(models.Model):
         """Calculate the total insurance amount paid by the employee and return to employee"""
         for rec in self:
             # Search for confirmed payslips of the employee
+            last_approved_revealing_date = self.env['hr.resignation'].search([
+                ('employee_id', '=', rec.id)
+            ], order='approved_revealing_date desc', limit=1)
+            if last_approved_revealing_date:
+                last_approved_date = last_approved_revealing_date.approved_revealing_date
+            else:
+                last_approved_date = '1900-01-01'
+
+
             confirmed_payslips = self.env['hr.payslip'].search([
                 ('employee_id', '=', rec.id),
-                ('state', '=', 'done')  # Assuming 'done' is the state for confirmed payslips
+                ('state', '=', 'done'),  # Assuming 'done' is the state for confirmed payslips
+                ('date_from', '>', last_approved_date)
             ])
 
             # Get the IDs of the confirmed payslips
@@ -53,7 +63,8 @@ class HrEmployee(models.Model):
             # Search for insurance input amounts related to the confirmed payslips
             insurance_amounts = self.env['hr.payslip.input'].search([
                 ('payslip_id', 'in', confirmed_payslip_ids),
-                ('code', '=', 'INSUR')
+                ('code', '=', 'INSUR'),
+                ('date_from', '>', last_approved_date)
             ]).mapped('amount')
 
             # Sum the insurance amounts
@@ -72,7 +83,7 @@ class HrEmployee(models.Model):
 
             insurance_return = self.env['hr.payslip.input'].search([
                 ('payslip_id', 'in', confirmed_payslip_ids),
-                ('code', '=', 'RIN')
+                ('code', '=', 'RIN'),
             ])
 
             if confirmed_resignation and confirmed_payslip_ids and insurance_return:

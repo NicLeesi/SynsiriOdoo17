@@ -38,12 +38,13 @@ class HrPayslip(models.Model):
             if emp_id.insurance_ids:
                 for insurance in emp_id.insurance_ids:
                     insurance_policy_name = insurance.policy_id.name
-                    insurance_policy_amount = insurance.policy_amount  # Use the specific amount per policy
+                    insurance_amount = insurance.policy_amount  # Use the specific amount per policy
+                    insurance_policy_code = insurance.policy_id.code
 
                     input_data = {
                         'name': insurance_policy_name,
-                        'code': insurance.code,
-                        'amount': insurance_policy_amount,
+                        'code': insurance_policy_code,
+                        'amount': insurance_amount,
                         'contract_id': contract.id,
                     }
                     res.append(input_data)

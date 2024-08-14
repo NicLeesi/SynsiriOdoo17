@@ -109,7 +109,7 @@ class HrLoan(models.Model):
             loan.total_paid_amount = total_paid_amount
             loan.balance_amount = loan.loan_amount - total_paid_amount
 
-    @api.model
+    @api.model_create_multi
     def create(self, values):
         """ Check whether any pending loan is for the employee and calculate
             the sequence

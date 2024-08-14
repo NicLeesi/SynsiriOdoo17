@@ -24,6 +24,7 @@ from odoo import models, fields
 class InsurancePolicy(models.Model):
     """used this model for insurance policy"""
     _name = 'insurance.policy'
+    _description = 'HR Insurance Policy'
 
     name = fields.Char(string='Name', required=True)
     note_field = fields.Html(string='Comment',
@@ -31,4 +32,7 @@ class InsurancePolicy(models.Model):
     company_id = fields.Many2one('res.company', string='Company',
                                  required=True, help="Company",
                                  default=lambda self: self.env.user.company_id)
+    code = fields.Selection([('INSUR', 'INSUR'),
+                             ('SINS', 'SINS'), ],
+                            default='SINS', string="code")
 

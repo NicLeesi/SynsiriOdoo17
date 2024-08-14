@@ -40,17 +40,17 @@ class HrEmployee(models.Model):
                                help="Employee joining date computed from the"
                                     " contract start date")
     id_expiry_date = fields.Date(help='Expiry date of Identification document',
-                                 string='Expiry Date',)
+                                 string='ID Expiry Date',)
     passport_expiry_date = fields.Date(help='Expiry date of Passport ID',
-                                       string='Expiry Date')
+                                       string='Passport Expiry Date')
     identification_attachment_ids = fields.Many2many(
         'ir.attachment', 'id_attachment_rel',
-        'id_ref', 'attach_ref', string="Attachment",
+        'id_ref', 'attach_ref', string="Attachment ID",
         help='Attach the copy of Identification document')
     passport_attachment_ids = fields.Many2many(
         'ir.attachment',
         'passport_attachment_rel',
-        'passport_ref', 'attach_ref1', string="Attachment",
+        'passport_ref', 'attach_ref1', string="Attachment Passport",
         help='Attach the copy of Passport')
     family_info_ids = fields.One2many('hr.employee.family', 'employee_id',
                                       string='Family',
@@ -129,12 +129,11 @@ class HrEmployeeFamily(models.Model):
     _rec_name = 'member_name'
 
     employee_id = fields.Many2one('hr.employee', string="Employee",
-                                  help='Select corresponding Employee',
-                                  invisible=1)
+                                  help='Select corresponding Employee',)
     relation_id = fields.Many2one('hr.employee.relation', string="Relation",
                                   help="Relationship with the employee")
     member_name = fields.Char(string='Name', help='Name of the family member')
     member_contact = fields.Char(string='Contact No',
                                  help='Contact No of the family member')
-    birth_date = fields.Date(string="DOB", tracking=True,
+    birth_date = fields.Date(string="DOB",
                              help='Birth date of the family member')
