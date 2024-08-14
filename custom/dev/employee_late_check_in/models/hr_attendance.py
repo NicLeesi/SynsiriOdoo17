@@ -132,7 +132,7 @@ class HrAttendance(models.Model):
                             'late_check_in_after')) or 10
                         minutes_after = timedelta(minutes=minutes_after_value)
                         if check_in > start_date:
-                            final = check_in - (start_date + minutes_after)
+                            final = max(timedelta(0),check_in - (start_date + minutes_after))
                             rec.late_check_in = final.total_seconds() / 60
                             if rec.late_check_in >= float(self.env['ir.config_parameter'].sudo().get_param(
                                     'late_check_in_not_count_after')):
@@ -162,7 +162,7 @@ class HrAttendance(models.Model):
                             'late_check_in_after')) or 10
                         minutes_after = timedelta(minutes=minutes_after_value)
                         if check_in > start_date:
-                            final = check_in - (start_date + minutes_after)
+                            final = max(timedelta(0),check_in - (start_date + minutes_after))
                             rec.late_check_in = final.total_seconds() / 60
 
                             if rec.late_check_in >= float(self.env['ir.config_parameter'].sudo().get_param(
@@ -172,35 +172,6 @@ class HrAttendance(models.Model):
                                     rec.days_work_include_late -= 0.5
 
 
-
-    # def late_check_in_records(self):
-    #     """Function creates records in late.check.in model for the employees
-    #     who were late"""
-    #     # minutes_after = int(self.env['ir.config_parameter'].sudo().get_param(
-    #     #     'late_check_in_after')) or 10
-    #     max_limit = int(self.env['ir.config_parameter'].sudo().get_param(
-    #         'maximum_minutes')) or 0
-    #     for rec in self.sudo().search(
-    #             [('id', 'not in', self.env['late.check.in'].sudo().search(
-    #                 []).attendance_id.ids)]):
-    #         late_check_in = rec.sudo().late_check_in
-    #         if rec.late_check_in and late_check_in and late_check_in < max_limit:
-    #             self.env['late.check.in'].sudo().create({
-    #                 'employee_id': rec.employee_id.id,
-    #                 'late_minutes': late_check_in,
-    #                 'date': rec.check_in.date(),
-    #                 'attendance_id': rec.id,
-    #             })
-    #     for rec in self.sudo().search(
-    #             [('id', 'in', self.env['late.check.in'].sudo().search(
-    #                 []).attendance_id.ids)]):
-    #         late_check_in = rec.sudo().late_check_in
-    #         if rec.late_check_in and late_check_in and late_check_in < max_limit:
-    #             self.env['late.check.in'].sudo().write({
-    #                 'employee_id': rec.employee_id.id,
-    #                 'late_minutes': late_check_in,
-    #                 'date': rec.check_in.date(),
-    #             })
 
     def late_check_in_records(self):
         """Function creates or updates records in late.check.in model for the employees who were late."""
@@ -310,6 +281,52 @@ class HrAttendance(models.Model):
     #
     #     print("Completed processing late check-in records")
 
+    # def _compute_late_check_in_afternoon(self):
+    #     """Calculate late check-in for (afternoon session) minutes for each record in the current Odoo
+    #     model.This method iterates through the records and calculates late
+    #     check-in minutes based on the employee's contract schedule.The
+    #     calculation takes into account the employee's time zone, scheduled
+    #     check-in time, and the actual check-in time."""
+    #     for rec in self:
+    #         rec.late_check_in_afternoon = 0.0
+    #         if rec.employee_id.contract_id:
+    #             dt = rec.check_in
+    #             if self.env.user.tz in pytz.all_timezones:
+    #                 old_tz = pytz.timezone('UTC')
+    #                 new_tz = pytz.timezone(self.env.user.tz)
+    #                 dt = old_tz.localize(dt).astimezone(new_tz)
+    #             str_time = dt.strftime("%H:%M")
+    #             check_in_date = datetime.strptime(
+    #                 str_time, "%H:%M").time()
+    #             morning_checkout = self._get_morning_checkout(rec.employee_id, rec.check_in)
+    #             if morning_checkout:
+    #                 morning_checkout_time = morning_checkout.check_out
+    #                 morning_checkout_time = old_tz.localize(morning_checkout_time).astimezone(
+    #                     new_tz)
+    #                 morning_checkout_str_time = morning_checkout_time.strftime("%H:%M")
+    #                 morning_checkout_time = datetime.strptime(morning_checkout_str_time,
+    #                                                           "%H:%M").time()
+    #                 morning_checkout_timedelta = timedelta(hours=morning_checkout_time.hour,
+    #                                                        minutes=morning_checkout_time.minute)
+    #
+    #                 break_time = int(self.env['ir.config_parameter'].sudo().get_param(
+    #                             'Lunch_break_time'))
+    #                 check_in = timedelta(hours=check_in_date.hour,
+    #                                      minutes=check_in_date.minute)
+    #                 break_time = timedelta(minutes=break_time)
+    #                 minutes_after_value = int(self.env['ir.config_parameter'].sudo().get_param(
+    #                     'late_check_in_after')) or 10
+    #                 minutes_after = timedelta(minutes=minutes_after_value)
+    #
+    #                 if check_in > morning_checkout_timedelta + break_time:
+    #                     final = max(0, check_in - (morning_checkout_timedelta + break_time + minutes_after))
+    #                     rec.late_check_in_afternoon = final.total_seconds() / 60
+    #                     if rec.late_check_in_afternoon >= float(self.env['ir.config_parameter'].sudo().get_param(
+    #                             'late_check_in_not_count_after')):
+    #                         rec.late_check_in_afternoon = 0
+    #                         if rec.days_work_include_late > 0:
+    #                             rec.days_work_include_late -= 0.5
+
     def _compute_late_check_in_afternoon(self):
         """Calculate late check-in for (afternoon session) minutes for each record in the current Odoo
         model.This method iterates through the records and calculates late
@@ -347,14 +364,16 @@ class HrAttendance(models.Model):
                         'late_check_in_after')) or 10
                     minutes_after = timedelta(minutes=minutes_after_value)
 
-                    if check_in > morning_checkout_timedelta + break_time :
-                        final = check_in - (morning_checkout_timedelta + break_time + minutes_after)
+                    if check_in > morning_checkout_timedelta + break_time:
+                        final = max(timedelta(0), check_in - (morning_checkout_timedelta + break_time + minutes_after))
                         rec.late_check_in_afternoon = final.total_seconds() / 60
                         if rec.late_check_in_afternoon >= float(self.env['ir.config_parameter'].sudo().get_param(
                                 'late_check_in_not_count_after')):
                             rec.late_check_in_afternoon = 0
                             if rec.days_work_include_late > 0:
                                 rec.days_work_include_late -= 0.5
+
+
 
     def _get_morning_checkout(self, employee, check_in_datetime):
         """Retrieve the morning check-out record for the same day as the given check-in datetime."""
