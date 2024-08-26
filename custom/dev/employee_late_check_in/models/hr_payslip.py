@@ -76,7 +76,7 @@ class PayslipLateCheckIn(models.Model):
         if attendance_id:
             self.attendance_ids = attendance_id
             input_data = {
-                'name': "Total Days Work",
+                'name': "Total Days Work(รวมวันมาทำงาน)",
                 'code': "DW",
                 'amount': sum(attendance_id.mapped('days_work_include_late')),
                 'contract_id': self.contract_id.id,
@@ -115,7 +115,7 @@ class PayslipLateCheckIn(models.Model):
             if attendance_ids_leave_filtered:
                 self.attendance_ids = attendance_ids_leave_filtered
                 input_data = {
-                    'name': "Time off Days Work",
+                    'name': "Time off Days Work(วันหยุดมาทำงาน)",
                     'code': "ADW",
                     'amount': sum(attendance_ids_leave_filtered.mapped('days_work_include_late')),
                     'contract_id': self.contract_id.id,
@@ -125,7 +125,7 @@ class PayslipLateCheckIn(models.Model):
             if attendance_ids_sick_filtered:
                 self.attendance_ids = attendance_ids_sick_filtered
                 input_data = {
-                    'name': "Sick Days Work",
+                    'name': "Sick Days Work(วันลาป่วยมาทำงาน)",
                     'code': "SDW",
                     'amount': sum(attendance_ids_sick_filtered.mapped('days_work_include_late')),
                     'contract_id': self.contract_id.id,
@@ -134,7 +134,7 @@ class PayslipLateCheckIn(models.Model):
 
             if attendance_ids_weekend_filtered:
                 input_data = {
-                    'name': "Weekend Work",
+                    'name': "Weekend Work(วันหยุดประจำสัปดาห์มาทำงาน)",
                     'code': 'WDW',
                     'amount': sum(attendance_ids_weekend_filtered.mapped('days_work_include_late')),
                     'contract_id': self.contract_id.id,

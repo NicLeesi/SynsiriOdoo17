@@ -28,6 +28,50 @@ class HrPayslip(models.Model):
     additional functionality related to employee loans."""
     _inherit = 'hr.payslip'
 
+    # def get_inputs(self, contract_ids, date_from, date_to):
+    #     """Compute additional inputs for the employee payslip,
+    #     considering active loans.
+    #     :param contract_ids: Contract ID of the current employee.
+    #     :param date_from: Start date of the payslip.
+    #     :param date_to: End date of the payslip.
+    #     :return: List of dictionaries representing additional inputs for
+    #     the payslip."""
+    #
+    #     res = super(HrPayslip, self).get_inputs(contract_ids, date_from, date_to)
+    #
+    #     employee_id = self.env['hr.contract'].browse(
+    #         contract_ids[0].id).employee_id if contract_ids else self.employee_id
+    #
+    #     loan_id = self.env['hr.loan'].search(
+    #         [('employee_id', '=', employee_id.id), ('state', '=', 'approve')])
+    #
+    #     for loan in loan_id:
+    #         for loan_line in loan.loan_lines:
+    #
+    #             if date_from <= loan_line.date <= date_to and not loan_line.paid:
+    #
+    #                 loan_found = False
+    #                 for result in res:
+    #
+    #                     if result.get('code') == 'LO':
+    #                         result['amount'] = loan_line.amount
+    #                         result['loan_line_id'] = loan_line.id
+    #                         loan_found = True
+    #
+    #                 if not loan_found:
+    #                     loan_detail = loan_id.detail
+    #                     # Add a new input for the loan if not found
+    #                     loan_input = {
+    #                         'name': loan_detail,
+    #                         'code': 'LO',
+    #                         'amount': loan_line.amount,
+    #                         'loan_line_id': loan_line.id,
+    #                         'contract_id': contract_ids[0].id
+    #                     }
+    #                     res.append(loan_input)
+    #
+    #     return res
+
     def get_inputs(self, contract_ids, date_from, date_to):
         """Compute additional inputs for the employee payslip,
         considering active loans.
@@ -39,36 +83,42 @@ class HrPayslip(models.Model):
 
         res = super(HrPayslip, self).get_inputs(contract_ids, date_from, date_to)
 
+        # Determine the employee_id either from the contract or the current payslip
         employee_id = self.env['hr.contract'].browse(
             contract_ids[0].id).employee_id if contract_ids else self.employee_id
 
-        loan_id = self.env['hr.loan'].search(
+        # Search for approved loans for the employee
+        loan_ids = self.env['hr.loan'].search(
             [('employee_id', '=', employee_id.id), ('state', '=', 'approve')])
 
-        for loan in loan_id:
+        total_loan_amount = 0  # Initialize the sum of loan amounts
+        concatenated_details = ""  # Initialize an empty string to concatenate loan details
+
+        for loan in loan_ids:
             for loan_line in loan.loan_lines:
-
+                # Check if the loan line date falls within the payslip period and if it's unpaid
                 if date_from <= loan_line.date <= date_to and not loan_line.paid:
+                    total_loan_amount += loan_line.amount  # Add the loan amount to the total
+                    concatenated_details += loan.detail + ", "  # Concatenate each loan detail with a space
 
-                    loan_found = False
-                    for result in res:
+        if total_loan_amount > 0:
+            loan_found = False
+            for result in res:
+                if result.get('code') == 'LO':
+                    result['amount'] = total_loan_amount
+                    result[
+                        'name'] = 'Loan: ' + concatenated_details.strip()  # Update the name with concatenated details
+                    loan_found = True
 
-                        if result.get('code') == 'LO':
-                            result['amount'] = loan_line.amount
-                            result['loan_line_id'] = loan_line.id
-                            loan_found = True
-
-                    if not loan_found:
-                        loan_detail = loan_id.detail
-                        # Add a new input for the loan if not found
-                        loan_input = {
-                            'name': loan_detail,
-                            'code': 'LO',
-                            'amount': loan_line.amount,
-                            'loan_line_id': loan_line.id,
-                            'contract_id': contract_ids[0].id
-                        }
-                        res.append(loan_input)
+            if not loan_found:
+                # Add a new input for the total loan amount with concatenated details if not found
+                loan_input = {
+                    'name': 'Loan(หนี้สิน): ' + concatenated_details.strip(),  # Strip to remove any trailing space
+                    'code': 'LO',
+                    'amount': total_loan_amount,
+                    'contract_id': contract_ids[0].id
+                }
+                res.append(loan_input)
 
         return res
 
