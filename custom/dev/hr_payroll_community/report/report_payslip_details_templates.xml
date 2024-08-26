@@ -66,65 +66,97 @@
                                 </td>
                             </tr>
                         </table>
-                        <h3>Details by Salary Rule Category(รายละเอียดสลิป)</h3>
-                        <table class="table table-sm mb32">
-                            <thead>
-                                <tr>
-                                    <th>Code(รหัส)</th>
-                                    <th>Salary Rule Category(ประเภท)</th>
-                                    <th>Total(รวม)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr t-foreach="get_details_by_rule_category.get(o.id, [])"
-                                    t-as="h">
-                                    <td>
-                                        <span t-esc="h['code']"/>
-                                    </td>
-                                    <td>
-                                        <span t-esc="'..'*h['level']"/>
-                                        <span t-esc="h['rule_category']"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-esc="h['total']"
-                                              t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-<!--                        <h3>Payslip Lines by Contribution Register</h3>-->
-<!--                        <table class="table table-sm mt32">-->
-<!--                            <thead>-->
-<!--                                <tr>-->
-<!--                                    <th>Code</th>-->
-<!--                                    <th>Name</th>-->
-<!--                                    <th>Quantity/rate</th>-->
-<!--                                    <th>Amount</th>-->
-<!--                                    <th>Total</th>-->
-<!--                                </tr>-->
-<!--                            </thead>-->
-<!--                            <tbody>-->
-<!--                                <tr t-foreach="get_lines_by_contribution_register.get(o.id, [])"-->
-<!--                                    t-as="p">-->
-<!--                                    <td>-->
-<!--                                        <span t-esc="p.get('code', '')"/>-->
-<!--                                    </td>-->
-<!--                                    <td>-->
-<!--                                        <span t-esc="p.get('name', '')"/>-->
-<!--                                    </td>-->
-<!--                                    <td>-->
-<!--                                        <span t-esc="p.get('quantity', '')"/>-->
-<!--                                    </td>-->
-<!--                                    <td>-->
-<!--                                        <span t-esc="p.get('amount', 0)"/>-->
-<!--                                    </td>-->
-<!--                                    <td class="text-right">-->
-<!--                                        <span t-esc="p.get('total', 0)"-->
-<!--                                              t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>-->
-<!--                                    </td>-->
-<!--                                </tr>-->
-<!--                            </tbody>-->
-<!--                        </table>-->
+                        <h3>Details by Salary Rule Category (รายละเอียดสลิป)</h3>
+                        <div class="row">
+                            <!-- First Half -->
+                            <div class="col-6">
+                                <table class="table table-sm mb32">
+                                    <thead>
+                                        <tr>
+                                            <th>Code (รหัส)</th>
+                                            <th>Salary Rule Category (ประเภท)</th>
+                                            <th>Total (รวม)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])[:(len(get_details_by_rule_category.get(o.id, []))//2)]" t-as="h">
+                                            <td>
+                                                <span t-esc="h['code']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="'..'*h['level']"/>
+                                                <span t-esc="h['rule_category']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="h['total']"
+                                                      t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Second Half -->
+                            <div class="col-6">
+                                <table class="table table-sm mb32">
+                                    <thead>
+                                        <tr>
+                                            <th>Code (รหัส)</th>
+                                            <th>Salary Rule Category (ประเภท)</th>
+                                            <th>Total (รวม)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])[(len(get_details_by_rule_category.get(o.id, []))//2):]" t-as="h">
+                                            <td>
+                                                <span t-esc="h['code']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="'..'*h['level']"/>
+                                                <span t-esc="h['rule_category']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="h['total']"
+                                                      t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!--                        <h3>Payslip Lines by Contribution Register</h3>-->
+                        <!--                        <table class="table table-sm mt32">-->
+                        <!--                            <thead>-->
+                        <!--                                <tr>-->
+                        <!--                                    <th>Code</th>-->
+                        <!--                                    <th>Name</th>-->
+                        <!--                                    <th>Quantity/rate</th>-->
+                        <!--                                    <th>Amount</th>-->
+                        <!--                                    <th>Total</th>-->
+                        <!--                                </tr>-->
+                        <!--                            </thead>-->
+                        <!--                            <tbody>-->
+                        <!--                                <tr t-foreach="get_lines_by_contribution_register.get(o.id, [])"-->
+                        <!--                                    t-as="p">-->
+                        <!--                                    <td>-->
+                        <!--                                        <span t-esc="p.get('code', '')"/>-->
+                        <!--                                    </td>-->
+                        <!--                                    <td>-->
+                        <!--                                        <span t-esc="p.get('name', '')"/>-->
+                        <!--                                    </td>-->
+                        <!--                                    <td>-->
+                        <!--                                        <span t-esc="p.get('quantity', '')"/>-->
+                        <!--                                    </td>-->
+                        <!--                                    <td>-->
+                        <!--                                        <span t-esc="p.get('amount', 0)"/>-->
+                        <!--                                    </td>-->
+                        <!--                                    <td class="text-right">-->
+                        <!--                                        <span t-esc="p.get('total', 0)"-->
+                        <!--                                              t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>-->
+                        <!--                                    </td>-->
+                        <!--                                </tr>-->
+                        <!--                            </tbody>-->
+                        <!--                        </table>-->
                         <h3>Additional Inputs(รายละเอียดเพิ่มเติม)</h3>
                         <table class="table table-sm mt32">
                             <thead>
