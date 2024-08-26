@@ -111,20 +111,25 @@ class HrLoan(models.Model):
 
     @api.model_create_multi
     def create(self, values_list):
-        """ Check whether any pending loan is for the employee and calculate
-            the sequence
-            :param values : Dictionary which contain fields and values"""
-        for values in values_list:
-            loan_count = self.env['hr.loan'].search_count(
-                [('employee_id', '=', values['employee_id']),
-                 ('state', '=', 'approve'),
-                 ('balance_amount', '!=', 0)])
-            if loan_count:
-                raise ValidationError(
-                    _("The Employee has already a pending installment"))
-            else:
-                values['name'] = self.env['ir.sequence'].get('hr.loan.seq') or ' '
+        """Check the total balance_amount for each employee and raise an error
+           if the total exceeds 5000, then calculate the sequence for each loan."""
 
+        for values in values_list:
+            # Sum up the balance_amount for all approved loans of the employee
+            loan_sum = sum(self.env['hr.loan'].search([
+                ('employee_id', '=', values['employee_id']),
+                ('state', '=', 'approve'),
+            ]).mapped('balance_amount'))
+
+            # Check if the sum exceeds 5000
+            if loan_sum + values.get('balance_amount', 0) > 5000:
+                raise ValidationError(
+                    _("The total balance amount for the Employee exceeds 5000 Baht."))
+
+            # Set the sequence name
+            values['name'] = self.env['ir.sequence'].next_by_code('hr.loan.seq') or ' '
+
+        # Proceed with the creation of records
         return super(HrLoan, self).create(values_list)
 
     def action_compute_installment(self):
