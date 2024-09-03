@@ -37,6 +37,7 @@
         'security/hr_loan_security.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
+        'data/salary_rule.xml',
         'views/hr_loan_views.xml',
         'views/hr_payslip_views.xml',
         'views/hr_employee_views.xml',

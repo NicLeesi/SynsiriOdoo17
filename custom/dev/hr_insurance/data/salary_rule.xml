@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
         <!--Calculate the amount for the 'Late Check-in' rule.-->
-    <record id="late_check_in" model="hr.salary.rule">
-        <field name="name">Late Check-in(มาสาย)</field>
+    <record id="insurance_rule" model="hr.salary.rule">
+        <field name="name">Insurance(ประกันงาน+สังคม)</field>
         <field name="sequence" eval="6"/>
-        <field name="code">LC</field>
+        <field name="code">INSUR</field>
         <field name="category_id" ref="hr_payroll_community.DED"/>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-amount = 0
 try:
-    if inputs.LC:
-        amount = inputs.LC.amount
-except:
-    amount = 0
-result = -amount
+   insurance = inputs.INSURE.amount if inputs.INSURE else 0
+except AttributeError:
+   insurance = 0
+
+try:
+   social_insurance = inputs.SINS.amount if inputs.SINS else 0
+except AttributeError:
+   social_insurance = 0
+
+total_insurance = social_insurance + insurance
+
+result = -total_insurance
         </field>
     </record>
 

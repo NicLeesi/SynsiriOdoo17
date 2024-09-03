@@ -77,13 +77,19 @@
             <field name="amount_python_compute">result = categories.BASIC + categories.ALW</field>
         </record>
         <record id="hr_rule_net" model="hr.salary.rule">
-            <field name="name">Net Salary</field>
+            <field name="name">Net Salary(เงินเดือนสุทธิ)</field>
             <field name="sequence" eval="200"/>
             <field name="code">NET</field>
             <field name="category_id" ref="hr_payroll_community.NET"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = categories.BASIC + categories.ALW + categories.DED</field>
+            <field name="amount_python_compute">res = categories.BASIC + categories.DED
+if res > int(res):
+   res = int(res) + 1
+else:
+   res = int(res)
+
+result = res</field>
             <field name="register_id" ref="contribution_register_employees"/>
         </record>
         <record id="hr_rule_hra" model="hr.salary.rule">

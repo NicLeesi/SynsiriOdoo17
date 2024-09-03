@@ -6,8 +6,8 @@
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
                     <div class="page">
-                        <h2>Pay Slip(ข้อมูลสลิป)</h2>
-                        <p t-field="o.name"/>
+                        <h2 style="font-size: 25px;">Pay Slip(ข้อมูลสลิป)</h2>
+                        <p t-field="o.name" style="font-size: 18px;"/>
                         <table class="table table-sm table-bordered">
                             <tr>
                                 <td>
@@ -23,20 +23,20 @@
                                     <span t-field="o.employee_id.job_id"/>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <strong>Email</strong>
-                                </td>
-                                <td>
-                                    <span t-field="o.employee_id.work_email"/>
-                                </td>
-                                <td>
-                                    <strong>Identification No(เลขบัตรประชาชน)</strong>
-                                </td>
-                                <td>
-                                    <span t-field="o.employee_id.identification_id"/>
-                                </td>
-                            </tr>
+<!--                            <tr>-->
+<!--                                <td>-->
+<!--                                    <strong>Email</strong>-->
+<!--                                </td>-->
+<!--                                <td>-->
+<!--                                    <span t-field="o.employee_id.work_email"/>-->
+<!--                                </td>-->
+<!--                                <td>-->
+<!--                                    <strong>Identification No(เลขบัตรประชาชน)</strong>-->
+<!--                                </td>-->
+<!--                                <td>-->
+<!--                                    <span t-field="o.employee_id.identification_id"/>-->
+                            <!--                                </td>-->
+                            <!--                            </tr>-->
                             <tr>
                                 <td>
                                     <strong>Reference(เลขที่สลิป)</strong>
@@ -66,9 +66,68 @@
                                 </td>
                             </tr>
                         </table>
-                        <h3>Details by Salary Rule Category (รายละเอียดสลิป)</h3>
+                        <!--                        <h3 style="font-size: 20px;" >Details by Salary Rule Category (รายละเอียดสลิป)</h3>-->
+                        <!--                        <div class="row">-->
+                        <!--                            &lt;!&ndash; First Half &ndash;&gt;-->
+                        <!--                            <div class="col-6">-->
+                        <!--                                <table class="table table-sm mb32">-->
+                        <!--                                    <thead>-->
+                        <!--                                        <tr>-->
+                        <!--                                            <th>Code (รหัส)</th>-->
+                        <!--                                            <th>Salary Rule Category (ประเภท)</th>-->
+                        <!--                                            <th>Total (รวม)</th>-->
+                        <!--                                        </tr>-->
+                        <!--                                    </thead>-->
+                        <!--                                    <tbody>-->
+                        <!--                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])[:(len(get_details_by_rule_category.get(o.id, []))//2)]" t-as="h">-->
+                        <!--                                            <td>-->
+                        <!--                                                <span t-esc="h['code']"/>-->
+                        <!--                                            </td>-->
+                        <!--                                            <td>-->
+                        <!--                                                <span t-esc="'..'*h['level']"/>-->
+                        <!--                                                <span t-esc="h['rule_category']"/>-->
+                        <!--                                            </td>-->
+                        <!--                                            <td class="text-right">-->
+                        <!--                                                <span t-esc="h['total']"-->
+                        <!--                                                      t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>-->
+                        <!--                                            </td>-->
+                        <!--                                        </tr>-->
+                        <!--                                    </tbody>-->
+                        <!--                                </table>-->
+                        <!--                            </div>-->
+
+                        <!--                            &lt;!&ndash; Second Half &ndash;&gt;-->
+                        <!--                            <div class="col-6">-->
+                        <!--                                <table class="table table-sm mb32">-->
+                        <!--                                    <thead>-->
+                        <!--                                        <tr>-->
+                        <!--                                            <th>Code (รหัส)</th>-->
+                        <!--                                            <th>Salary Rule Category (ประเภท)</th>-->
+                        <!--                                            <th>Total (รวม)</th>-->
+                        <!--                                        </tr>-->
+                        <!--                                    </thead>-->
+                        <!--                                    <tbody>-->
+                        <!--                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])[(len(get_details_by_rule_category.get(o.id, []))//2):]" t-as="h">-->
+                        <!--                                            <td>-->
+                        <!--                                                <span t-esc="h['code']"/>-->
+                        <!--                                            </td>-->
+                        <!--                                            <td>-->
+                        <!--                                                <span t-esc="'..'*h['level']"/>-->
+                        <!--                                                <span t-esc="h['rule_category']"/>-->
+                        <!--                                            </td>-->
+                        <!--                                            <td class="text-right">-->
+                        <!--                                                <span t-esc="h['total']"-->
+                        <!--                                                      t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>-->
+                        <!--                                            </td>-->
+                        <!--                                        </tr>-->
+                        <!--                                    </tbody>-->
+                        <!--                                </table>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
+
+                        <h3 style="font-size: 20px;">Details by Salary Rule Category (รายละเอียดสลิป)</h3>
                         <div class="row">
-                            <!-- First Half -->
+                            <!-- First Half - Specific Code (e.g., 'BASIC') -->
                             <div class="col-6">
                                 <table class="table table-sm mb32">
                                     <thead>
@@ -79,7 +138,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])[:(len(get_details_by_rule_category.get(o.id, []))//2)]" t-as="h">
+                                        <!-- Loop to display rows for 'BASIC' code -->
+                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['code'] == 'BASIC' and h['level'] != 0">
                                             <td>
                                                 <span t-esc="h['code']"/>
                                             </td>
@@ -90,13 +150,23 @@
                                             <td class="text-right">
                                                 <span t-esc="h['total']"
                                                       t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                        <!-- Compute total sum for 'BASIC' code -->
+                                        <tr>
+                                            <td colspan="2"><strong>Total for BASIC</strong></td>
+                                            <td class="text-right">
+                                                <strong>
+                                                    <span t-esc="sum([h['total'] for h in get_details_by_rule_category.get(o.id, []) if h['code'] == 'BASIC' and h['level'] != 0])"
+                                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                                </strong>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
 
-                            <!-- Second Half -->
+                            <!-- Second Half - Specific Code (e.g., 'DED') -->
                             <div class="col-6">
                                 <table class="table table-sm mb32">
                                     <thead>
@@ -107,7 +177,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])[(len(get_details_by_rule_category.get(o.id, []))//2):]" t-as="h">
+                                        <!-- Loop to display rows for 'DED' code -->
+                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['code'] == 'DED'">
                                             <td>
                                                 <span t-esc="h['code']"/>
                                             </td>
@@ -115,15 +186,106 @@
                                                 <span t-esc="'..'*h['level']"/>
                                                 <span t-esc="h['rule_category']"/>
                                             </td>
-                                            <td class="text-right">
+                                            <td class="text-right" style="color: red;">
                                                 <span t-esc="h['total']"
                                                       t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                        <!-- Compute total sum for 'DED' code -->
+                                        <tr>
+                                            <td colspan="2"><strong>Total for DED</strong></td>
+                                            <td class="text-right">
+                                                <strong style="color: red;">
+                                                    <span t-esc="sum([h['total'] for h in get_details_by_rule_category.get(o.id, []) if h['code'] == 'DED'])"
+                                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                                </strong>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+                        <h3 style="font-size: 20px;"> Workday(วันมาทำงาน)</h3>
+                        <div class="row">
+                            <div class="col-6">
+                                <table class="table table-sm mb32">
+                                    <thead>
+                                        <tr>
+                                            <th>Code (รหัส)</th>
+                                            <th>Salary Rule Category (ประเภท)</th>
+                                            <th>Total (รวม)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Loop to display rows for 'DED' code -->
+                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['code'] == 'WORKDAY'">
+                                            <td>
+                                                <span t-esc="h['code']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="'..'*h['level']"/>
+                                                <span t-esc="h['rule_category']"/>
+                                            </td>
+                                            <td class="text-right" t-attf-style="color: #{'red' if h['total'] &lt; 0 else 'green'};">
+                                                <span t-esc="h['total']"
+                                                      t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                        <!-- Compute total sum for 'DED' code -->
+                                        <tr>
+                                            <td colspan="2"><strong>Total for WORKDAY</strong></td>
+                                            <td class="text-right">
+                                                <strong t-attf-style="color: #{'red' if h['total'] &lt; 0 else 'green'};">
+                                                    <span t-esc="sum([h['total'] for h in get_details_by_rule_category.get(o.id, []) if h['code'] == 'WORKDAY'])"
+                                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-sm mb32">
+                                    <thead>
+                                        <tr>
+                                            <th>Code (รหัส)</th>
+                                            <th>Salary Rule Category (ประเภท)</th>
+                                            <th>Total (รวม)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Loop to display rows for 'DED' code -->
+                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['code'] == 'NET'">
+                                            <td>
+                                                <span t-esc="h['code']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="'..'*h['level']"/>
+                                                <span t-esc="h['rule_category']"/>
+                                            </td>
+                                            <td class="text-right" t-attf-style="color: #{'red' if h['total'] &lt; 0 else 'green'};">
+                                                <span t-esc="h['total']"
+                                                      t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                        <!-- Compute total sum for 'DED' code -->
+                                        <tr>
+                                            <td colspan="2"><strong>Total for NET(รวมเงินเดือนสุทธิ)</strong></td>
+                                            <td class="text-right">
+                                                <strong t-attf-style="color: #{'red' if h['total'] &lt; 0 else 'green'};">
+                                                    <span t-esc="sum([h['total'] for h in get_details_by_rule_category.get(o.id, []) if h['code'] == 'NET'])"
+                                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+
+
                         <!--                        <h3>Payslip Lines by Contribution Register</h3>-->
                         <!--                        <table class="table table-sm mt32">-->
                         <!--                            <thead>-->
@@ -157,13 +319,17 @@
                         <!--                                </tr>-->
                         <!--                            </tbody>-->
                         <!--                        </table>-->
-                        <h3>Additional Inputs(รายละเอียดเพิ่มเติม)</h3>
-                        <table class="table table-sm mt32">
+
+
+                        <h3 style="font-size: 20px; margin-bottom: 10px; margin-top: 15px;"> <!-- Adjust -10px as needed -->
+                            Additional Inputs (รายละเอียดเพิ่มเติม)
+                        </h3>
+                        <table class="table table-sm" style="margin-top: -10px;"> <!-- Adjust -10px as needed -->
                             <thead>
                                 <tr>
-                                    <th>Name(ชื่อ)</th>
-                                    <th>Code(รหัส)</th>
-                                    <th>Amount(จำนวน)</th>
+                                    <th>Name (ชื่อ)</th>
+                                    <th>Code (รหัส)</th>
+                                    <th>Amount (จำนวน)</th>
                                 </tr>
                             </thead>
                             <tbody>

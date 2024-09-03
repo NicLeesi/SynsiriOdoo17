@@ -49,4 +49,5 @@ class HrPayslip(models.Model):
                     if state == 'approve' and amount != 0 and result.get(
                             'code') == 'SAR':
                         result['amount'] = amount
+                        result['name'] = 'Salary Advance(ฉุกเฉิน)'
         return res

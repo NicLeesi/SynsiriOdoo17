@@ -109,7 +109,7 @@ class SalaryAdvance(models.Model):
         """Method of a button. Changing the state of the salary advance."""
         self.state = 'reject'
 
-    @api.model_create_multi
+    @api.model
     def create(self, vals):
         """Supering the create method to generate sequence for the salary
          advance."""

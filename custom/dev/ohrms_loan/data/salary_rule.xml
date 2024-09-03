@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+        <!--Calculate the amount for the 'Loan' rule.-->
+    <record id="hr_loan" model="hr.salary.rule">
+        <field name="name">Loan(หนี้สิน)</field>
+        <field name="sequence" eval="6"/>
+        <field name="code">LOAN</field>
+        <field name="category_id" ref="hr_payroll_community.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+try:
+    loan = inputs.LO.amount if inputs.LO else 0
+except AttributeError:
+    loan = 0
+
+
+result = -loan
+        </field>
+    </record>
+</odoo>
