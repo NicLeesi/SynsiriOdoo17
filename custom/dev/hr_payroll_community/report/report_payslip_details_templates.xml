@@ -139,13 +139,15 @@
                                     </thead>
                                     <tbody>
                                         <!-- Loop to display rows for 'BASIC' code -->
-                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['code'] == 'BASIC' and h['level'] != 0">
+                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['category_code'] == 'BASIC'">
                                             <td>
+                                                <!-- code = salary rule code -->
                                                 <span t-esc="h['code']"/>
                                             </td>
                                             <td>
                                                 <span t-esc="'..'*h['level']"/>
                                                 <span t-esc="h['rule_category']"/>
+
                                             </td>
                                             <td class="text-right">
                                                 <span t-esc="h['total']"
@@ -154,10 +156,10 @@
                                         </tr>
                                         <!-- Compute total sum for 'BASIC' code -->
                                         <tr>
-                                            <td colspan="2"><strong>Total for BASIC</strong></td>
+                                            <td colspan="2"><strong>BASIC(รวมเงินรับ)</strong></td>
                                             <td class="text-right">
                                                 <strong>
-                                                    <span t-esc="sum([h['total'] for h in get_details_by_rule_category.get(o.id, []) if h['code'] == 'BASIC' and h['level'] != 0])"
+                                                    <span t-esc="sum([h['total'] for h in get_details_by_rule_category.get(o.id, []) if h['category_code'] == 'BASIC' and h['code'] != 'BASIC'])"
                                                           t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                                 </strong>
                                             </td>
@@ -178,7 +180,7 @@
                                     </thead>
                                     <tbody>
                                         <!-- Loop to display rows for 'DED' code -->
-                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['code'] == 'DED'">
+                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['category_code'] == 'DED'">
                                             <td>
                                                 <span t-esc="h['code']"/>
                                             </td>
@@ -186,17 +188,17 @@
                                                 <span t-esc="'..'*h['level']"/>
                                                 <span t-esc="h['rule_category']"/>
                                             </td>
-                                            <td class="text-right" style="color: red;">
+                                            <td class="text-right">
                                                 <span t-esc="h['total']"
                                                       t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                             </td>
                                         </tr>
                                         <!-- Compute total sum for 'DED' code -->
                                         <tr>
-                                            <td colspan="2"><strong>Total for DED</strong></td>
+                                            <td colspan="2"><strong>DED(รวมเงินหัก)</strong></td>
                                             <td class="text-right">
-                                                <strong style="color: red;">
-                                                    <span t-esc="sum([h['total'] for h in get_details_by_rule_category.get(o.id, []) if h['code'] == 'DED'])"
+                                                <strong>
+                                                    <span t-esc="sum([h['total'] for h in get_details_by_rule_category.get(o.id, []) if h['category_code'] == 'DED' and h['code'] != 'DED'])"
                                                           t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                                 </strong>
                                             </td>
@@ -205,7 +207,7 @@
                                 </table>
                             </div>
                         </div>
-                        <h3 style="font-size: 20px;"> Workday(วันมาทำงาน)</h3>
+                        <h3 style="font-size: 20px;">  </h3>
                         <div class="row">
                             <div class="col-6">
                                 <table class="table table-sm mb32">
@@ -218,7 +220,7 @@
                                     </thead>
                                     <tbody>
                                         <!-- Loop to display rows for 'DED' code -->
-                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['code'] == 'WORKDAY'">
+                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['category_code'] == 'WD'">
                                             <td>
                                                 <span t-esc="h['code']"/>
                                             </td>
@@ -226,17 +228,17 @@
                                                 <span t-esc="'..'*h['level']"/>
                                                 <span t-esc="h['rule_category']"/>
                                             </td>
-                                            <td class="text-right" t-attf-style="color: #{'red' if h['total'] &lt; 0 else 'green'};">
+                                            <td class="text-right">
                                                 <span t-esc="h['total']"
                                                       t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                             </td>
                                         </tr>
                                         <!-- Compute total sum for 'DED' code -->
                                         <tr>
-                                            <td colspan="2"><strong>Total for WORKDAY</strong></td>
+                                            <td colspan="2"><strong>WD(รวมวันทำงาน)</strong></td>
                                             <td class="text-right">
-                                                <strong t-attf-style="color: #{'red' if h['total'] &lt; 0 else 'green'};">
-                                                    <span t-esc="sum([h['total'] for h in get_details_by_rule_category.get(o.id, []) if h['code'] == 'WORKDAY'])"
+                                                <strong>
+                                                    <span t-esc="sum([h['total'] for h in get_details_by_rule_category.get(o.id, []) if h['category_code'] == 'WD' and h['code'] != 'WD'])"
                                                           t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                                 </strong>
                                             </td>
@@ -255,7 +257,7 @@
                                     </thead>
                                     <tbody>
                                         <!-- Loop to display rows for 'DED' code -->
-                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['code'] == 'NET'">
+                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['category_code'] == 'NET'">
                                             <td>
                                                 <span t-esc="h['code']"/>
                                             </td>
@@ -263,7 +265,7 @@
                                                 <span t-esc="'..'*h['level']"/>
                                                 <span t-esc="h['rule_category']"/>
                                             </td>
-                                            <td class="text-right" t-attf-style="color: #{'red' if h['total'] &lt; 0 else 'green'};">
+                                            <td class="text-right">
                                                 <span t-esc="h['total']"
                                                       t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                             </td>
@@ -271,9 +273,9 @@
                                         <!-- Compute total sum for 'DED' code -->
                                         <tr>
                                             <td colspan="2"><strong>Total for NET(รวมเงินเดือนสุทธิ)</strong></td>
-                                            <td class="text-right">
-                                                <strong t-attf-style="color: #{'red' if h['total'] &lt; 0 else 'green'};">
-                                                    <span t-esc="sum([h['total'] for h in get_details_by_rule_category.get(o.id, []) if h['code'] == 'NET'])"
+                                            <td class="text-right" style="font-size: 20px;" >
+                                                <strong>
+                                                    <span t-esc="sum([h['total'] for h in get_details_by_rule_category.get(o.id, []) if h['category_code'] == 'NET' and h['code'] != 'NET'])"
                                                           t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                                 </strong>
                                             </td>

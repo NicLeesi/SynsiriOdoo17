@@ -101,6 +101,7 @@ result = -amount
         <field name="rule_ids" eval="[(6, 0, [ref('hr_payroll_community.hr_rule_basic'),
                                                 ref('hr_payroll_community.hr_rule_net'),
                                                 ref('hr_payroll_community.hr_rule_taxable'),
+                                                ref('hr_payroll_community.hr_rule_da')
                                                 ref('late_check_in'),
                                                 ref('hr_attendance'),
                                                 ref('hr_attendance_unpaid')

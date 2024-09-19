@@ -22,11 +22,12 @@
 #############################################################################
 from odoo import api, models
 
-
+@api.model
 class ReportHrPayrollCommunityReportPayslipDetails(models.AbstractModel):
     """Create new model for getting Payslip Details Report"""
     _name = 'report.hr_payroll_community.report_payslipdetails'
     _description = 'Payslip Details Report'
+
 
     def get_details_by_rule_category(self, payslip_lines):
         """Function for get Salary Rule Categories"""
@@ -45,18 +46,23 @@ class ReportHrPayrollCommunityReportPayslipDetails(models.AbstractModel):
                                             rule_categories)
             else:
                 return rule_categories
+
         res = {}
         result = {}
         if payslip_lines:
             self.env.cr.execute("""
-                SELECT pl.id, pl.category_id, pl.slip_id FROM 
+                SELECT pl.id, pl.category_id, pl.slip_id FROM
                 hr_payslip_line as pl
-                LEFT JOIN hr_salary_rule_category AS rc on 
+                LEFT JOIN hr_salary_rule_category AS rc on
                 (pl.category_id = rc.id)
                 WHERE pl.id in %s
                 GROUP BY rc.parent_id, pl.sequence, pl.id, pl.category_id
                 ORDER BY pl.sequence, rc.parent_id""",
                                 (tuple(payslip_lines.ids),))
+
+            # query_result = self.env.cr.fetchall()
+            # print("Query result (raw fetchall):", query_result)
+
             for x in self.env.cr.fetchall():
                 result.setdefault(x[2], {})
                 result[x[2]].setdefault(x[1], [])
@@ -70,6 +76,7 @@ class ReportHrPayrollCommunityReportPayslipDetails(models.AbstractModel):
                     for parent in get_recursive_parent(rule_categories):
                         res[payslip_id].append({
                             'rule_category': parent.name,
+                            'category_code': parent.code,
                             'name': parent.name,
                             'code': parent.code,
                             'level': level,
@@ -79,12 +86,100 @@ class ReportHrPayrollCommunityReportPayslipDetails(models.AbstractModel):
                     for line in lines:
                         res[payslip_id].append({
                             'rule_category': line.name,
+                            'category_code': line.category_id.code,
                             'name': line.name,
                             'code': line.code,
                             'total': line.total,
                             'level': level
                         })
+
+                    print("Final result (res):", res)
         return res
+
+
+    # def get_details_by_rule_category(self, payslip_lines):
+    #     """Function for get Salary Rule Categories"""
+    #     PayslipLine = self.env['hr.commission.payslip.line']
+    #     RuleCateg = self.env['hr.salary.rule.category']
+    #
+    #     def get_recursive_parent(current_rule_category, rule_categories=None):
+    #         """Function for return Rule Categories with respect to Parent Category"""
+    #         if rule_categories:
+    #             rule_categories = current_rule_category | rule_categories
+    #         else:
+    #             rule_categories = current_rule_category
+    #         if current_rule_category.parent_id:
+    #             return get_recursive_parent(current_rule_category.parent_id, rule_categories)
+    #         else:
+    #             return rule_categories
+    #
+    #     res = {}
+    #     result = {}
+    #
+    #     if payslip_lines:
+    #         self.env.cr.execute("""
+    #             SELECT pl.id, pl.category_id, pl.com_slip_id FROM
+    #             hr_commission_payslip_line as pl
+    #             LEFT JOIN hr_salary_rule_category AS rc on
+    #             (pl.category_id = rc.id)
+    #             WHERE pl.id in %s
+    #             GROUP BY rc.parent_id, pl.sequence, pl.id, pl.category_id
+    #             ORDER BY pl.sequence, rc.parent_id""",
+    #                             (tuple(payslip_lines.ids),))
+    #
+    #         # Debugging: Print query result
+    #         query_result = self.env.cr.fetchall()
+    #         print("Query result (raw fetchall):", query_result)
+    #
+    #         for x in query_result:
+    #             result.setdefault(x[2], {})
+    #             result[x[2]].setdefault(x[1], [])
+    #             result[x[2]][x[1]].append(x[0])
+    #
+    #         # Debugging: Print result after processing
+    #         print("Processed result:", result)
+    #
+    #         for payslip_id, lines_dict in result.items():
+    #             res.setdefault(payslip_id, [])
+    #             for rule_categ_id, line_ids in lines_dict.items():
+    #                 rule_categories = RuleCateg.browse(rule_categ_id)
+    #                 lines = PayslipLine.browse(line_ids)
+    #                 level = 0
+    #
+    #                 # Debugging: Print rule categories
+    #                 print(f"Payslip ID: {payslip_id}, Rule Categories: {rule_categories}")
+    #
+    #                 if not rule_categories:
+    #                     print(f"No rule categories found for ID {rule_categ_id}")
+    #                 if not lines:
+    #                     print(f"No lines found for IDs {line_ids}")
+    #
+    #                 for parent in get_recursive_parent(rule_categories):
+    #                     res[payslip_id].append({
+    #                         'rule_category': parent.name,
+    #                         'name': parent.name,
+    #                         'code': parent.code,
+    #                         'level': level,
+    #                         'total': sum(lines.mapped('total')),
+    #                     })
+    #                     level += 1
+    #
+    #                 # Debugging: Print lines for each payslip
+    #                 print(f"Lines for payslip {payslip_id}: {lines}")
+    #
+    #                 for line in lines:
+    #                     res[payslip_id].append({
+    #                         'rule_category': line.name,
+    #                         'name': line.name,
+    #                         'code': line.code,
+    #                         'total': line.total,
+    #                         'level': level
+    #                     })
+    #
+    #     # Debugging: Print final result before returning
+    #     print("Final result (res):", res)
+    #
+    #     return res
 
     def get_lines_by_contribution_register(self, payslip_lines):
         """Function for getting Contribution Register Lines"""
