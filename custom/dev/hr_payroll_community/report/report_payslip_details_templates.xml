@@ -180,7 +180,7 @@
                                     </thead>
                                     <tbody>
                                         <!-- Loop to display rows for 'DED' code -->
-                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['category_code'] == 'DED'">
+                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['category_code'] == 'DED' and h['code'] != 'DED'">
                                             <td>
                                                 <span t-esc="h['code']"/>
                                             </td>
@@ -220,7 +220,7 @@
                                     </thead>
                                     <tbody>
                                         <!-- Loop to display rows for 'DED' code -->
-                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['category_code'] == 'WD'">
+                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['category_code'] == 'WD' and h['code'] != 'WD'">
                                             <td>
                                                 <span t-esc="h['code']"/>
                                             </td>
@@ -257,7 +257,7 @@
                                     </thead>
                                     <tbody>
                                         <!-- Loop to display rows for 'DED' code -->
-                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['category_code'] == 'NET'">
+                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['category_code'] == 'NET' and h['code'] != 'NET'">
                                             <td>
                                                 <span t-esc="h['code']"/>
                                             </td>

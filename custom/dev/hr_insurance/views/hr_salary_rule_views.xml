@@ -5,7 +5,19 @@
         <field name="name">Insurance Amount(Payslip-Only) </field>
         <field name="category_id" ref="hr_payroll_community.DED"/>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = -(inputs.INSUR.amount)
+        <field name="amount_python_compute">try:
+   insurance = inputs.INSURE.amount if inputs.INSURE else 0
+except AttributeError:
+   insurance = 0
+
+try:
+   social_insurance = inputs.SINS.amount if inputs.SINS else 0
+except AttributeError:
+   social_insurance = 0
+
+total_insurance = social_insurance + insurance
+
+result = -total_insurance
         </field>
         <field name="appears_on_payslip" eval="True"/>
         <field name="sequence" eval="190"/>
