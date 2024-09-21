@@ -139,7 +139,7 @@
                                     </thead>
                                     <tbody>
                                         <!-- Loop to display rows for 'BASIC' code -->
-                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['category_code'] == 'BASIC'">
+                                        <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h" t-if="h['category_code'] == 'BASIC' and h['code'] != 'BASIC'">
                                             <td>
                                                 <!-- code = salary rule code -->
                                                 <span t-esc="h['code']"/>

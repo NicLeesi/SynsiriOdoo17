@@ -98,7 +98,6 @@ result = -amount
                                                 ref('hr_payroll_community.hr_rule_da'),
                                                 ref('late_check_in'),
                                                 ref('hr_attendance'),
-                                                ref('hr_attendance_unpaid')
                                                 ])]"/>
         <field name="company_id" ref="base.main_company"/>
     </record>
