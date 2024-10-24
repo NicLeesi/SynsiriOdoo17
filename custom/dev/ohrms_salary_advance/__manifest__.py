@@ -43,6 +43,7 @@
         'data/ir_sequence_data.xml',
         'data/hr_salary_rule_data.xml',
         'views/salary_advance_views.xml',
+        'views/res_config_settings_views.xml'
     ],
     'images': ['static/description/banner.jpg'],
     'license': 'LGPL-3',

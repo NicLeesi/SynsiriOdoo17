@@ -98,36 +98,29 @@ class HrInsurance(models.Model):
     def get_status(self):
         """This function gets and sets the state."""
         current_date = fields.Date.today()
-        print(f"Current Date: {current_date}")
 
         for rec in self:
-            print(f"\nProcessing Record: {rec.id}")
 
             confirmed_resignation = self.env['hr.resignation'].search([
                 ('employee_id.name', '=', rec.employee_id.name),
                 ('state', '=', 'confirm')
             ])
-            print(f"Confirmed Resignation: {confirmed_resignation}")
 
             last_approved_revealing_date = self.env['hr.resignation'].search([
                 ('employee_id.name', '=', rec.employee_id.name),
                 ('state', '=', 'approved')
             ], order='approved_revealing_date desc', limit=1)
-            print(f"Last Approved Revealing Date Record: {last_approved_revealing_date}")
 
             if last_approved_revealing_date:
                 last_approved_date = last_approved_revealing_date.approved_revealing_date
             else:
                 last_approved_date = False
-            print(f"Last Approved Date: {last_approved_date}")
-
             if rec.policy_coverage == 'monthly':
                 rec.date_to = fields.Date.end_of(rec.date_from, 'month')
             elif rec.policy_coverage == 'yearly':
                 rec.date_to = fields.Date.end_of(rec.date_from, 'year')
             elif rec.policy_coverage == 'Permanent':
                 rec.date_to = False
-            print(f"Date From: {rec.date_from}, Date To: {rec.date_to}")
 
             # Determine the state of the insurance
             if rec.date_from <= current_date:
@@ -141,4 +134,3 @@ class HrInsurance(models.Model):
                     rec.state = 'expired'
             else:
                 rec.state = 'active'
-            print(f"Final State: {rec.state}")

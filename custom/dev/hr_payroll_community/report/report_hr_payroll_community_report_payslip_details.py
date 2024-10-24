@@ -93,7 +93,6 @@ class ReportHrPayrollCommunityReportPayslipDetails(models.AbstractModel):
                             'level': level
                         })
 
-                    print("Final result (res):", res)
         return res
 
 
@@ -176,8 +175,6 @@ class ReportHrPayrollCommunityReportPayslipDetails(models.AbstractModel):
     #                         'level': level
     #                     })
     #
-    #     # Debugging: Print final result before returning
-    #     print("Final result (res):", res)
     #
     #     return res
 

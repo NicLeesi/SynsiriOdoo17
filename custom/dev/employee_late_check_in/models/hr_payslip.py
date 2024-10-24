@@ -88,7 +88,6 @@ class PayslipLateCheckIn(models.Model):
             calendar = self.employee_id
             leave_dates = calendar.list_leave_dates(from_datetime, to_datetime)
             leave_dates_list = leave_dates
-            print(leave_dates_list)
             attendance_ids_leave_filtered = attendance_id.filtered(
                 lambda att: (att.check_in.date(), False) in leave_dates_list and att.days_work_include_late != 0
             )

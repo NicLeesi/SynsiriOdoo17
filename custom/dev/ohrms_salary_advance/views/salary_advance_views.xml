@@ -83,6 +83,11 @@
         <field name="model">salary.advance</field>
         <field name="arch" type="xml">
             <tree string="Salary Advance">
+                <header>
+                    <button name="approve_all_records" string="Approve"
+                            type="object" class="btn-primary"
+                            groups="hr.group_hr_manager"/>
+                </header>
                 <field name="employee_id"/>
                 <field name="date"/>
                 <field name="advance"/>

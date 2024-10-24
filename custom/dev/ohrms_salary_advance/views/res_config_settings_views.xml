@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Window action for Salary Advance Settings -->
+<!--    <record id="action_open_salary_advance_settings" model="ir.actions.act_window">-->
+<!--        <field name="name">Salary Advance Settings</field>-->
+<!--        <field name="res_model">res.config.settings</field>-->
+<!--        <field name="view_mode">form</field>-->
+<!--        <field name="context">{'module': 'salary_advance'}</field>-->
+<!--        <field name="target">inline</field>-->
+<!--    </record>-->
+
+     Form view of Salary Advance Configuration Settings
+    <record id="view_salary_advance_config_settings" model="ir.ui.view">
+        <field name="name">salary.advance.config.settings</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="1"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <div class="app_settings_block" data-string="Salary Advance"
+                     string="Salary Advance"
+                     data-key="salary_advance_settings"
+                     groups="base.group_system">
+
+                    <h2>Salary Advance Settings</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-lg-6 col-12 o_setting_box">
+                            <div>
+                                <label for="default_debit" string="Default Debit Account"/>
+                            </div>
+                            <div>
+                                <field name="default_debit"/>
+                                <div class="text-muted">
+                                    Set the default debit account for salary advance
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12 o_setting_box">
+                            <div>
+                                <label for="default_journal" string="Default Journal"/>
+                            </div>
+                            <div>
+                                <field name="default_journal"/>
+                                <div class="text-muted">
+                                    Set the default Journal for salary advance
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12 o_setting_box">
+                            <div>
+                                <label for="default_credit" string="Default Credit Account"/>
+                            </div>
+                            <div>
+                                <field name="default_credit"/>
+                                <div class="text-muted">
+                                    Set the default credit account for salary advance
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+<!--    &lt;!&ndash; Menu Item for Salary Advance Settings &ndash;&gt;-->
+<!--    <menuitem id="menu_salary_advance_settings" name="Salary Advance Settings"-->
+<!--              parent="base.menu_administration"-->
+<!--              sequence="10"-->
+<!--              action="action_open_salary_advance_settings"-->
+<!--              groups="base.group_system"/>-->
+</odoo>

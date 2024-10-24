@@ -61,7 +61,7 @@ class LateCheckinSettings(models.TransientModel):
     currency_id = fields.Many2one(
         'res.currency', default=lambda self: self.env.company.currency_id.id)
     day_work_count_ratio = fields.Float(
-        config_parameter='employee_late_check_in.deduction_amount',
+        config_parameter='employee_late_check_in.day_work_count_ratio',
         help='How much work hour to count a day work'
         '(set 1 for 100% work-hour compare with average day-work from schedule to count as a day work)',
         string="Day work count ratio", default=0.75)

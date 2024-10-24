@@ -74,12 +74,33 @@ class SalaryAdvance(models.Model):
                               ('reject', 'Rejected')], string='Status',
                              default='draft', tracking=True,
                              help='State of the salary advance.')
+    # debit = fields.Many2one('account.account', string='Debit Account',
+    #                         help='Debit account of the salary advance.',
+    #                         default=lambda self: self.env[
+    #                             'account.journal'].search(
+    #                             [('code', '=', '221000')],
+    #                             limit=1))
+    # credit = fields.Many2one('account.account', string='Credit Account',
+    #                          help='Credit account of the salary advance.',
+    #                          default=lambda self: self.env[
+    #                              'account.account'].search(
+    #                              [('code', '=', '110001')],
+    #                              limit=1))
     debit = fields.Many2one('account.account', string='Debit Account',
-                            help='Debit account of the salary advance.')
+                            help='Debit account of the salary advance.',
+                            default=lambda self: self.env['ir.config_parameter'].sudo().get_param(
+                                'default_debit_account_id'))
+
     credit = fields.Many2one('account.account', string='Credit Account',
-                             help='Credit account of the salary advance.')
+                             help='Credit account of the salary advance.',
+                             default=lambda self: self.env['ir.config_parameter'].sudo().get_param(
+                                 'default_credit_account_id'))
     journal = fields.Many2one('account.journal', string='Journal',
-                              help='Journal of the salary advance.')
+                              help='Journal of the salary advance.',
+                              default=lambda self: self.env[
+                                  'account.journal'].search(
+                                  [('code', '=', 'SLA')],
+                                  limit=1))
     employee_contract_id = fields.Many2one('hr.contract', string='Contract',
                                            related='employee_id.contract_id',
                                            help='Running contract of the '
@@ -108,6 +129,12 @@ class SalaryAdvance(models.Model):
     def action_reject(self):
         """Method of a button. Changing the state of the salary advance."""
         self.state = 'reject'
+
+    def approve_all_records(self):
+        """Approve all late check-in records."""
+        for rec in self:
+            rec.search([('state', '=', 'waiting_approval')])
+            rec.state = 'approve'
 
     @api.model
     def create(self, vals):
