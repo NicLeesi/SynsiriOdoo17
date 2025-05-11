@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="view_gamification_value_form" model="ir.ui.view">
         <field name="name">gamification.value.form</field>
         <field name="model">gamification.value</field>
         <field name="arch" type="xml">
-            <form string="Gamification Value">
+            <form string="Set Goals Current Value">
                 <sheet>
                     <group>
-                        <field name="name" widget="selection"/>
-                        <field name="apply_date"/>
-                        <field name="goal_id" />
-                        <field name="current_value"/>
+                        <field name="challenge_id"/>
+                        <field name="department_id"/>
+                    </group>
+
+                    <group string="Goals in This Challenge">
+                        <!-- Corrected line here -->
+                        <field name="related_goal_ids" context="{'no_open': True}">
+                            <tree editable="bottom" create="false">
+                                <field name="definition_id" readonly="1" options="{'no_open': True}"/>
+                                <field name="code" readonly="1" options="{'no_open': True}"/>
+                                <field name="current"/>
+                                <field name="user_id" readonly="1" options="{'no_open': True}"/>
+                                <field name="start_date" readonly="1" options="{'no_open': True}"/>
+                                <field name="end_date" readonly="1" options="{'no_open': True}"/>
+                                <field name="target_goal" readonly="1"/>
+                                <field name="completeness" readonly="1"/>
+                            </tree>
+                        </field>
                     </group>
                 </sheet>
             </form>
@@ -18,18 +33,15 @@
     </record>
 
 
+
+
     <record id="view_gamification_value_tree" model="ir.ui.view">
         <field name="name">gamification.value.tree</field>
         <field name="model">gamification.value</field>
         <field name="arch" type="xml">
-            <tree string="Gamification Values" >
-                <header>
-                    <button string="Update Goal Value" type="object" name="action_update_goal_value" class="oe_highlight"/>
-                </header>
-                <field name="name" />
-                <field name="apply_date" />
-                <field name="goal_id" />
-                <field name="current_value"/>
+            <tree string="Set Goals Current Value" >
+                <field name="challenge_id"/>
+                <field name="department_id"/>
             </tree>
         </field>
     </record>
@@ -39,25 +51,17 @@
         <field name="name">gamification.value.kanban</field>
         <field name="model">gamification.value</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_example" >
-                <field name="name"/>
-                <field name="goal_id"/>
-                <field name="current_value"/>
+            <kanban class="o_kanban_example" default_group_by="department_id">
+                <field name="challenge_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
-                            <div class="oe_kanban_card">
-                                <div class="oe_kanban_details">
-                                    <strong>
-                                        <field name="name"/>
-                                    </strong>
+                        <div class="oe_kanban_global_click o_kanban_card">
+                            <div class="oe_kanban_details">
+                                <div class="oe_kanban_content">
                                     <div>
-                                        <span>Goal ID: </span>
-                                        <field name="goal_id"/>
-                                    </div>
-                                    <div>
-                                        <span>Current Value: </span>
-                                        <field name="current_value"/>
+                                        <strong>
+                                            <field name="challenge_id"/>
+                                        </strong>
                                     </div>
                                 </div>
                             </div>
@@ -67,5 +71,6 @@
             </kanban>
         </field>
     </record>
+
 
 </odoo>

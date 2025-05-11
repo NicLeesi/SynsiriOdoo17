@@ -54,6 +54,7 @@ class LateCheckIn(models.Model):
             rec.search([('state', '=', 'draft')])
             rec.state = 'approved'
 
+    # original code
     # method that cause error!!
     # @api.model_create_multi
     # def create(self, vals_list):
@@ -62,13 +63,20 @@ class LateCheckIn(models.Model):
     #         'late.check.in') or '/'
     #     return super(LateCheckIn, self.sudo()).create(vals_list)
 
-    @api.model
-    def create(self, vals):
-        # Ensure vals is treated as a dictionary
-        if 'name' not in vals:  # Ensure 'name' is present or set a default
-            vals['name'] = self.env['ir.sequence'].next_by_code('late.check.in.sequence')
+    # @api.model
+    # def create(self, vals):
+    #     # Ensure vals is treated as a dictionary
+    #     if 'name' not in vals:  # Ensure 'name' is present or set a default
+    #         vals['name'] = self.env['ir.sequence'].next_by_code('late.check.in.sequence')
+    #
+    #     return super(LateCheckIn, self).create(vals)
 
-        return super(LateCheckIn, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'name' not in vals:
+                vals['name'] = self.env['ir.sequence'].next_by_code('late.check.in.sequence') or '/'
+        return super().create(vals_list)
 
     def _compute_penalty_amount(self):
         """Compute the penalty amount if the employee was late"""

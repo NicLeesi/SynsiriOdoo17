@@ -16,7 +16,7 @@
     'company': 'Nic Leehard',
     'maintainer': 'Nic Leehard',
     'website': '',
-    'depends': ['gamification'],
+    'depends': ['gamification','hr'],
     'data': [
         'views/gamification_views.xml',
         'views/gamification_menu.xml',
