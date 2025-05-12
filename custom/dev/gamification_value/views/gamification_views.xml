@@ -14,7 +14,7 @@
 
                     <group string="Goals in This Challenge">
                         <!-- Corrected line here -->
-                        <field name="related_goal_ids" context="{'no_open': True}">
+                        <field name="goal_ids" context="{'no_open': True}">
                             <tree editable="bottom" create="false">
                                 <field name="definition_id" readonly="1" options="{'no_open': True}"/>
                                 <field name="code" readonly="1" options="{'no_open': True}"/>

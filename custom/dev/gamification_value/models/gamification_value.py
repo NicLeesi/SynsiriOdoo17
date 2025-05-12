@@ -18,15 +18,15 @@ class GamificationValue(models.Model):
         required=True,
         help='The gamification challenge this value is related to.'
     )
-    # Related One2many field: fetches all goals linked to the selected challenge
-    related_goal_ids = fields.One2many(
-        comodel_name='gamification.goal',
-        inverse_name='challenge_id',
-        string='Related Goals',
-        related='challenge_id.goal_ids',
-        readonly=False,
-        help='Goals that are part of the selected challenge.'
+
+    goal_ids = fields.One2many(
+        'gamification.goal',
+        compute='_compute_goal_ids',
+        string='Goals',
+        readonly=False,  # allow editing
+        store=False
     )
+
     # Link to HR department
     department_id = fields.Many2one(
         'hr.department',
@@ -34,9 +34,21 @@ class GamificationValue(models.Model):
         help='The department related to this gamification value.'
     )
 
+    @api.onchange('challenge_id')
+    def _onchange_challenge_id(self):
+        if self.challenge_id:
+            self.goal_ids = self.env['gamification.goal'].search([
+                ('challenge_id', '=', self.challenge_id.id)
+            ])
+        else:
+            self.goal_ids = False
 
-
-
+    @api.depends('challenge_id')
+    def _compute_goal_ids(self):
+        for rec in self:
+            rec.goal_ids = self.env['gamification.goal'].search([
+                ('challenge_id', '=', rec.challenge_id.id)
+            ])
 
 
     # Original code
