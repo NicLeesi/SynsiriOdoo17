@@ -19,6 +19,7 @@
                                 <field name="definition_id" readonly="1" options="{'no_open': True}"/>
                                 <field name="code" readonly="1" options="{'no_open': True}"/>
                                 <field name="current"/>
+                                <field name="state"/>
                                 <field name="user_id" readonly="1" options="{'no_open': True}"/>
                                 <field name="start_date" readonly="1" options="{'no_open': True}"/>
                                 <field name="end_date" readonly="1" options="{'no_open': True}"/>

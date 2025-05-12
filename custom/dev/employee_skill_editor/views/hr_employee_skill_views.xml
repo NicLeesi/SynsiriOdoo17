@@ -6,7 +6,7 @@
         <field name="name">hr.employee.skill.tree.editable</field>
         <field name="model">hr.employee.skill</field>
         <field name="arch" type="xml">
-            <tree editable="bottom" >
+            <tree editable="bottom" create="false" >
                 <field name="employee_id" readonly="1" options="{'no_open': True}"/>
                 <field name="skill_type_id" readonly="1" options="{'no_open': True}"/>
                 <field name="skill_id" readonly="1" options="{'no_open': True}"/>
