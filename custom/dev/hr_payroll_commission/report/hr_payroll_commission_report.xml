@@ -16,6 +16,6 @@
         <field name="binding_model_id" ref="model_hr_commission_payslip"/>
         <field name="report_name">hr_payroll_commission.report_com_payslipdetails</field>
         <field name="report_file">hr_payroll_commission.report_com_payslipdetails</field>
-        <field name="print_report_name">('Payslip Details - %s' % (object.employee_id.name))</field>
+        <field name="print_report_name">('ComPayslip Details - %s' % (object.employee_id.name))</field>
     </record>
 </odoo>

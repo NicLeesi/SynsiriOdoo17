@@ -34,6 +34,13 @@ class GamificationValue(models.Model):
         help='The department related to this gamification value.'
     )
 
+    parent_department_id = fields.Many2one(
+        'hr.department',
+        string='Parent Department',
+        related='department_id.parent_id',
+        store=True,
+    )
+
     @api.onchange('challenge_id')
     def _onchange_challenge_id(self):
         if self.challenge_id:
@@ -51,3 +58,7 @@ class GamificationValue(models.Model):
                 ('challenge_id', '=', rec.challenge_id.id),
                 ('state', '=', 'inprogress')
             ])
+
+    # @api.model
+    # def _group_expand_parent_department_id(self, departments, domain, order):
+    #     return self.env['hr.department'].search([], order=order)

@@ -10,6 +10,7 @@
                     <group>
                         <field name="challenge_id"/>
                         <field name="department_id"/>
+                        <field name="parent_department_id" options="{'no_open': True}" readonly="1"/>
                     </group>
 
                     <group string="Goals in This Challenge">
@@ -40,9 +41,10 @@
         <field name="name">gamification.value.tree</field>
         <field name="model">gamification.value</field>
         <field name="arch" type="xml">
-            <tree string="Set Goals Current Value" >
+            <tree string="Set Goals Current Value">
                 <field name="challenge_id"/>
                 <field name="department_id"/>
+                <field name="parent_department_id" />
             </tree>
         </field>
     </record>
@@ -52,7 +54,7 @@
         <field name="name">gamification.value.kanban</field>
         <field name="model">gamification.value</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_example" default_group_by="department_id">
+            <kanban class="o_kanban_example" default_group_by="parent_department_id">
                 <field name="challenge_id"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -73,5 +75,17 @@
         </field>
     </record>
 
+    <record id="gamification_value_search_view" model="ir.ui.view">
+        <field name="name">gamification.value.search</field>
+        <field name="model">gamification.value</field>
+        <field name="arch" type="xml">
+            <search>
+                <group expand="0" string="Group By">
+                    <filter string="Parent Department" name="group_by_parent_department_id" context="{'group_by': 'parent_department_id'}"/>
+                    <filter string="Department" name="group_by_department_id" context="{'group_by': 'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
 
 </odoo>

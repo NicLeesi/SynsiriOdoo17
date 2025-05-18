@@ -98,7 +98,20 @@ class HrAttendance(models.Model):
             #                                            empl_name=attendance.employee_id.name,
             #                                            datetime=format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False)))
 
-@api.constrains('check_in', 'check_out')
-def _check_validity_check_in_check_out(self):
-    """ Overwrite the method to not verifies if check_in is earlier than check_out. """
-    pass
+    # @api.constrains('check_in', 'check_out')
+    # def _check_validity_check_in_check_out(self):
+    #     """Verifies if check_in is earlier than check_out and provides detailed error info."""
+    #     for attendance in self:
+    #         if attendance.check_in and attendance.check_out:
+    #             if attendance.check_out < attendance.check_in:
+    #                 raise exceptions.ValidationError(_(
+    #                     'Invalid time for %s:\n- Check In: %s\n- Check Out: %s\n\n"Check Out" time cannot be earlier than "Check In".'
+    #                 ) % (
+    #                                                      attendance.employee_id.name or 'Unknown Employee',
+    #                                                      fields.Datetime.to_string(attendance.check_in),
+    #                                                      fields.Datetime.to_string(attendance.check_out),
+    #                                                  ))
+    @api.constrains('check_in', 'check_out')
+    def _check_validity_check_in_check_out(self):
+        """ Disable the original constraint on check-in/check-out time order. """
+        pass
