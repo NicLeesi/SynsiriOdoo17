@@ -56,6 +56,12 @@ class HrEmployee(models.Model):
                                       string='Family',
                                       help='Family Information')
 
+    @api.onchange('resource_calendar_id')
+    def _onchange_resource_calendar_id(self):
+        """When working hours change on employee, apply it to the contract."""
+        if self.contract_id:
+            self.contract_id.resource_calendar_id = self.resource_calendar_id
+
     @api.depends('contract_id')
     def _compute_joining_date(self):
         """Compute the joining date of the employee based on their contract

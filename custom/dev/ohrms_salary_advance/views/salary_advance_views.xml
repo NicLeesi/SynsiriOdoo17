@@ -175,16 +175,21 @@
               name="Advance"
               parent="ohrms_loan.hr_loan_menu_root"
               sequence="7"/>
-    <menuitem id="salary_advance_menu_own" action="salary_advance_own_action"
-              parent="salary_advance_menu_root" name="Request Salary Advance"
-              sequence="1"/>
-    <menuitem id="salary_advance_menu_to_approve"
-              action="salary_advance_to_approve_action"
+    <menuitem id="salary_advance_menu_own"
+              action="salary_advance_own_action"
               parent="salary_advance_menu_root"
-              name="Salary Advance To Approve" sequence="3"
-              groups="hr.group_hr_manager,hr.group_hr_user,account.group_account_manager"/>
+              name="Request Salary Advance"
+              sequence="1"/>
     <menuitem id="salary_advance_menu_my_approved"
               action="salary_advance_own_request_approved_action"
               parent="salary_advance_menu_root"
-              name="My Approved Salary Advance" sequence="2"/>
+              name="My Approved Salary Advance"
+              sequence="2"/>
+    <menuitem id="salary_advance_menu_to_approve"
+              action="salary_advance_to_approve_action"
+              parent="salary_advance_menu_root"
+              name="Salary Advance To Approve"
+              sequence="3"
+              groups="hr.group_hr_manager,hr.group_hr_user,account.group_account_manager"/>
+
 </odoo>

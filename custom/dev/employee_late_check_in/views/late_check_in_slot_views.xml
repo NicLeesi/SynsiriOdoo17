@@ -1,0 +1,37 @@
+<!-- views/late_check_in_slot_views.xml -->
+<odoo>
+    <record id="view_late_check_in_slot_form" model="ir.ui.view">
+        <field name="name">late.check.in.slot.form</field>
+        <field name="model">late.check.in.slot</field>
+        <field name="arch" type="xml">
+            <form string="Late Check-in Slot">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="check_in_change"/>
+                        <field name="note"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_late_check_in_slot_tree" model="ir.ui.view">
+        <field name="name">late.check.in.slot.tree</field>
+        <field name="model">late.check.in.slot</field>
+        <field name="arch" type="xml">
+            <tree string="Late Check-in Slots">
+                <field name="name"/>
+                <field name="check_in_change"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_late_check_in_slot" model="ir.actions.act_window">
+        <field name="name">Check-in Time Slots</field>
+        <field name="res_model">late.check.in.slot</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+</odoo>

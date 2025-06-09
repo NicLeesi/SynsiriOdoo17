@@ -47,6 +47,7 @@
         'views/late_check_in_views.xml',
         'views/hr_employee_views.xml',
         'views/hr_payslip_views.xml',
+        'views/late_check_in_slot_views.xml',
     ],
     'images': ['static/description/banner.jpg'],
     'license': 'LGPL-3',

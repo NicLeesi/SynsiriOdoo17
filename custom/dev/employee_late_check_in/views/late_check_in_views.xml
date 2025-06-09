@@ -91,10 +91,15 @@
         <field name="view_mode">tree,form</field>
         <field name="context">{'search_default_group_employee': 1}</field>
     </record>
+
     <!-- MenuItems -->
     <menuitem id="menu_late_check_in" name="Late Check-in"
               parent="hr_attendance.menu_hr_attendance_root"
               action="late_check_in_action"
               sequence="21"
               groups="hr.group_hr_user"/>
+    <menuitem id="menu_late_check_in_config" name="Check-in Slots"
+              parent="menu_late_check_in"
+              action="action_late_check_in_slot"
+              sequence="21"/>
 </odoo>
