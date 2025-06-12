@@ -10,11 +10,13 @@ from odoo.tools import format_datetime
 class HrAttendance(models.Model):
     _inherit = "hr.attendance"
 
-    is_bio_device = fields.Boolean(string='Created/Edited by Bio Device', default=False, readonly=True)
+    is_bio_device = fields.Boolean(string='Created by Bio Device',store=True, default=False, readonly=True)
+    created_by_user = fields.Integer(string='User Edit',store=True, group_operator='sum',readonly=True)
     edit_source = fields.Selection([
         ('user', 'User'),
         ('bio_device', 'Bio Device')
-        ], string="Edit Source", compute='_compute_edit_source', store=True, readonly=True)
+        ], string="Edit Source", compute='_compute_edit_source', store=True, readonly=True )
+    alert_flag = fields.Integer(string='Alert',store=True, group_operator='sum',readonly=True)
 
     def write(self, vals):
         if 'is_bio_device' not in vals:
@@ -26,26 +28,48 @@ class HrAttendance(models.Model):
         for record in self:
             if record.is_bio_device:
                 record.edit_source = 'bio_device'
+                record.created_by_user = '0'
             else:
                 record.edit_source = 'user'
+                record.created_by_user = '1'
 
+    @api.depends('check_in', 'check_out', 'worked_hours')
     def _compute_color(self):
         for attendance in self:
-            if attendance.check_out:
-                attendance.color = 1 if attendance.worked_hours > 16 else 0
-                attendance.color = 2 if attendance.check_out < attendance.check_in + timedelta(minutes=10) else 0
-                # Check for the number of check-ins on the same day
-                same_day_check_ins = self.env['hr.attendance'].search_count([
-                    ('employee_id', '=', attendance.employee_id.id),
-                    ('check_in', '>=', attendance.check_in.replace(hour=0, minute=0, second=0, microsecond=0)),
-                    ('check_in', '<', (attendance.check_in + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0))
-                ])
-                # Set color to 2 if there is only one check-in for that day
-                if same_day_check_ins == 1:
-                    attendance.color = 2
+            color = 0
+            alert = 0
 
+            if attendance.check_out:
+                if attendance.worked_hours == 0:
+                    color = 1
+                    alert = 1
+                elif attendance.worked_hours > 16:
+                    color = 1
+                    alert = 1
+                elif attendance.check_out < attendance.check_in + timedelta(minutes=10):
+                    color = 2
+                    alert = 1
+                else:
+                    # Check for single check-in per day
+                    same_day_check_ins = self.env['hr.attendance'].search_count([
+                        ('employee_id', '=', attendance.employee_id.id),
+                        ('check_in', '>=', attendance.check_in.replace(hour=0, minute=0, second=0, microsecond=0)),
+                        ('check_in', '<',
+                         (attendance.check_in + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0))
+                    ])
+                    if same_day_check_ins == 1:
+                        color = 2
+                        alert = 1
             else:
-                attendance.color = 1 if attendance.check_in < (datetime.today() - timedelta(days=1)) else 10
+                # No check out — check if it’s an old entry
+                if attendance.check_in and attendance.check_in < (datetime.today() - timedelta(days=1)):
+                    color = 1
+                    alert = 1
+                else:
+                    color = 10  # Optional: fallback color
+
+            attendance.color = color
+            attendance.alert_flag = alert
 
     @api.constrains('check_in', 'check_out', 'employee_id')
     def _check_validity(self):
