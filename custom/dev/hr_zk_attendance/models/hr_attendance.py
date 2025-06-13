@@ -20,8 +20,13 @@ class HrAttendance(models.Model):
 
     def write(self, vals):
         if 'is_bio_device' not in vals:
-            vals['is_bio_device'] = False
-        return super(HrAttendance, self).write(vals)
+            # Only update is_bio_device if check_in or check_out is being modified
+            if 'check_in' in vals or 'check_out' in vals or 'employee_id' in vals:
+                for rec in self:
+                    # Preserve True if it's already set
+                    if rec.is_bio_device:
+                        vals['is_bio_device'] = False
+        return super().write(vals)
 
     @api.depends('create_uid', 'write_uid', 'is_bio_device')
     def _compute_edit_source(self):
