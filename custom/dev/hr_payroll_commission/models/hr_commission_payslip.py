@@ -238,7 +238,7 @@ class PayrollCommission(models.Model):
 
 
     def action_commission_compute_sheet(self):
-        """Function for compute Payslip sheet"""
+        """Function for compute Comslip sheet"""
         for com_payslip in self:
             #Call onchange_contract_id function to get Other input lines
             com_payslip.onchange_contract_id()
@@ -403,12 +403,12 @@ class PayrollCommission(models.Model):
 
         res = []
         # Process only if the goal has a related goal_id
-        for goal in goals.filtered(lambda goal: goal.challenge_id and goal.start_date and goal.end_date):
+        for goal in goals.filtered(lambda goal: goal.challenge_id and goal.start_date):
             day_from = datetime.combine(fields.Date.from_string(date_from),
                                         time.min).date()
             day_to = datetime.combine(fields.Date.from_string(date_to),
                                       time.max).date()
-            if goal.start_date >= day_from and goal.end_date <= day_to:
+            if goal.start_date <= day_from and (not goal.end_date or day_to <= goal.end_date):
                 goal_data = {
                     'definition_id': goal.definition_id.name,
                     'code': goal.code or 'GOAL',
