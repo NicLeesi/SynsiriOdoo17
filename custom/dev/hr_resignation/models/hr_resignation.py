@@ -189,7 +189,7 @@ class HrResignation(models.Model):
             if vals.get('name', _('New')) == _('New'):
                 vals['name'] = self.env['ir.sequence'].next_by_code(
                     'hr.resignation') or _('New')
-        return super(HrResignation, self).create(vals_list)
+        return super().create(vals_list)
 
     def action_confirm_resignation(self):
         """
