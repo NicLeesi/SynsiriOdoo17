@@ -181,14 +181,15 @@ class HrResignation(models.Model):
                     self.notice_period = contracts.notice_days
 
     @api.model_create_multi
-    def create(self, vals):
+    def create(self, vals_list):
         """
             Override of the create method to assign a sequence for the record.
         """
-        if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code(
-                'hr.resignation') or _('New')
-        return super(HrResignation, self).create(vals)
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code(
+                    'hr.resignation') or _('New')
+        return super(HrResignation, self).create(vals_list)
 
     def action_confirm_resignation(self):
         """
