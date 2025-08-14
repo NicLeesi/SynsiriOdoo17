@@ -34,10 +34,10 @@
                 'hr_contract', 'hr_resignation'],
     'data': [
         'security/ir.model.access.csv',
+        'data/salary_rule.xml',
         'security/hr_insurance_security.xml',
         'views/hr_employee_views.xml',
         'views/employee_insurance_views.xml',
-        'views/hr_salary_rule_views.xml',
         'views/insurance_policy_views.xml',
               ],
     'images': ['static/description/banner.jpg'],

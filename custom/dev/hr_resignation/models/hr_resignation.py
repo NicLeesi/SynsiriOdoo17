@@ -43,8 +43,8 @@ class HrResignation(models.Model):
                        readonly=True, index=True,
                        default=lambda self: _('New'))
     employee_id = fields.Many2one('hr.employee', string="Employee",
-                                  default=lambda
-                                      self: self.env.user.employee_id.id,
+                                  # default=lambda
+                                  #     self: self.env.user.employee_id.id,
                                   help='Name of the employee for '
                                        'whom the request is creating')
     department_id = fields.Many2one('hr.department', string="Department",
@@ -89,7 +89,6 @@ class HrResignation(models.Model):
                                      help="Checks , for return insurance"
                                           " to the employee")
     return_insurance = fields.Float(string="Return Insurance Amount",
-                                           compute="_compute_return_insurance",
                                            help="Amount that is return from employee's insurance account")
     check_other_deduction = fields.Boolean(string="Other Deduction",
                                             default=False,
@@ -261,9 +260,9 @@ class HrResignation(models.Model):
                     resignation.resign_confirm_date):
                 employee_contract = self.env['hr.contract'].search(
                     [('employee_id', '=', self.employee_id.id)])
-                if not employee_contract:
-                    raise ValidationError(
-                        _("There are no Contracts found for this employee"))
+                # if not employee_contract:
+                #     raise ValidationError(
+                #         _("There are no Contracts found for this employee"))
                 for contract in employee_contract:
                     if contract.state == 'open':
                         resignation.employee_contract = contract.name
@@ -293,6 +292,7 @@ class HrResignation(models.Model):
                     if resignation.employee_id.user_id:
                         resignation.employee_id.user_id.active = False
                         resignation.employee_id.user_id = None
+                    resignation.state = 'approved'
             else:
                 raise ValidationError(_('Please Enter Valid Dates.'))
 

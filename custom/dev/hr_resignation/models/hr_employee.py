@@ -68,26 +68,28 @@ class HrEmployee(models.Model):
             ]).mapped('amount')
 
             # Sum the insurance amounts
-            insurance_account = sum(insurance_amounts)
-            if insurance_account > rec.insurance_fix_amount_total:
-                rec.insurance_account = rec.insurance_fix_amount_total
-            else:
-                rec.insurance_account = insurance_account
+            rec.insurance_account = sum(insurance_amounts)
 
-            # Check resignation state
+            ## create the maximum for insurance_account
+            # if insurance_account > rec.insurance_fix_amount_total:
+            #     rec.insurance_account = rec.insurance_fix_amount_total
+            # else:
+            #     rec.insurance_account = insurance_account
 
-            confirmed_resignation = self.env['hr.resignation'].search([
-                ('employee_id', '=', rec.id),
-                ('state', '=', 'confirm')
-            ])
 
-            insurance_return = self.env['hr.payslip.input'].search([
-                ('payslip_id', 'in', confirmed_payslip_ids),
-                ('code', '=', 'RIN'),
-            ])
-
-            if confirmed_resignation and confirmed_payslip_ids and insurance_return:
-                rec.insurance_account = 0
+            # # Check resignation state
+            # confirmed_resignation = self.env['hr.resignation'].search([
+            #     ('employee_id', '=', rec.id),
+            #     ('state', '=', 'confirm')
+            # ])
+            #
+            # insurance_return = self.env['hr.payslip.input'].search([
+            #     ('payslip_id', 'in', confirmed_payslip_ids),
+            #     ('code', '=', 'RIN'),
+            # ])
+            #
+            # if confirmed_resignation and confirmed_payslip_ids and insurance_return:
+            #     rec.insurance_account = 0
 
 
 

@@ -60,8 +60,7 @@ class HrEmployee(models.Model):
         for employee in self:
             total_fix_amount = sum(
                 ins.fix_amount for ins in employee.insurance_ids
-                if ins.policy_fix_amount and ins.state == 'active' or 'resignation_confirm'
-            )
+                if ins.policy_fix_amount and ins.state == 'active' or 'resignation_confirm')
             employee.insurance_fix_amount_total = total_fix_amount
 
     @api.depends('insurance_ids', 'insurance_account')

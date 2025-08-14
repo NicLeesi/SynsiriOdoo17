@@ -8,7 +8,7 @@
             <form string="Employee Insurance">
                 <header>
                     <field name="state" widget="statusbar"
-                           statusbar_visible="active,expired,resignation_confirm"/>
+                           statusbar_visible="active,expired"/>
                 </header>
                 <sheet>
                     <group>

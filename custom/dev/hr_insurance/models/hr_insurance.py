@@ -48,8 +48,7 @@ class HrInsurance(models.Model):
                             help="Start date")
     date_to = fields.Date(string='Date To', help="End date")
     state = fields.Selection([('active', 'Active'),
-                              ('expired', 'Expired'),
-                              ('resignation_confirm', 'Resignation Confirm')],
+                              ('expired', 'Expired'),],
                              default='active', string="State",
                              compute='get_status',  store=True)
     company_id = fields.Many2one('res.company', string='Company',
@@ -101,9 +100,9 @@ class HrInsurance(models.Model):
 
         for rec in self:
 
-            confirmed_resignation = self.env['hr.resignation'].search([
+            approved_resignation = self.env['hr.resignation'].search([
                 ('employee_id.name', '=', rec.employee_id.name),
-                ('state', '=', 'confirm')
+                ('state', '=', 'approved')
             ])
 
             last_approved_revealing_date = self.env['hr.resignation'].search([
@@ -128,8 +127,6 @@ class HrInsurance(models.Model):
                     rec.state = 'active'
                     if last_approved_date and rec.date_from <= last_approved_date:
                         rec.state = 'expired'
-                    if confirmed_resignation and not rec.state == 'expired':
-                        rec.state = 'resignation_confirm'
                 else:
                     rec.state = 'expired'
             else:

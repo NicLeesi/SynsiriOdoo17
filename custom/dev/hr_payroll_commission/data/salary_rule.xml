@@ -4,51 +4,131 @@
         <!--Calculate the amount for the 'Late Check-in' rule.-->
 
     <record id="hr_payroll_commission" model="hr.salary.rule">
-        <field name="name">Commission(Goals,Skills,Discipline)</field>
+        <field name="name">(backup)ComPurchase</field>
         <field name="sequence" eval="7"/>
-        <field name="code">CSG</field>
+        <field name="code">backup3</field>
         <field name="category_id" ref="hr_payroll_community.Com"/>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 
-skills = employee.get_total_skill_level() / 100
-goal = goals.GOAL.completeness
-base_incentive = contract.commission_start
-
-goal_ratio = base_incentive * goal / 100
-
-skill_ratio = skills
-com = goal_ratio * skill_ratio
-
-if 0.51 &lt;= skill_ratio &lt;= 0.55:
-  com *= 0.3
-elif 0.56 &lt;= skill_ratio &lt;= 0.60:
-  com *= 0.4
-elif 0.61 &lt;= skill_ratio &lt;= 0.65:
-   com *= 0.5
-elif 0.66 &lt;= skill_ratio &lt;= 0.75:
-   com *= 0.6
-elif 0.66 &lt;= skill_ratio &lt;= 0.75:
-   com *= 0.7
-elif 0.76 &lt;= skill_ratio &lt;= 0.80:
-   com *= 0.8
-elif 0.81 &lt;= skill_ratio &lt;= 0.85:
-   com *= 0.9
-elif 0.86 &lt;= skill_ratio &lt;= 0.90:
-   com *= 1
-elif 0.91 &lt;= skill_ratio &lt;= 0.95:
-   com *= 1.05
-elif 0.96 &lt;= skill_ratio &lt;= 1:
-   com *= 1.1
-
-discipline = 1
+#source code backup
+# Get skill ratio safely  (employee.get_total_skill_level() /100 * 90) / 100
 try:
-    if inputs.VERBAL.amount:
-        discipline = 1 - inputs.VERBAL.amount
-except:
+    skills = (employee.get_total_skill_level() /100 * 90) / 100
+    skills = round(skills, 2)
+except Exception:
+    skills = 0
+
+# Use try blocks to fetch each goal completeness safely
+try:
+    goalGOAL = goals.GOAL.completeness
+except Exception:
+    goalGOAL = 0
+
+try:
+    goalHTL = goals.HTL.completeness
+except Exception:
+    goalHTL = 0
+
+try:
+    goalHON = goals.HON.completeness
+except Exception:
+    goalHON = 0
+
+
+def convert_percent(value, type):
+    if type == 'tello':
+        if 25 &lt;= value &lt;= 25:
+            return 2
+        elif 26 &lt;= value &lt;= 50:
+            return 5
+        elif 51 &lt;= value &lt;= 75:
+            return 7
+        elif 76 &lt;= value &lt;= 100:
+            return 10
+        else:
+            return 0
+    elif type == 'tello_b':
+        if 25 &lt;= value &lt;= 25:
+            return 50
+        elif 26 &lt;= value &lt;= 50:
+            return 100
+        elif 51 &lt;= value &lt;= 75:
+            return 150
+        elif 76 &lt;= value &lt;= 100:
+            return 200
+        else:
+            return 0
+    elif type == 'online':
+        if 25  &lt;= value &lt;= 25:
+            return 50
+        elif 26 &lt;= value &lt;= 50:
+            return 100
+        elif 51 &lt;= value &lt;= 75:
+            return 150
+        elif 76 &lt;= value &lt;= 100:
+            return 200
+        else:
+            return 0
+    else:
+        return -1  # Unknown type
+
+
+# Apply bonus
+tello_point = convert_percent(goalHTL, 'tello')
+tello_baht = convert_percent(goalHTL, 'tello_b')
+online_baht = convert_percent(goalHON, 'online')
+
+goal_baht = tello_baht + online_baht
+base_incentive = contract.commission_start
+# adjust tello point
+skills += tello_point / 100
+
+# GOAL-based multiplier
+if goalGOAL &lt; 75:
+    base_incentive = 0
+elif 75 &lt;= goalGOAL &lt;= 79:
+    base_incentive *= 0.7
+elif 80 &lt;= goalGOAL &lt;= 89:
+    base_incentive *= 0.8
+elif 90 &lt;= goalGOAL &lt;= 99:
+    base_incentive *= 0.9
+elif 100 &lt;= goalGOAL &lt;= 109:
+    base_incentive *= 1
+elif 110 &lt;= goalGOAL &lt;= 120:
+    base_incentive *= 1.1
+elif 121 &lt;= goalGOAL &lt;= 130:
+    base_incentive *= 1.2
+
+# Skill multiplier
+if 0.51 &lt;= skills &lt;= 0.55:
+    skill_bonus = 0.8
+elif 0.56 &lt;= skills &lt;= 0.60:
+    skill_bonus = 0.85
+elif 0.61 &lt;= skills &lt;= 0.65:
+    skill_bonus = 0.9
+elif 0.66 &lt;= skills &lt;= 0.75:
+    skill_bonus = 0.95
+elif 0.76 &lt;= skills &lt;= 0.80:
+    skill_bonus = 1.0
+elif 0.81 &lt;= skills &lt;= 0.85:
+    skill_bonus = 1.05
+elif 0.86 &lt;= skills &lt;= 0.90:
+    skill_bonus = 1.1
+elif 0.91 &lt;= skills &lt;= 0.95:
+    skill_bonus = 1.15
+elif 0.96 &lt;= skills &lt;= 1:
+    skill_bonus = 1.2
+
+
+# Handle discipline
+try:
+    discipline = 1 - inputs.VERBAL.amount if inputs.VERBAL.amount else 1
+except Exception:
     discipline = 1
 
-result = com * discipline
+# Final result ((base_incentive + goal_baht) * skill_bonus ) * discipline
+result =  ((base_incentive + goal_baht) * skill_bonus ) * discipline
 
                      </field>
     </record>

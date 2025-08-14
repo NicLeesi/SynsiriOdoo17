@@ -1,15 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-        <!--Calculate the amount for the 'Late Check-in' rule.-->
-    <record id="insurance_rule" model="hr.salary.rule">
-        <field name="name">Insurance(ประกันงาน+สังคม)</field>
-        <field name="sequence" eval="6"/>
+    <record id="hr_salary_rule_insurance" model="hr.salary.rule">
         <field name="code">INSUR</field>
+        <field name="name">Insurance Amount(Payslip-Only) </field>
         <field name="category_id" ref="hr_payroll_community.DED"/>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">
-try:
-   insurance = inputs.INSURE.amount if inputs.INSURE else 0
+        <field name="amount_python_compute">try:
+   insurance = inputs.INSUR.amount if inputs.INSUR else 0
 except AttributeError:
    insurance = 0
 
@@ -18,97 +15,26 @@ try:
 except AttributeError:
    social_insurance = 0
 
+try:
+   return_insurance = inputs.RIN.amount if inputs.RIN else 0
+except AttributeError:
+   return_insurance = 0
+
 total_insurance = social_insurance + insurance
 
-result = -total_insurance
+result = -total_insurance + return_insurance
         </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="sequence" eval="190"/>
     </record>
 
-
-    <record id="hr_attendance" model="hr.salary.rule">
-        <field name="name">Absences</field>
-        <field name="sequence" eval="7"/>
-        <field name="code">AB</field>
-        <field name="category_id" ref="hr_payroll_community.DED"/>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">
-
-total_leave_work = 0
-
-try:
-    sick_work = inputs.SDW.amount if inputs.SDW else 0
-except AttributeError:
-    sick_work = 0
-
-try:
-    weekend_work = inputs.WDW.amount if inputs.WDW else 0
-except AttributeError:
-    weekend_work = 0
-
-try:
-    holiday_work = inputs.ADW.amount if inputs.ADW else 0
-except AttributeError:
-    holiday_work = 0
-
-try:
-    if inputs.DW:
-        days_work = inputs.DW.amount
-        try:
-                 if inputs.ADW or inputs.SDW or inputs.WDW :
-                    total_leave_work = sick_work + weekend_work + holiday_work
-                 if total_leave_work > 0:
-                     days_work = days_work - total_leave_work + 1
-                     total_leave_work = total_leave_work - 1
-        except:
-                   total_leave_work = 0
-
-
-except:
-      days_work = 0
-
-if worked_days.WORK100.number_of_days - days_work > 1:
-     net_amount =((worked_days.WORK100.number_of_days - days_work)  - (total_leave_work / 2)) * (categories.BASIC ) / 30
-else:
-     net_amount =((worked_days.WORK100.number_of_days - days_work)  - (total_leave_work)) * (categories.BASIC ) / 30
-
-result = -net_amount
-
-                       </field>
-    </record>
-
-    <record id="hr_attendance_unpaid" model="hr.salary.rule">
-        <field name="name">Unpaid</field>
-        <field name="sequence" eval="8"/>
-        <field name="code">UNPAID</field>
-        <field name="category_id" ref="hr_payroll_community.DED"/>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">
-amount = 0
-try:
-    if worked_days.UNPAID.number_of_days:
-        amount = worked_days.UNPAID.number_of_days * (categories.BASIC + categories.ALW) / 26
-except:
-    amount = 0
-result = -amount
-                       </field>
-    </record>
-
-
- Salary structure for late check-in
-    <record id="late_check_in_salary_structure" model="hr.payroll.structure">
-        <field name="code">LCS</field>
-        <field name="name">Base Salary Structure For Late Check-in</field>
-        <field name="rule_ids" eval="[(6, 0, [ref('hr_payroll_community.hr_rule_basic'),
-                                                ref('hr_payroll_community.hr_rule_net'),
-                                                ref('hr_payroll_community.hr_rule_taxable'),
-                                                ref('hr_payroll_community.hr_rule_da')
-                                                ref('late_check_in'),
-                                                ref('hr_attendance'),
-                                                ref('hr_attendance_unpaid')
-                                                ])]"/>
-        <field name="company_id" ref="base.main_company"/>
+    <record id="hr_payroll_community.structure_base"
+            model="hr.payroll.structure">
+        <field eval="[(4, ref('hr_salary_rule_insurance'))]"
+               name="rule_ids"/>
     </record>
 </odoo>
+
 
 
 

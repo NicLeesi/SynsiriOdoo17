@@ -25,6 +25,18 @@ class HrPayslip(models.Model):
     """inherited to add fields"""
     _inherit = 'hr.payslip'
 
+    def action_payslip_done(self):
+        res = super().action_payslip_done()
+        employees = self.mapped('employee_id').sudo()
+
+        # 1) Recompute paid insurance based on confirmed payslips
+        #    (call your compute directly, or _compute_* if you rename it)
+        employees.get_paid_insurance()
+
+        # 2) Then recompute deduced amounts that depend on insurance_account
+        employees.get_deduced_amount()
+        return res
+
     @api.model
     def get_inputs(self, contract_ids, date_from, date_to):
         """used get inputs, to add datas"""
