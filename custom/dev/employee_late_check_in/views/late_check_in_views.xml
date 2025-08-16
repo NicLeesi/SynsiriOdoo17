@@ -101,6 +101,10 @@
               parent="head_menu_late_check_in"
               action="action_late_check_in_slot"
               sequence="21"/>
+    <menuitem id="menu_late_check_in_progressive_rate" name="Late Check-in Progressive Rate"
+              parent="head_menu_late_check_in"
+              action="action_late_check_in_progressive_rate"
+              sequence="22"/>
     <menuitem id="menu_late_check_in" name="Late Check-in"
               parent="head_menu_late_check_in"
               action="late_check_in_action"

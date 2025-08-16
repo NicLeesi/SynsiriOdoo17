@@ -1,0 +1,71 @@
+<odoo>
+  <data>
+
+    <!-- Form view -->
+    <record id="view_late_check_progressive_rate_form" model="ir.ui.view">
+      <field name="name">late.check.progressive.rate.form</field>
+      <field name="model">late.check.in.progressive.rate</field>
+      <field name="arch" type="xml">
+        <form string="Late Check-in Progressive Rate">
+          <sheet>
+            <group>
+              <field name="name"/>
+              <!-- Pick ONE widget you like: many2many_avatar (avatars) or many2many_tags (chips) -->
+              <field name="employee_ids"
+                     widget="many2many_avatar"
+                     domain="[('active','=', True)]"
+                     options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+              <field name="note"/>
+            </group>
+
+            <notebook>
+              <page string="Progressive Rate">
+                <field name="progressive_rate_ids">
+                  <tree string="Progressive Rate Lines" editable="bottom">
+                    <!-- Do NOT include the parent Many2one here; Odoo links it automatically -->
+                    <field name="late_minute_range"/>
+                    <field name="penalty_rate"/>
+                  </tree>
+                  <!-- (Optional) line form if you want a dialog editor
+                  <form string="Progressive Rate Line">
+                    <group>
+                      <field name="late_minute_range"/>
+                      <field name="penalty_rate"/>
+                    </group>
+                  </form>
+                  -->
+                </field>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- Tree view -->
+    <record id="view_late_check_progressive_rate_tree" model="ir.ui.view">
+      <field name="name">late.check.in.progressive.rate.tree</field>
+      <field name="model">late.check.in.progressive.rate</field>
+      <field name="arch" type="xml">
+        <tree string="Late Check-in Progressive Rate">
+          <field name="name"/>
+          <field name="employee_ids"/>
+          <field name="note"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_late_check_in_progressive_rate" model="ir.actions.act_window">
+      <field name="name">Check-in Progressive Rate</field>
+      <field name="res_model">late.check.in.progressive.rate</field>
+      <field name="view_mode">tree,form</field>
+      <field name="views" eval="[(ref('view_late_check_progressive_rate_tree'),'tree'),
+                                  (ref('view_late_check_progressive_rate_form'),'form')]"/>
+      <field name="target">current</field>
+      <field name="context">{}</field>
+    </record>
+
+  </data>
+</odoo>
+

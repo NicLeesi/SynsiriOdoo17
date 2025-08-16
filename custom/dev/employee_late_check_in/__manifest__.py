@@ -44,10 +44,12 @@
         'data/salary_rule.xml',
         'views/res_config_settings_views.xml',
         'views/hr_attendance_views.xml',
+        'views/late_check_progressive_rate_views.xml',
         'views/late_check_in_slot_views.xml',
         'views/late_check_in_views.xml',
         'views/hr_employee_views.xml',
         'views/hr_payslip_views.xml',
+
     ],
     'images': ['static/description/banner.jpg'],
     'license': 'LGPL-3',

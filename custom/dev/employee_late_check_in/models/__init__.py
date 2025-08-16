@@ -28,3 +28,5 @@ from . import res_company
 from . import res_config_settings
 from . import late_check_in_slot
 from . import hr_commission_payslip
+from . import progressive_rate
+from . import late_check_in_progressive_rate

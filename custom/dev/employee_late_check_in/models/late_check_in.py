@@ -35,14 +35,17 @@ class LateCheckIn(models.Model):
                                   help='The field indicates the number of '
                                        'minutes the worker is late.')
     date = fields.Date(string="Date", help='Current date')
-    penalty_amount = fields.Float(compute="_compute_penalty_amount",
-                                  help='Amount needs to be deducted',
-                                  string="Amount",)
+    penalty_amount = fields.Float(
+        compute="_compute_penalty_amount",
+        store=True,
+        string="Amount",
+        help="Amount to deduct based on progressive rate or system config."
+    )
     state = fields.Selection(selection=[('draft', 'Draft'),
                                         ('approved', 'Approved'),
                                         ('refused', 'Refused'),
                                         ('deducted', 'Deducted')],
-                             string="State", default="draft",
+                             string="State", default="approved",
                              help='State of the record')
     attendance_id = fields.Many2one('hr.attendance', string='Attendance',
                                     help='Attendence of the employee')
@@ -78,15 +81,54 @@ class LateCheckIn(models.Model):
                 vals['name'] = self.env['ir.sequence'].next_by_code('late.check.in.sequence') or '/'
         return super().create(vals_list)
 
+    @api.depends('late_minutes','employee_id')
     def _compute_penalty_amount(self):
         """Compute the penalty amount if the employee was late"""
+        ICP = self.env['ir.config_parameter'].sudo()
+
+        default_amount = float(ICP.get_param('deduction_amount') or 0)
+        default_type = ICP.get_param('deduction_type') or 'minutes'
+
+        progressive = self.env['late.check.in.progressive.rate']
+
         for rec in self:
-            amount = float(self.env['ir.config_parameter'].sudo().get_param(
-                'deduction_amount'))
-            rec.penalty_amount = amount
-            if self.env['ir.config_parameter'].sudo().get_param(
-                    'deduction_type') == 'minutes':
-                rec.penalty_amount = amount * rec.late_minutes
+            penalty = 0.0
+            minutes = int(rec.late_minutes or 0)
+
+            if rec.employee_id and minutes > 0:
+                prog = progressive.search([('employee_ids', 'in', rec.employee_id.ids)],
+                     order='id desc', limit=1)
+                if prog and prog.progressive_rate_ids:
+                    lines = (prog.progressive_rate_ids.sorted
+                             (key=lambda l: l.late_minute_range or 0))
+                    match = next((ln for ln in lines if minutes <= ln.late_minute_range), None)
+                    if not match:
+                        match = lines[-1]
+
+                    rate = float(match.penalty_rate or 0.0)
+                    penalty = minutes * rate
+                else:
+                    penalty = (default_amount * minutes) if default_type == 'minutes' else default_amount
+            rec.penalty_amount = penalty
+
+
+
+
+
+
+
+
+    # def _compute_penalty_amount(self):
+    #     """Compute the penalty amount if the employee was late"""
+    #     for rec in self:
+    #         amount = float(self.env['ir.config_parameter'].sudo().get_param(
+    #             'deduction_amount'))
+    #         rec.penalty_amount = amount
+    #         if self.env['ir.config_parameter'].sudo().get_param(
+    #                 'deduction_type') == 'minutes':
+    #             rec.penalty_amount = amount * rec.late_minutes
+
+
 
     def approve(self):
         """Change state to approved when approve button clicks"""

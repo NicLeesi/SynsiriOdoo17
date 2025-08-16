@@ -6,5 +6,5 @@ class LateCheckInSlot(models.Model):
     _description = 'Late Check-in Slot Configuration'
 
     name = fields.Char("Name", required=True)
-    check_in_change = fields.Datetime(string="Check In change time to", default=fields.Datetime.now, required=True, tracking=True)
+    check_in_change = fields.Datetime(string="Check In change time to", default=fields.Datetime.now, required=True)
     note = fields.Text("Note")
