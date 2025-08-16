@@ -154,8 +154,10 @@ class BiometricDeviceDetails(models.Model):
 
                         for uid in users:
                             if uid.user_id == each.user_id:
-                                get_user_id = self.env['hr.employee'].search(
-                                    [('device_id_num', '=', each.user_id)])
+                                get_user_id = self.env['hr.employee'].with_context(active_test=False).search(
+                                    [('device_id_num', '=', each.user_id)],
+                                    limit=1
+                                )
                                 if get_user_id:
                                     duplicate_atten_ids = zk_attendance.search(
                                         [('device_id_num', '=', each.user_id),
@@ -301,8 +303,10 @@ class BiometricDeviceDetails(models.Model):
 
                         for uid in users:
                             if uid.user_id == each.user_id:
-                                get_user_id = self.env['hr.employee'].search(
-                                    [('device_id_num', '=', each.user_id)])
+                                get_user_id = self.env['hr.employee'].with_context(active_test=False).search(
+                                    [('device_id_num', '=', each.user_id)],
+                                    limit=1
+                                )
                                 if get_user_id:
                                     duplicate_atten_ids = zk_attendance.search(
                                         [('device_id_num', '=', each.user_id),
