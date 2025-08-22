@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- payslip -->
+    <!-- ========================= -->
+    <!-- Payslip Tree View -->
+    <!-- ========================= -->
     <record id="hr_payslip_view_tree" model="ir.ui.view">
         <field name="name">hr.payslip.view.tree</field>
         <field name="model">hr.payslip</field>
@@ -19,7 +21,10 @@
             </tree>
         </field>
     </record>
-    <!-- Payslip kanban view -->
+
+    <!-- ========================= -->
+    <!-- Payslip Kanban View -->
+    <!-- ========================= -->
     <record id="hr_payslip_view_kanban" model="ir.ui.view">
         <field name="name">hr.payslip.view.kanban</field>
         <field name="model">hr.payslip</field>
@@ -30,9 +35,7 @@
                         <div t-attf-class="oe_kanban_content oe_kanban_global_click">
                             <div class="row">
                                 <div class="col-6">
-                                    <strong>
-                                        <field name="employee_id"/>
-                                    </strong>
+                                    <strong><field name="employee_id"/></strong>
                                 </div>
                                 <div class="col-6">
                                     <span class="float-right badge badge-secondary">
@@ -41,15 +44,11 @@
                                 </div>
                                 <div class="col-12">
                                     <span>
-                                        <field name="date_from"/>
-                                        -
-                                        <field name="date_to"/>
+                                        <field name="date_from"/> - <field name="date_to"/>
                                     </span>
                                 </div>
                                 <div class="col-12">
-                                    <span>
-                                        <field name="name"/>
-                                    </span>
+                                    <span><field name="name"/></span>
                                 </div>
                             </div>
                         </div>
@@ -58,6 +57,10 @@
             </kanban>
         </field>
     </record>
+
+    <!-- ========================= -->
+    <!-- Search View -->
+    <!-- ========================= -->
     <record id="hr_payslip_search" model="ir.ui.view">
         <field name="name">hr.payslip.select</field>
         <field name="model">hr.payslip</field>
@@ -86,17 +89,23 @@
             </search>
         </field>
     </record>
+
+    <!-- ========================= -->
+    <!-- Actions & Menu -->
+    <!-- ========================= -->
     <record id="hr_payslip_action" model="ir.actions.act_window">
         <field name="name">Employee Payslips</field>
         <field name="res_model">hr.payslip</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="hr_payslip_search"/>
     </record>
+
     <menuitem action="hr_payslip_action"
               id="menu_department_tree"
               parent="menu_hr_payroll_community_root"
               sequence="1"
               groups="hr_payroll_community.group_hr_payroll_community_user"/>
+
     <record id="action_hr_payslip" model="ir.actions.act_window">
         <field name="res_model">hr.payslip</field>
         <field name="name">Payslips</field>
@@ -104,5 +113,16 @@
         <field name="context">{'search_default_employee_id': [active_id],
             'default_employee_id': active_id}
         </field>
+    </record>
+
+    <!-- ========================= -->
+    <!-- Server Action: Confirm Selected Payslips -->
+    <!-- ========================= -->
+    <record id="action_confirm_selected_payslips" model="ir.actions.server">
+        <field name="name">Confirm Selected Payslips</field>
+        <field name="model_id" ref="hr_payroll_community.model_hr_payslip"/>
+        <field name="binding_model_id" ref="hr_payroll_community.model_hr_payslip"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_confirm_all()</field>
     </record>
 </odoo>

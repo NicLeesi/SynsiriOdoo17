@@ -122,9 +122,9 @@ class HrLoan(models.Model):
             ]).mapped('balance_amount'))
 
             # Check if the sum exceeds 5000
-            if loan_sum + values.get('balance_amount', 0) > 5000:
+            if loan_sum + values.get('loan_amount', 0) > 10000:
                 raise ValidationError(
-                    _("The total balance amount for the Employee exceeds 5000 Baht."))
+                    _("The total balance amount for the Employee exceeds 10000 Baht."))
 
             # Set the sequence name
             values['name'] = self.env['ir.sequence'].next_by_code('hr.loan.seq') or ' '

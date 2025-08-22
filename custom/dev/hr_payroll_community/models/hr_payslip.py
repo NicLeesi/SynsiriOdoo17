@@ -113,6 +113,12 @@ class HrPayslip(models.Model):
                                    string="Payslip Computation Details",
                                    help="Set Payslip Count")
 
+    def action_confirm_all(self):
+        for slip in self:
+            if slip.state == "draft":
+                slip.action_payslip_done()
+        # Return a valid action so the UI doesn't break
+        return {'type': 'ir.actions.act_window_close'}
 
     def _compute_details_by_salary_rule_category_ids(self):
         """Compute function for Salary Rule Category for getting
