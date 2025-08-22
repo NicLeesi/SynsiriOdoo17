@@ -49,7 +49,7 @@ class PayslipLateDiscipline(models.Model):
                 input_data = {
                     'name': 'Return Insurance',
                     'code': 'RIN',
-                    'amount': resignation.return_insurance,
+                    'amount': self.employee_id.insurance_account,
                     'contract_id': self.contract_id.id,
                 }
                 res.append(input_data)

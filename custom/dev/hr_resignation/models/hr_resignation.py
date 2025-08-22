@@ -141,22 +141,22 @@ class HrResignation(models.Model):
                     raise ValidationError(
                         _('You cannot create a request for other employees'))
 
-    @api.constrains('joined_date')
-    def _check_joined_date(self):
-        """
-        Check if there is an active resignation request for the
-        same employee with a confirmed or approved state, based on the
-        'joined_date'
-        of the current resignation.
-        """
-        for resignation in self:
-            resignation_request = self.env['hr.resignation'].search(
-                [('employee_id', '=', resignation.employee_id.id),
-                 ('state', 'in', ['confirm', 'approved'])])
-            if resignation_request:
-                raise ValidationError(
-                    _('There is a resignation request in confirmed or'
-                      ' approved state for this employee'))
+    # @api.constrains('joined_date')
+    # def _check_joined_date(self):
+    #     """
+    #     Check if there is an active resignation request for the
+    #     same employee with a confirmed or approved state, based on the
+    #     'joined_date'
+    #     of the current resignation.
+    #     """
+    #     for resignation in self:
+    #         resignation_request = self.env['hr.resignation'].search(
+    #             [('employee_id', '=', resignation.employee_id.id),
+    #              ('state', 'in', ['confirm', 'approved'])])
+    #         if resignation_request:
+    #             raise ValidationError(
+    #                 _('There is a resignation request in confirmed or'
+    #                   ' approved state for this employee'))
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
@@ -165,13 +165,13 @@ class HrResignation(models.Model):
         """
         self.joined_date = self.employee_id.joining_date
         if self.employee_id:
-            resignation_request = self.env['hr.resignation'].search(
-                [('employee_id', '=', self.employee_id.id),
-                 ('state', 'in', ['confirm', 'approved'])])
-            if resignation_request:
-                raise ValidationError(
-                    _('There is a resignation request in confirmed or'
-                      ' approved state for this employee'))
+            # resignation_request = self.env['hr.resignation'].search(
+            #     [('employee_id', '=', self.employee_id.id),
+            #      ('state', 'in', ['confirm', 'approved'])])
+            # if resignation_request:
+            #     raise ValidationError(
+            #         _('There is a resignation request in confirmed or'
+            #           ' approved state for this employee'))
             employee_contract = self.env['hr.contract'].search(
                 [('employee_id', '=', self.employee_id.id)])
             for contracts in employee_contract:
@@ -209,7 +209,8 @@ class HrResignation(models.Model):
             resignation.resign_confirm_date = str(fields.Datetime.now())
 
             resignation.employee_id.get_paid_insurance()
-            resignation.employee_id.get_deduced_amount()
+            # resignation.employee_id.get_deduced_amount()
+
 
     # def _refund_insurance_amount(self, employee):
     #     """ Method to refund the insurance amount to the employee """

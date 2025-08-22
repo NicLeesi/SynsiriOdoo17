@@ -31,7 +31,7 @@
     'company': 'Cybrosys Techno Solutions',
     'website': 'https://www.openhrms.com',
     'depends': ['base', 'hr', 'hr_payroll_community', 'hr_employee_updation',
-                'hr_contract', 'hr_resignation'],
+                'hr_contract'],
     'data': [
         'security/ir.model.access.csv',
         'data/salary_rule.xml',

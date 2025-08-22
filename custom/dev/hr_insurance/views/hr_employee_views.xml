@@ -23,6 +23,39 @@
                            context="{'default_employee_id':id}"/>
                 </page>
             </xpath>
+            <xpath expr="//form/header" position="inside">
+                <!-- Add your statusbar field -->
+                <field name="probation_status"
+                  widget="statusbar"/>
+
+                <field name="insurance_payment_status"
+                   widget="statusbar"
+                        />
+                <button name="action_set_complete_insurance_payment"
+                        string="Complete Insurance Payment"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="insurance_payment_status == 'complete'"/>
+
+                <button name="action_set_incomplete_insurance_payment"
+                        string="Undo Insurance Payment"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="insurance_payment_status == 'incomplete'"/>
+
+                <button name="action_set_on_probation"
+                        string="Set On Probation"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="probation_status == 'on_probation'"/>
+
+                <button name="action_set_pass_probation"
+                        string="Mark as Passed"
+                        type="object"
+                        class="btn-primary"
+                        invisible="probation_status == 'pass_probation'"/>
+
+            </xpath>
         </field>
     </record>
 </odoo>

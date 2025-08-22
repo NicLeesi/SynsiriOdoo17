@@ -36,10 +36,17 @@ class HrEmployee(models.Model):
                               help="If checked then employee has resigned")
     fired = fields.Boolean(string="Fired", default=False,
                            help="If checked then employee has fired")
+    resignation_ids = fields.One2many(
+    'hr.resignation',
+    'employee_id',
+    string="Resignations",
+    help="List of resignation requests for this employee",
+)
 
     @api.depends('payroll_id')
     def get_paid_insurance(self):
         """Calculate the total insurance amount paid by the employee and return to employee"""
+
         for rec in self:
             # Search for confirmed payslips of the employee
             last_approved_revealing_date = self.env['hr.resignation'].search([
@@ -64,72 +71,72 @@ class HrEmployee(models.Model):
             insurance_amounts = self.env['hr.payslip.input'].search([
                 ('payslip_id', 'in', confirmed_payslip_ids),
                 ('code', '=', 'INSUR'),
-                ('date_from', '>', last_approved_date)
+                ('payslip_id.date_from', '>', last_approved_date)
             ]).mapped('amount')
 
-            # Sum the insurance amounts
-            rec.insurance_account = sum(insurance_amounts)
+            insurance_returns = self.env['hr.payslip.input'].search([
+                ('payslip_id', 'in', confirmed_payslip_ids),
+                ('code', '=', 'RIN'),
+                ('payslip_id.date_from', '>', last_approved_date)
+            ]).mapped('amount')
 
-            ## create the maximum for insurance_account
-            # if insurance_account > rec.insurance_fix_amount_total:
-            #     rec.insurance_account = rec.insurance_fix_amount_total
-            # else:
-            #     rec.insurance_account = insurance_account
+            # 3) Base = INSUR - RIN (never below 0)
+            base = max(0.0, (sum(insurance_amounts) or 0.0) - (sum(insurance_returns) or 0.0))
+
+            # 4) Cap to fix total
+            cap = rec.insurance_fix_amount_total or 0.0
+            value = min(base, cap)
+
+            # 5) Add probation bump (only if not completed)
+            if rec.probation_status == 'pass_probation' and rec.insurance_fix_amount_total:
+                value += 1000.0
+
+            # 6) If marked complete → force to full cap and ignore bump
+            if rec.insurance_payment_status == 'complete':
+                value = cap
+
+            # 7) Set final (safe guard)
+            rec.insurance_account = max(0.0, value)
+
+            if (
+                    (rec.insurance_fix_amount_total or 0.0) > 0.0
+                    and (rec.insurance_account or 0.0) >= (rec.insurance_fix_amount_total or 0.0)
+            ):
+                rec.insurance_payment_status = 'complete'
+                rec.probation_status = 'pass_probation'
+            else:
+                # Optional: reset if falls below cap again
+                rec.insurance_payment_status = 'incomplete'
 
 
-            # # Check resignation state
-            # confirmed_resignation = self.env['hr.resignation'].search([
-            #     ('employee_id', '=', rec.id),
-            #     ('state', '=', 'confirm')
-            # ])
-            #
-            # insurance_return = self.env['hr.payslip.input'].search([
-            #     ('payslip_id', 'in', confirmed_payslip_ids),
-            #     ('code', '=', 'RIN'),
-            # ])
-            #
-            # if confirmed_resignation and confirmed_payslip_ids and insurance_return:
-            #     rec.insurance_account = 0
-
-
-
-
-
-    @api.depends('insurance_ids', 'insurance_account')
+    @api.depends('insurance_ids', 'insurance_account', 'resignation_ids.state')
     def get_deduced_amount(self):
-        """Calculate deduced amount per month and per year"""
+        """
+        Extend insurance logic to consider resignation confirmation.
+        If resignation is confirmed, zero all insurance deductions.
+        """
+        super(HrEmployee, self).get_deduced_amount()
         current_date = fields.Date.today()
+
         for emp in self:
-            total_yearly_amount = 0
-            for ins in emp.insurance_ids:
-                if ins.date_from <= current_date:
-                    if not ins.date_to or ins.date_to >= current_date:
-                        if ins.policy_coverage in ['monthly', 'permanent']:
-                            if ins.policy_fix_amount:
-                                if emp.insurance_account >= ins.fix_amount:
-                                    policy_amount = 0
-                                else:
-                                    yearly_amount = ins.amount * 12
-                                    policy_amount = yearly_amount - ((yearly_amount * emp.insurance_percentage) / 100)
-                            else:
-                                yearly_amount = ins.amount * 12
-                                policy_amount = yearly_amount - ((yearly_amount * emp.insurance_percentage) / 100)
-                        else:
-                            yearly_amount = ins.amount
-                            policy_amount = yearly_amount - ((yearly_amount * emp.insurance_percentage) / 100)
+            # Check for confirmed resignation
+            confirmed_resignation = self.env['hr.resignation'].search([
+                ('employee_id', '=', emp.id),
+                ('state', '=', 'confirm')
+            ], limit=1)
 
-                        # Check resignation state
-                        confirmed_resignation = self.env['hr.resignation'].search([
-                            ('employee_id', '=', emp.id),
-                            ('state', '=', 'confirm')
-                        ])
+            if confirmed_resignation:
+                for ins in emp.insurance_ids:
 
-                        if confirmed_resignation:
-                            ins.policy_amount = 0
-                        else:
-                            total_yearly_amount += policy_amount
-                            ins.policy_amount = policy_amount / 12
+                    # Only modify active policies
+                    if ins.state == 'active' and (not ins.date_to or ins.date_to >= current_date) and ins.policy_id.code == 'INSUR' :
+                        ins.policy_amount = 0.0
+
+                # Reset deductions
+                emp.deduced_amount_per_month = 0.0
+                emp.deduced_amount_per_year = 0.0
 
 
-            emp.deduced_amount_per_year = total_yearly_amount
-            emp.deduced_amount_per_month = total_yearly_amount / 12 if total_yearly_amount else 0
+
+
+

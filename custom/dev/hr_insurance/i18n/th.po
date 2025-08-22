@@ -1,0 +1,306 @@
+# Translation for hr_insurance
+msgid ""
+msgstr ""
+"Project-Id-Version: hr_insurance\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-13 00:00+0700\n"
+"PO-Revision-Date: 2025-10-13 00:00+0700\n"
+"Last-Translator: \n"
+"Language-Team: Thai\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_insurance
+#: model_terms:ir.ui.view,arch_db:hr_insurance.view_employee_form
+msgid "Insurance"
+msgstr "ประกัน"
+
+#. module: hr_insurance
+#: model_terms:ir.ui.view,arch_db:hr_insurance.view_employee_form
+msgid "Set On Probation"
+msgstr "ตั้งสถานะทดลองงาน"
+
+#. module: hr_insurance
+#: model_terms:ir.ui.view,arch_db:hr_insurance.view_employee_form
+msgid "Mark as Passed"
+msgstr "ผ่านทดลองงาน"
+
+#. module: hr_insurance
+#: model:ir.model,name:hr_insurance.model_hr_insurance
+msgid "HR Insurance"
+msgstr "ประกันพนักงาน"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_insurance__employee_id
+msgid "Employee"
+msgstr "พนักงาน"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_insurance__employee_id
+msgid "Employee"
+msgstr "พนักงาน"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_insurance__policy_id
+msgid "Policy"
+msgstr "กรมธรรม์"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_insurance__policy_id
+msgid "Policy"
+msgstr "กรมธรรม์"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_insurance__amount
+msgid "Premium"
+msgstr "เบี้ยประกัน"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_insurance__amount
+msgid "Policy amount"
+msgstr "จำนวนเงินกรมธรรม์"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_insurance__sum_insured
+msgid "Sum Insured"
+msgstr "จำนวนเงินเอาประกันภัย"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_insurance__sum_insured
+msgid "Insured sum"
+msgstr "จำนวนเงินที่เอาประกันภัย"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_insurance__policy_coverage
+msgid "Policy Coverage"
+msgstr "ระยะเวลาความคุ้มครอง"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_insurance__policy_coverage
+msgid "During of the policy(If blank mean permanent period"
+msgstr "ระยะเวลาความคุ้มครองของกรมธรรม์ (ถ้าเว้นว่างหมายถึงถาวร)"
+
+#. module: hr_insurance
+#: selection:hr.insurance,policy_coverage:0
+msgid "Monthly"
+msgstr "รายเดือน"
+
+#. module: hr_insurance
+#: selection:hr.insurance,policy_coverage:0
+msgid "Yearly"
+msgstr "รายปี"
+
+#. module: hr_insurance
+#: selection:hr.insurance,policy_coverage:0
+msgid "Permanent"
+msgstr "ถาวร"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_insurance__policy_fix_amount
+msgid "Policy Fix Amount"
+msgstr "จำนวนเบี้ยประกันคงที่"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_insurance__policy_fix_amount
+msgid "check for fix premium amount"
+msgstr "เลือกเพื่อตั้งเบี้ยประกันให้เป็นจำนวนคงที่"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_insurance__fix_amount
+msgid "Fix Amount"
+msgstr "จำนวนคงที่"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_insurance__fix_amount
+msgid "Total amount for Premium payable"
+msgstr "จำนวนรวมของเบี้ยประกันที่ต้องชำระ"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_insurance__date_from
+msgid "Date From"
+msgstr "วันที่เริ่มต้น"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_insurance__date_from
+msgid "Start date"
+msgstr "วันที่เริ่มคุ้มครอง"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_insurance__date_to
+msgid "Date To"
+msgstr "วันที่สิ้นสุด"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_insurance__date_to
+msgid "End date"
+msgstr "วันที่สิ้นสุดการคุ้มครอง"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_insurance__state
+msgid "State"
+msgstr "สถานะ"
+
+#. module: hr_insurance
+#: selection:hr.insurance,state:0
+msgid "Active"
+msgstr "ใช้งานอยู่"
+
+#. module: hr_insurance
+#: selection:hr.insurance,state:0
+msgid "Expired"
+msgstr "หมดอายุ"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_insurance__company_id
+msgid "Company"
+msgstr "บริษัท"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_insurance__company_id
+msgid "Company"
+msgstr "บริษัท"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_insurance__policy_amount
+msgid "Policy Amount"
+msgstr "จำนวนเงินกรมธรรม์"
+
+# ------------------------------
+# Model: hr.employee (inherited)
+# ------------------------------
+
+#. module: hr_insurance
+#: model:ir.model,name:hr_insurance.model_hr_employee
+msgid "Employee"
+msgstr "พนักงาน"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_employee__insurance_percentage
+msgid "Company Percentage "
+msgstr "เปอร์เซ็นต์ส่วนของบริษัท"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_employee__insurance_percentage
+msgid "Company insurance percentage"
+msgstr "เปอร์เซ็นต์ส่วนของบริษัทในประกัน"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_employee__deduced_amount_per_month
+msgid "Salary deduced per month"
+msgstr "จำนวนที่หักจากเงินเดือนต่อเดือน"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_employee__deduced_amount_per_month
+msgid "Amount that is deduced from the salary per month"
+msgstr "จำนวนเงินที่ถูกหักจากเงินเดือนต่อเดือน"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_employee__deduced_amount_per_year
+msgid "Salary deduced per year"
+msgstr "จำนวนที่หักจากเงินเดือนต่อปี"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_employee__deduced_amount_per_year
+msgid "Amount that is deduced from the salary per year"
+msgstr "จำนวนเงินที่ถูกหักจากเงินเดือนต่อปี"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_employee__insurance_ids
+msgid "Insurance"
+msgstr "ประกัน"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_employee__insurance_ids
+msgid "Insurance"
+msgstr "ประกัน"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_employee__payroll_id
+msgid "payroll_id"
+msgstr "ใบจ่ายเงินเดือน"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_employee__insurance_account
+msgid "insurance_account"
+msgstr "บัญชีประกัน"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_employee__insurance_account
+msgid "Total Amount that employee has paid"
+msgstr "จำนวนเงินรวมที่พนักงานได้ชำระไปแล้ว"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_employee__previous_insurance_account
+msgid "Previous Insurance Account"
+msgstr "บัญชีประกันก่อนหน้า"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_employee__previous_insurance_account
+msgid "Stores the previous insurance account before refund"
+msgstr "เก็บค่าบัญชีประกันก่อนการคืนเงิน"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_employee__insurance_fix_amount_total
+msgid "Total Premium Fix Amount"
+msgstr "ยอดรวมเบี้ยประกันแบบคงที่"
+
+#. module: hr_insurance
+#: model:ir.model.fields,help:hr_insurance.field_hr_employee__insurance_fix_amount_total
+msgid "Total sum of Premium fix amounts for the employee"
+msgstr "ผลรวมของเบี้ยประกันแบบคงที่ทั้งหมดของพนักงาน"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_employee__probation_status
+msgid "Probation Status"
+msgstr "สถานะการทดลองงาน"
+
+#. module: hr_insurance
+#: model:ir.model.fields.selection,name:hr_insurance.selection__hr_employee__probation_status__pass_probation
+msgid "Pass Probation"
+msgstr "ผ่านทดลองงาน"
+
+#. module: hr_insurance
+#: model:ir.model.fields.selection,name:hr_insurance.selection__hr_employee__probation_status__on_probation
+#: selection:hr.employee,probation_status:0
+msgid "On Probation"
+msgstr "กำลังทดลองงาน"
+
+#. module: hr_insurance
+#: model:ir.model.fields,field_description:hr_insurance.field_hr_employee__insurance_payment_status
+msgid "Insurance Payment"
+msgstr "สถานะการชำระประกัน"
+
+#. module: hr_insurance
+#: model:ir.model.fields.selection,name:hr_insurance.selection__hr_employee__insurance_payment_status__complete
+#: selection:hr.employee,insurance_payment_status:0
+msgid "Complete Insurance Payment"
+msgstr "ชำระประกันครบแล้ว"
+
+#. module: hr_insurance
+#: model:ir.model.fields.selection,name:hr_insurance.selection__hr_employee__insurance_payment_status__incomplete
+#: selection:hr.employee,insurance_payment_status:0
+msgid "Incomplete Insurance Payment"
+msgstr "ยังชำระประกันไม่ครบ"
+
+
+#. module: hr_insurance
+#: model:ir.actions.server,name:hr_insurance.action_set_complete_insurance_payment
+#: model_terms:ir.ui.view,arch_db:hr_insurance.view_employee_form
+msgid "Complete Insurance Payment"
+msgstr "ตั้งสถานะชำระประกันครบแล้ว"
+
+#. module: account
+#: model:ir.actions.server,name:account.invoice_send
+#: model_terms:ir.ui.view,arch_db:account.account_move_send_form
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Send & Print"
+msgstr "ส่งและพิมพ์"
+
+#. module: hr_insurance
+#: model:ir.actions.server,name:hr_insurance.action_set_incomplete_insurance_payment
+#: model_terms:ir.ui.view,arch_db:hr_insurance.view_employee_form
+msgid "Undo Insurance Payment"
+msgstr "ยกเลิกสถานะการชำระประกัน"
