@@ -7,3 +7,4 @@ from . import hr_commission_payslip_goal
 from . import hr_commission_payslip_line
 from . import hr_commission_payslip_worked_days
 from . import hr_payslip_run
+from . import hr_skill_type

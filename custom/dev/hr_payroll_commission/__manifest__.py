@@ -34,7 +34,7 @@
     'company': 'Nic Leehard',
     'maintainer': 'Nic Leehard',
     'website': '',
-    'depends': ['hr_payroll_community','hr_payroll_community_skill_goal','gamification_value'],
+    'depends': ['hr_skills','hr_payroll_community','hr_payroll_community_skill_goal','gamification_value'],
     'data': [
         'security/ir.model.access.csv',
         'data/salary_rule.xml',
@@ -43,6 +43,7 @@
         'report/hr_payroll_commission_report.xml',
         'report/report_compayslip_templates.xml',
         'report/report_compayslip_details_templates.xml',
+        'views/hr_skill_type_views.xml',
         'views/hr_commission_payslip_views.xml',
         'views/hr_employee_views.xml',
         'views/hr_commission_payslip_line_views.xml',

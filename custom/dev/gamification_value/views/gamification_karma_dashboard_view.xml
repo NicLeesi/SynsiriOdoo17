@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gamification_karma_dashboard_form" model="ir.ui.view">
+        <field name="name">gamification.karma.dashboard.form</field>
+        <field name="model">gamification.karma.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Karma Dashboard" create="false" edit="false">
+                <sheet>
+                    <!-- Top statistic cards -->
+                    <div class="o_stat_cards" style="display:flex;justify-content:center;gap:20px;padding:16px;">
+                        <div class="o_stat_box" style="flex:1;text-align:center;background:#f8f9fa;border-radius:10px;padding:12px;">
+                            <div style="font-size:24px;font-weight:700;color:#2a4d8f;">
+                                <field name="total_points" readonly="1"/>
+                            </div>
+                            <div style="color:#6c757d;">Total Points</div>
+                        </div>
+
+                        <div class="o_stat_box" style="flex:1;text-align:center;background:#f8f9fa;border-radius:10px;padding:12px;">
+                            <div style="font-size:24px;font-weight:700;color:#198754;">
+                                <field name="remaining_points" readonly="1"/>
+                            </div>
+                            <div style="color:#6c757d;">Remaining</div>
+                        </div>
+
+                        <div class="o_stat_box" style="flex:1;text-align:center;background:#f8f9fa;border-radius:10px;padding:12px;">
+                            <div style="font-size:24px;font-weight:700;color:#dc3545;">
+                                <field name="used_points" readonly="1"/>
+                            </div>
+                            <div style="color:#6c757d;">Used</div>
+                        </div>
+                    </div>
+
+                    <!-- Employee karma board below -->
+                    <sheet>
+                        <field name="employee_ids" nolabel="1">
+                            <tree string="Employee Karma Board" create="false" edit="false">
+                                <field name="image_128" widget="image" string="Photo"/>
+                                <field name="name"/>
+                                <field name="department_id"/>
+                                <field name="karma_points"/>
+                                <button name="action_add_karma"
+                                        type="object"
+                                        string="Add"
+                                        icon="fa-plus-circle"
+                                        class="btn-primary"
+                                        groups="hr.group_hr_manager,gamification_value.group_gamification_value_manager"/>
+                                <button name="action_subtract_karma"
+                                        type="object"
+                                        string="Subtract"
+                                        icon="fa-minus-circle"
+                                        class="btn-secondary"
+                                        groups="hr.group_hr_manager,gamification_value.group_gamification_value_manager"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Action -->
+    <record id="action_open_gamification_karma_dashboard" model="ir.actions.server">
+        <field name="name">Open Karma Dashboard</field>
+        <field name="model_id" ref="gamification_value.model_gamification_karma_dashboard"/>
+        <field name="state">code</field>
+        <field name="code">action = env['gamification.karma.dashboard'].open_user_dashboard()</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_gamification_karma_dashboard"
+          name="Karma Dashboard"
+          parent="gamification_value.gamification_main_menu"
+          action="gamification_value.action_open_gamification_karma_dashboard"
+          sequence="1"
+          groups="gamification_value.group_gamification_value_manager,hr.group_hr_manager"/>
+
+</odoo>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<odoo>-->
+<!--  <record id="view_gamification_karma_dashboard_form" model="ir.ui.view">-->
+<!--    <field name="name">gamification.karma.dashboard.form</field>-->
+<!--    <field name="model">gamification.karma.dashboard</field>-->
+<!--    <field name="arch" type="xml">-->
+<!--      <form string="Karma Dashboard" create="false" edit="false">-->
+<!--        <sheet>-->
+<!--          &lt;!&ndash; 💎 Top statistic boxes &ndash;&gt;-->
+<!--          <div class="o_kanban_counter o_kanban_overview" style="display:flex;justify-content:center;gap:16px;">-->
+<!--            <div class="o_stat_box" style="flex:1;text-align:center;padding:16px;background:#f8f9fa;border-radius:8px;">-->
+<!--              <div class="o_stat_value" style="font-size:28px;color:#2a4d8f;font-weight:700;">-->
+<!--                <field name="total_points" readonly="1"/>-->
+<!--              </div>-->
+<!--              <div class="o_stat_text" style="color:#6c757d;">Total Points</div>-->
+<!--            </div>-->
+
+<!--            <div class="o_stat_box" style="flex:1;text-align:center;padding:16px;background:#f8f9fa;border-radius:8px;">-->
+<!--              <div class="o_stat_value" style="font-size:28px;color:#198754;font-weight:700;">-->
+<!--                <field name="remaining_points" readonly="1"/>-->
+<!--              </div>-->
+<!--              <div class="o_stat_text" style="color:#6c757d;">Remaining</div>-->
+<!--            </div>-->
+
+<!--            <div class="o_stat_box" style="flex:1;text-align:center;padding:16px;background:#f8f9fa;border-radius:8px;">-->
+<!--              <div class="o_stat_value" style="font-size:28px;color:#dc3545;font-weight:700;">-->
+<!--                <field name="used_points" readonly="1"/>-->
+<!--              </div>-->
+<!--              <div class="o_stat_text" style="color:#6c757d;">Used</div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; 📋 Open employee board &ndash;&gt;-->
+<!--          <div style="text-align:center;margin-top:20px;">-->
+<!--            <button name="action_open_employee_board" type="object"-->
+<!--                    string="Open Employee Karma Board"-->
+<!--                    class="btn btn-primary" icon="fa-users"/>-->
+<!--          </div>-->
+<!--        </sheet>-->
+<!--      </form>-->
+<!--    </field>-->
+<!--  </record>-->
+
+<!--&lt;!&ndash;  <record id="action_gamification_karma_dashboard" model="ir.actions.act_window">&ndash;&gt;-->
+<!--&lt;!&ndash;    <field name="name">Karma Dashboard</field>&ndash;&gt;-->
+<!--&lt;!&ndash;    <field name="res_model">gamification.karma.dashboard</field>&ndash;&gt;-->
+<!--&lt;!&ndash;    <field name="view_mode">form</field>&ndash;&gt;-->
+<!--&lt;!&ndash;    <field name="view_id" ref="view_gamification_karma_dashboard_form"/>&ndash;&gt;-->
+<!--&lt;!&ndash;    <field name="target">current</field>&ndash;&gt;-->
+<!--&lt;!&ndash;    <field name="context">{'default_manager_id': uid, 'search_default_my_dashboard': 1}</field>&ndash;&gt;-->
+<!--&lt;!&ndash;    <field name="domain">[('manager_id','=',uid)]</field>&ndash;&gt;-->
+<!--&lt;!&ndash;  </record>&ndash;&gt;-->
+<!--&lt;!&ndash;  &ndash;&gt;-->
+<!--  <record id="action_server_open_karma_dashboard" model="ir.actions.server">-->
+<!--        <field name="name">Open Karma Dashboard (per user)</field>-->
+<!--        <field name="model_id" ref="base.model_res_users"/>-->
+<!--        <field name="state">code</field>-->
+<!--        <field name="code">action = env['gamification.karma.dashboard']._open_current_user_dashboard()</field>-->
+<!--    </record>-->
+
+<!--    <menuitem id="menu_gamification_karma_dashboard"-->
+<!--              name="Karma Dashboard"-->
+<!--              parent="gamification_value.gamification_main_menu"-->
+<!--              action="gamification_value.action_server_open_karma_dashboard"-->
+<!--              sequence="1"-->
+<!--              />-->
+<!--</odoo>-->
+

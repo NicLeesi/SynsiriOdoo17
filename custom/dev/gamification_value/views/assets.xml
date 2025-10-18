@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="Gamification Value Backend Assets">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/gamification_value/static/src/css/karma_style.css"/>
+        </xpath>
+    </template>
+</odoo>

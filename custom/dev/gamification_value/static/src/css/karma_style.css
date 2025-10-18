@@ -1,0 +1,9 @@
+
+/* Bigger Karma buttons */
+.o_list_view button[name="action_add_karma"],
+.o_list_view button[name="action_subtract_karma"] {
+    font-size: 18px !important;
+    padding: 10px 20px !important;
+    border-radius: 10px !important;
+    font-weight: bold !important;
+}

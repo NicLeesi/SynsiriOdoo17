@@ -5,7 +5,7 @@
 
 ############################################################################.
 {
-    'name': 'Gamification Update value',
+    'name': 'Gamification Value',
     'version': '17.0.1.0.0',
     'category': 'Gamification',
     'summary': 'Extension gamification module for update current value for goals',
@@ -14,16 +14,28 @@
                    'maneger to manually update current value for all individual goal.',
     'author': "Nic Leehard",
     'company': 'Nic Leehard',
+    'technical_name': 'gamification_value',
     'maintainer': 'Nic Leehard',
     'website': '',
-    'depends': ['gamification','hr'],
+    'depends': ['hr','gamification'],
+    'assets': {
+        'web.assets_backend': [
+            '/gamification_value/static/src/css/karma_style.css',
+        ],
+    },
     'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
+        'views/hr_employee_view.xml',
+        'views/hr_employee_tree_karma_view.xml',
+        'views/gamification_karma_budget_view.xml',
         'views/gamification_views.xml',
         'views/gamification_menu.xml',
-        'security/ir.model.access.csv',
         'views/gamification_goal_views.xml',
         'views/gamification_goal_definition_views.xml',
+
     ],
+    'icon': '/gamification_value/static/description/icon.png',
     'license': 'LGPL-3',
     'installable': True,
     'auto_install': False,

@@ -1,3 +1,11 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_gamification_value_manager,access.gamification.value.manager,model_gamification_value,hr.group_hr_user,1,1,1,1
+access_gamification_value_manager,gamification_value.manager,model_gamification_value,group_gamification_value_manager,1,1,1,1
+access_gamification_value_officer,gamification_value.officer,model_gamification_value,group_gamification_value_officer,1,0,0,0
+
+access_karma_budget_manager,karma_budget.manager,model_gamification_karma_budget,group_gamification_value_manager,1,1,1,1
+access_karma_budget_officer,karma_budget.officer,model_gamification_karma_budget,group_gamification_value_officer,1,0,0,0
+
+access_hr_employee_karma_manager,hr_employee.karma.manager,model_hr_employee,group_gamification_value_manager,1,1,0,0
+access_hr_employee_karma_officer,hr_employee.karma.officer,model_hr_employee,group_gamification_value_officer,1,0,0,0
+
 

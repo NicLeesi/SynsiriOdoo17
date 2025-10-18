@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_employee_form_karma_header" model="ir.ui.view">
+        <field name="name">hr.employee.form.karma.header</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="o_stat_info"
+                     style="display:flex;justify-content:space-between;
+                            align-items:center;padding:12px 24px;
+                            background:#f8f9fa;border-radius:8px;margin-bottom:8px;">
+
+                    <!-- Left: Karma -->
+                    <div style="flex:1;text-align:left;">
+                        <span style="font-size:23px;color:#2a4d8f;font-weight:700;">
+                            🏅 Karma:
+                            <field name="karma_points"
+                                   readonly="1"
+                                   class="oe_inline"
+                                   nolabel="1"
+                                   style="font-weight:700;"/>
+                        </span>
+                    </div>
+
+                    <!-- Center: Rank -->
+                    <div style="flex:1;text-align:left;">
+                        <span style="font-size:23px;color:#198754;font-weight:700;">
+                            ⭐ Rank: <field name="rank_id" readonly="1" nolabel="1"/>
+                        </span>
+                    </div>
+
+                    <!-- Right: Badges -->
+                    <div style="flex:1;text-align:right;">
+                        <span style="font-size:19px;color:#f39c12;font-weight:700;">
+                            🏆 Badges: <field name="badge_ids"
+                                      widget="many2many_tags"/>
+                        </span>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Employee List -->
+  <record id="view_hr_employee_tree_karma" model="ir.ui.view">
+      <field name="name">hr.employee.tree.karma</field>
+      <field name="model">hr.employee</field>
+      <field name="arch" type="xml">
+          <tree string="Employee Karma Board" create="false" edit="false">
+              <header>
+                    <button name="apply_karma_changes"
+                            type="object"
+                            string="Confirm Karma Point 🏅"
+                            class="oe_highlight"
+                            icon="fa-save"
+                            groups="gamification_value.group_gamification_value_manager,hr.group_hr_manager,gamification_value.group_gamification_value_officer"/>
+              </header>
+              <field name="image_128" widget="image" string="Photo"/>
+              <field name="name"/>
+              <field name="department_id"/>
+              <field name="karma_points"/>
+              <field name="pending_karma"/>
+              <field name="applied"/>
+              <button name="action_add_karma"
+                    type="object"
+                    string="🏅"
+                    icon="fa-plus-circle"
+                    class="btn-primary"
+                    groups="hr.group_hr_manager,gamification_value.group_gamification_value_manager,gamification_value.group_gamification_value_officer"/>
+              <button name="action_subtract_karma"
+                    type="object"
+                    string="🏅"
+                    icon="fa-minus-circle"
+                    class="btn-secondary"
+                    groups="hr.group_hr_manager,gamification_value.group_gamification_value_manager,gamification_value.group_gamification_value_officer"/>
+              <field name="manager_remaining_points"
+                   string="🏅Point"
+                   widget="badge"
+                   readonly="1"/>
+          </tree>
+      </field>
+  </record>
+
+
+  <!-- Action -->
+  <record id="action_hr_employee_karma" model="ir.actions.act_window">
+      <field name="name">Employee Karma Board</field>
+      <field name="res_model">hr.employee</field>
+      <field name="view_mode">tree</field>
+      <field name="view_id" ref="view_hr_employee_tree_karma"/>
+      <field name="context">{}</field>
+      <field name="groups_id" eval="[(6,0,[ref('hr.group_hr_manager'),
+                                           ref('gamification_value.group_gamification_value_manager'),
+                                           ref('gamification_value.group_gamification_value_officer')])]"/>
+  </record>
+
+  <!-- Menu -->
+  <menuitem id="menu_hr_employee_karma"
+            name="Employee Karma Board"
+            parent="gamification_value.gamification_main_menu"
+            action="gamification_value.action_hr_employee_karma"
+            sequence="99"
+            groups="hr.group_hr_manager,gamification_value.group_gamification_value_manager,gamification_value.group_gamification_value_officer"/>
+
+  <!-- Smart button / stat widget view -->
+
+</odoo>
+

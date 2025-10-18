@@ -1,0 +1,23 @@
+<odoo>
+
+    <!-- Security Category -->
+    <record id="module_category_gamification_value" model="ir.module.category">
+        <field name="name">Gamification Value</field>
+        <field name="sequence">10</field>
+        <field name="description">Manage access to Gamification Value module.</field>
+    </record>
+
+    <!-- Manager -->
+    <record id="group_gamification_value_manager" model="res.groups">
+        <field name="name">Gamification Value Manager</field>
+        <field name="category_id" ref="gamification_value.module_category_gamification_value"/>
+    </record>
+
+    <!-- Officer -->
+    <record id="group_gamification_value_officer" model="res.groups">
+        <field name="name">Gamification Value Officer</field>
+        <field name="category_id" ref="gamification_value.module_category_gamification_value"/>
+    </record>
+
+</odoo>
+

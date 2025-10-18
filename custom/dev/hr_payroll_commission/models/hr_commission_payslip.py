@@ -375,22 +375,23 @@ class PayrollCommission(models.Model):
     @api.model
     def get_skill_lines(self, skills):
         """
-        @param skills: Browse record of skills from hr.employee.skill.report
-        @return: returns a list of dict containing the input that should be
-        applied for the given employee skills
+        Build employee_skill_line_ids but ONLY include skills whose type code
+        resolves to 'SKILL'.
         """
         res = []
-        # Process only if the skill has a related skill_id
-        for skill in skills.filtered(lambda skill: skill.skill_id):
-            skill_data = {
-                'skill_type': skill.skill_type_id.name,
-                'skill_id': skill.skill_id.name,
-                'code': 'SKILL',
-                'level_progress': skill.level_progress,
-                'skill_level': skill.skill_level,
-            }
-            res.append(skill_data)
+        for s in skills.filtered(lambda x: x.skill_id):
+            code = (s.skill_type_id.code or 'SKILL').strip().upper()
+            if code != 'SKILL':
+                # skip everything except the default SKILL
+                continue
 
+            res.append({
+                'skill_type': s.skill_type_id.name,
+                'skill_id': s.skill_id.name,
+                'code': 'SKILL',  # normalized
+                'level_progress': s.level_progress,
+                'skill_level': s.skill_level,
+            })
         return res
 
     @api.model
@@ -554,8 +555,11 @@ class PayrollCommission(models.Model):
         com_payslip = self.env['hr.commission.payslip'].browse(com_payslip_id)
         for goal_line_id in com_payslip.goal_line_ids:
             goals_dict[goal_line_id.code] = goal_line_id
-        for employee_skill_line_id in com_payslip.employee_skill_line_ids:
-            skills_dict[employee_skill_line_id.code] = employee_skill_line_id
+        skills_dict = {}
+        for line in com_payslip.employee_skill_line_ids:
+            code = (line.code or 'SKILL').strip().upper()
+            if code == 'SKILL':
+                skills_dict['SKILL'] = line
         for worked_days_line in com_payslip.worked_days_line_ids:
             worked_days_dict[worked_days_line.code] = worked_days_line
         for input_line in com_payslip.input_line_ids:

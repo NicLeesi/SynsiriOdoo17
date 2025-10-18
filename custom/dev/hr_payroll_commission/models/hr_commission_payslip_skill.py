@@ -50,11 +50,4 @@ class HrComPayslipSkill(models.Model):
     level_progress = fields.Float(string='Level progress',
                                   )
 
-    # number_of_days = fields.Float(string='Number of Days',
-    #                               help="Number of days worked")
-    # number_of_hours = fields.Float(string='Number of Hours',
-    #                                help="Number of hours worked")
-    # contract_id = fields.Many2one('hr.contract', string='Contract',
-    #                               required=True,
-    #                               help="The contract for which applied"
-    #                                    "this input")
+

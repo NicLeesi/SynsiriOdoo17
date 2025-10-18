@@ -20,6 +20,7 @@
         </field>
     </record>
 
-    <menuitem id="gamification_main_menu" name="Gamification" sequence="1"/>
+    <menuitem id="gamification_main_menu" name="Gamification" sequence="1"
+    web_icon="gamification_value,static/description/icon.png"/>
     <menuitem id="gamification_sub_menu" name="Goal Value" parent="gamification_main_menu" action="gamification_action"/>
 </odoo>
