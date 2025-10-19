@@ -1,23 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <!-- Security Category -->
     <record id="module_category_gamification_value" model="ir.module.category">
         <field name="name">Gamification Value</field>
-        <field name="sequence">10</field>
-        <field name="description">Manage access to Gamification Value module.</field>
+        <field name="sequence">100</field>
+        <field name="description">Manage access rights to the Gamification Value module.</field>
     </record>
 
-    <!-- Manager -->
-    <record id="group_gamification_value_manager" model="res.groups">
-        <field name="name">Gamification Value Manager</field>
-        <field name="category_id" ref="gamification_value.module_category_gamification_value"/>
-    </record>
-
-    <!-- Officer -->
+    <!-- Officer Group -->
     <record id="group_gamification_value_officer" model="res.groups">
-        <field name="name">Gamification Value Officer</field>
+        <field name="name">Officer: Manage Gamification Values</field>
         <field name="category_id" ref="gamification_value.module_category_gamification_value"/>
+        <field name="implied_ids" eval="[(6, 0, [ref('base.group_user')])]"/>
+        <field name="comment">Users in this group can view and manage their own gamification values and goals.</field>
+    </record>
+
+    <!-- Manager Group -->
+    <record id="group_gamification_value_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="gamification_value.module_category_gamification_value"/>
+        <field name="implied_ids" eval="[(4, ref('group_gamification_value_officer'))]"/>
+        <field name="comment">Users in this group can configure and approve all gamification value records and manage officers.</field>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
 
 </odoo>
-

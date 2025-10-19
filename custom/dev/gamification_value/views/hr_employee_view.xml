@@ -13,7 +13,7 @@
 
                     <!-- Left: Karma -->
                     <div style="flex:1;text-align:left;">
-                        <span style="font-size:23px;color:#2a4d8f;font-weight:700;">
+                        <span style="font-size:23px;color:#3ba3e3;font-weight:700;">
                             🏅 Karma:
                             <field name="karma_points"
                                    readonly="1"
@@ -25,16 +25,16 @@
 
                     <!-- Center: Rank -->
                     <div style="flex:1;text-align:left;">
-                        <span style="font-size:23px;color:#198754;font-weight:700;">
-                            ⭐ Rank: <field name="rank_id" readonly="1" nolabel="1"/>
+                        <span style="font-size:23px;color:#00e33d;font-weight:700;">
+                            ⭐ Rank: <field name="rank_id" class="oe_inline" readonly="1" nolabel="1"/>
                         </span>
                     </div>
 
                     <!-- Right: Badges -->
-                    <div style="flex:1;text-align:right;">
-                        <span style="font-size:19px;color:#f39c12;font-weight:700;">
+                    <div style="flex:1;text-align:left;">
+                        <span style="font-size:21px;color:#ebc805;font-weight:700;">
                             🏆 Badges: <field name="badge_ids"
-                                      widget="many2many_tags"/>
+                                      widget="many2many_tags" readonly="1" nolabel="1"/>
                         </span>
                     </div>
                 </div>

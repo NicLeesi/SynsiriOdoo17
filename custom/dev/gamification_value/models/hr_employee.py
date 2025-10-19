@@ -32,7 +32,13 @@ class HrEmployee(models.Model):
         help='Total Karma points received by this employee (based on linked user).'
     )
 
-    rank_id = fields.Many2one(related='user_id.rank_id', string="Karma Rank", store=False)
+    rank_id = fields.Many2one(
+        related='user_id.rank_id',
+        string="Karma Rank",
+        store=True,  # <-- IMPORTANT
+        readonly=True,
+    )
+
     badge_ids = fields.One2many(
         comodel_name='gamification.badge.user',
         inverse_name='user_id',
@@ -162,20 +168,44 @@ class HrEmployee(models.Model):
         today = date.today()
         first_day = today.replace(day=1)
 
+        # find the current month's karma budget for the manager
         budget = self.env['gamification.karma.budget'].search([
             ('manager_id', '=', manager_user.id),
             ('month', '=', first_day)
         ], limit=1)
 
+        if not budget:
+            raise UserError("No karma budget found for this month.")
+
+        affected_users = self.env['res.users']
 
         for emp in self:
             if emp.pending_karma > 0:
                 if budget.remaining_points < emp.pending_karma:
-                    raise UserError(f"Not enough remaining points to give {emp.pending_karma} to {emp.name}.")
+                    raise UserError(
+                        f"Not enough remaining points to give {emp.pending_karma} to {emp.name}."
+                    )
                 if not emp.user_id:
                     raise UserError(f"{emp.name} has no linked user.")
-                emp.user_id.karma += emp.pending_karma
-                budget.use_points(emp.pending_karma)
+
+                # update user's karma safely
+                user = emp.user_id.sudo()
+                user.karma += emp.pending_karma
+                affected_users |= user
+
+                # deduct from budget
+                budget.sudo().remaining_points -= emp.pending_karma
+
+                # mark employee record as updated
                 emp.pending_karma = 0
                 emp.applied = True
-        return True
+
+        # recompute rank for all affected users
+        if affected_users:
+            affected_users.sudo()._recompute_rank()
+
+        # refresh employees’ related rank fields
+        self.env['hr.employee'].invalidate_model(['rank_id'])
+
+        # force reload view so changes appear instantly
+        return {'type': 'ir.actions.client', 'tag': 'reload'}

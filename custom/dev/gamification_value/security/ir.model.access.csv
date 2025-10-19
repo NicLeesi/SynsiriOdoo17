@@ -8,4 +8,3 @@ access_karma_budget_officer,karma_budget.officer,model_gamification_karma_budget
 access_hr_employee_karma_manager,hr_employee.karma.manager,model_hr_employee,group_gamification_value_manager,1,1,0,0
 access_hr_employee_karma_officer,hr_employee.karma.officer,model_hr_employee,group_gamification_value_officer,1,0,0,0
 
-
