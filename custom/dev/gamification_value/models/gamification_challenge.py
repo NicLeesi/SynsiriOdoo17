@@ -1,42 +1,14 @@
 from odoo import models, fields
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta, MO
+from odoo.addons.gamification.models.gamification_challenge import start_end_date_for_period
 
 class GamificationChallenge(models.Model):
     _inherit = 'gamification.challenge'
 
     goal_ids = fields.One2many('gamification.goal', 'challenge_id', string='Goals')
 
-    def start_end_date_for_period(period, default_start_date=False, default_end_date=False):
-        """Return the start and end date for a goal period based on today
-
-        :param str default_start_date: string date in DEFAULT_SERVER_DATE_FORMAT format
-        :param str default_end_date: string date in DEFAULT_SERVER_DATE_FORMAT format
-
-        :return: (start_date, end_date), dates in string format, False if the period is
-        not defined or unknown"""
-        today = date.today()
-        if period == 'daily':
-            start_date = today
-            end_date = start_date
-        elif period == 'weekly':
-            start_date = today + relativedelta(weekday=MO(-1))
-            end_date = start_date + timedelta(days=7)
-        elif period == 'monthly':
-            start_date = today.replace(day=1)
-            end_date = today + relativedelta(months=1, day=1, days=-1)
-        elif period == 'yearly':
-            start_date = today.replace(month=1, day=1)
-            end_date = today.replace(month=12, day=31)
-        else:  # period == 'once':
-            start_date = default_start_date  # for manual goal, start each time
-            end_date = default_end_date
-
-            return (start_date, end_date)
-
-        return fields.Datetime.to_string(start_date), fields.Datetime.to_string(end_date)
-
-
+   
     def _generate_goals_from_challenge(self):
         """Generate the goals for each line and user.
 
