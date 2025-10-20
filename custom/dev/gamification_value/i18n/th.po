@@ -1,0 +1,70 @@
+# Translation for Gamification menu and actions
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-17 00:00+0000\n"
+"PO-Revision-Date: 2025-10-17 00:00+0000\n"
+"Last-Translator: YOUR NAME <you@example.com>\n"
+"Language-Team: Thai\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: gamification_value
+#: model:ir.actions.act_window,name:gamification_value.gamification_action
+msgid "Set Goal Value"
+msgstr "ตั้งค่าเป้าหมาย"
+
+#. module: gamification_value
+#: model:ir.ui.menu,name:gamification_value.gamification_main_menu
+msgid "Gamification"
+msgstr "เกมมิฟิเคชัน"
+
+#. module: gamification_value
+#: model:ir.ui.menu,name:gamification_value.gamification_sub_menu
+msgid "Goal Value"
+msgstr "ค่าเป้าหมาย"
+
+#. module: gamification_value
+#: model:ir.model,name:gamification_value.model_gamification_value
+msgid "Gamification Value"
+msgstr "ค่าการเล่นเกม"
+
+#. module: gamification_value
+#: model:ir.model.fields,field_description:gamification_value.field_gamification_value__challenge_id
+msgid "Challenge"
+msgstr "ความท้าทาย"
+
+#. module: gamification_value
+#: model:ir.model.fields,field_description:gamification_value.field_gamification_value__department_id
+msgid "Department"
+msgstr "แผนก"
+
+#. module: gamification_value
+#: model:ir.model.fields,field_description:gamification_value.field_gamification_value__parent_department_id
+msgid "Parent Department"
+msgstr "แผนกหลัก"
+
+#. module: gamification_value
+#: model:ir.model.fields,help:gamification_value.field_gamification_value__department_id
+msgid "The department related to this gamification value."
+msgstr "แผนกที่เกี่ยวข้องกับค่าการเล่นเกมนี้"
+
+#. module: gamification_value
+#: model:ir.model.fields,help:gamification_value.field_gamification_value__challenge_id
+msgid "The gamification challenge this value is related to."
+msgstr "ความท้าทายในการเล่นเกมที่ค่าดังกล่าวเกี่ยวข้องด้วย"
+
+#. module: gamification_value
+#: model:ir.ui.menu,name:gamification_value.menu_hr_employee_karma
+msgid "Employee Karma Board"
+msgstr "ตาราง Karma ของพนักงาน"
+
+#. module: gamification_value
+#: model:ir.actions.act_window,name:gamification_value.action_hr_employee_karma
+msgid "Employee Karma Board"
+msgstr "ตาราง Karma ของพนักงาน"
+

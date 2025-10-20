@@ -8,7 +8,7 @@ class GamificationChallenge(models.Model):
 
     goal_ids = fields.One2many('gamification.goal', 'challenge_id', string='Goals')
 
-   
+
     def _generate_goals_from_challenge(self):
         """Generate the goals for each line and user.
 
