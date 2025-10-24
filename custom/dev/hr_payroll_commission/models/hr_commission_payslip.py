@@ -748,7 +748,7 @@ class PayrollCommission(models.Model):
                 return
             self.contract_id = self.env['hr.contract'].browse(contract_ids[0])
         if not self.contract_id.com_struct_id:
-            return
+            raise ValidationError(_("No commission structure set on the contract."))
         self.com_struct_id = self.contract_id.com_struct_id
         if self.contract_id:
             contract_ids = self.contract_id.ids

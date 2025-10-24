@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Add the single importance field to Task views -->
+  <record id="view_task_form_importance_inherit" model="ir.ui.view">
+    <field name="name">project.task.form.importance.single.inherit</field>
+    <field name="model">project.task</field>
+    <field name="inherit_id" ref="project.view_task_form2"/>
+    <field name="arch" type="xml">
+      <!-- Insert after priority (safe anchor in your form) -->
+      <xpath expr="//label[@for='repeat_interval']/following-sibling::div[1]" position="after">
+        <field name="importance_type_id"
+               domain="[('active','=',True)]"
+               options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="view_task_tree_importance_inherit" model="ir.ui.view">
+    <field name="name">project.task.tree.importance.single.inherit</field>
+    <field name="model">project.task</field>
+    <field name="inherit_id" ref="project.view_task_tree2"/>
+    <field name="arch" type="xml">
+      <!-- Add a column after name -->
+      <xpath expr="//tree/field[@name='name']" position="after">
+        <field name="importance_type_id"
+               domain="[('active','=',True)]"
+               options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="view_task_search_importance_inherit" model="ir.ui.view">
+    <field name="name">project.task.search.importance.single.inherit</field>
+    <field name="model">project.task</field>
+    <field name="inherit_id" ref="project.view_task_search_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//search" position="inside">
+        <filter string="Has Importance" name="has_importance" domain="[('importance_type_id','!=',False)]"/>
+        <group expand="0" string="Group By">
+          <filter string="Importance" name="group_importance" context="{'group_by':'importance_type_id'}"/>
+        </group>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="task_kanban_add_field" model="ir.ui.view">
+    <field name="name">project.task.kanban.add.importance.field</field>
+    <field name="model">project.task</field>
+    <!-- Replace with your actual task kanban xmlid if different -->
+    <field name="inherit_id" ref="project.view_task_kanban"/>
+    <field name="arch" type="xml">
+      <xpath expr="//kanban" position="inside">
+        <field name="importance_type_id"/>
+        <field name="importance_color"/>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="task_kanban_show_importance_after_priority" model="ir.ui.view">
+      <field name="name">project.task.kanban.show.importance.after.priority</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="project.view_task_kanban"/>
+      <field name="arch" type="xml">
+        <!-- safer: put at end of bottom-left container -->
+        <xpath expr="//t[@t-name='kanban-box']//div[contains(@class,'oe_kanban_bottom_left')]" position="inside">
+          <t t-if="record.importance_type_id and record.importance_type_id.value">
+            <span t-attf-class="o_tag ms-1 o_tag_color_#{record.importance_color and record.importance_color.raw_value or 0}"
+                  t-att-title="record.importance_type_id.value"
+                  style="font-size:0.95rem;padding:0.2rem 0.6rem;font-weight:600;">
+              <t t-esc="record.importance_type_id.value"/>
+            </span>
+          </t>
+        </xpath>
+      </field>
+</record>
+
+</odoo>

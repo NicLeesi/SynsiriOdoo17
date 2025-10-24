@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="action_importance_type" model="ir.actions.act_window">
+    <field name="name">Importance Types</field>
+    <field name="res_model">project.task.importance.type</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <!-- Put under Project root (safe) -->
+  <menuitem id="menu_project_importance_root"
+            name="Importance Types"
+            parent="project.menu_main_pm"
+            action="action_importance_type"
+            groups="project.group_project_manager"
+            sequence="450"/>
+
+  <!-- Basic tree/form for types -->
+  <record id="view_importance_type_tree" model="ir.ui.view">
+    <field name="name">project.task.importance.type.tree</field>
+    <field name="model">project.task.importance.type</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+        <field name="active"/>
+        <field name="points"/>
+        <field name="color" widget="color_picker"/>
+        <field name="description"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="view_importance_type_form" model="ir.ui.view">
+    <field name="name">project.task.importance.type.form</field>
+    <field name="model">project.task.importance.type</field>
+    <field name="arch" type="xml">
+      <form string="Importance Type">
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="points"/>
+            <field name="active"/>
+            <field name="color" widget="color_picker"/>
+            <field name="description"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+</odoo>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+  <!-- Inherit the REAL task kanban view (replace xmlid if different) -->
+    <record id="task_kanban_with_custom_qc" model="ir.ui.view">
+      <field name="name">project.task.kanban.with.custom.qc</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="project.view_task_kanban"/>
+      <field name="arch" type="xml">
+        <xpath expr="//kanban" position="attributes">
+          <attribute name="quick_create">true</attribute>
+          <attribute name="quick_create_view">project_gamification.view_task_quick_create_importance</attribute>
+        </xpath>
+      </field>
+    </record>
+
+    <!-- QUICK-CREATE FORM -->
+    <record id="view_task_quick_create_importance" model="ir.ui.view">
+      <field name="name">project.task.quick.create.importance</field>
+      <field name="model">project.task</field>
+      <field name="priority" eval="2"/>
+      <field name="arch" type="xml">
+        <form string="New Task">
+          <group>
+            <!-- Must be present because project_id's domain references it -->
+            <field name="company_id" invisible="1"/>
+            <!-- Title -->
+            <field name="name" placeholder="Task title..." required="1"/>
+            <!-- Your required importance field -->
+            <field name="user_ids"
+               widget="many2many_avatar_user"
+               domain="[('share','=', False), ('active','=', True)]"
+               options="{'no_quick_create': True, 'no_create_edit': True}"/>
+            <field name="importance_type_id"
+                   required="1"
+                   domain="[('active','=',True)]"
+                   options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+            <!-- clickable uploader -->
+          <field name="cover_image"
+                 widget="image"
+                 class="o_w_full"
+                 options="{'preview_image':'cover_image'}"
+                 placeholder="Click to add cover image"/>
+            <!-- Optional: project_id (normally defaulted by column context) -->
+            <!-- <field name="project_id" invisible="context.get('default_project_id')"/> -->
+          </group>
+        </form>
+      </field>
+    </record>
+</odoo>

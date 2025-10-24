@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Goal Definition: Sum Importance Points on Approved Tasks -->
+  <record id="goal_def_importance_points_approved" model="gamification.goal.definition">
+    <field name="name">Approved Importance Points</field>
+    <field name="description">Sum of Importance Type points for tasks approved and not yet consumed.</field>
+    <field name="computation_mode">python</field>
+    <field name="model_id" ref="project.model_project_task"/>
+    <!-- Python code must set 'result' -->
+    <field name="compute_code"><![CDATA[
+# env: Odoo environment
+# uid: current user id
+# result: must be set to a number
+result = env['project.task']._sum_importance_points_approved()
+    ]]></field>
+<!--    <field name="unit">pts</field>-->
+    <field name="display_mode">progress</field>
+  </record>
+
+  <!-- Challenge using that goal -->
+  <record id="challenge_approved_points" model="gamification.challenge">
+    <field name="name">Monthly Approved Importance Points</field>
+    <field name="period">monthly</field>
+    <field name="start_date" eval="False"/>
+    <field name="end_date" eval="False"/>
+    <field name="visibility_mode">personal</field>
+  </record>
+
+  <!-- Attach the goal to the challenge (target example: 100 pts) -->
+  <record id="challenge_approved_points_line" model="gamification.challenge.line">
+    <field name="challenge_id" ref="challenge_approved_points"/>
+    <field name="definition_id" ref="goal_def_importance_points_approved"/>
+    <field name="target_goal">100</field>
+  </record>
+
+  <!-- Cron: consume points daily & close tasks -->
+  <record id="cron_consume_approved_points" model="ir.cron">
+    <field name="name">Consume Approved Importance Points</field>
+    <field name="model_id" ref="project.model_project_task"/>
+    <field name="state">code</field>
+    <field name="code">env['project.task'].action_consume_approved_points()</field>
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <field name="numbercall">-1</field>
+    <field name="active">True</field>
+  </record>
+</odoo>

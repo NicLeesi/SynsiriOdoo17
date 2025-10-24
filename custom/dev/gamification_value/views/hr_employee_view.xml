@@ -32,7 +32,7 @@
 
                     <!-- Right: Badges -->
                     <div style="flex:1;text-align:left;">
-                        <span style="font-size:21px;color:#ebc805;font-weight:700;">
+                        <span style="font-size:21px;color:#FFD700;font-weight:700;">
                             🏆 Badges: <field name="badge_ids"
                                       widget="many2many_tags" readonly="1" nolabel="1"/>
                         </span>
