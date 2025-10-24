@@ -11,7 +11,7 @@
 # env: Odoo environment
 # uid: current user id
 # result: must be set to a number
-result = env['project.task']._sum_importance_points_approved()
+result = env['project.task']._sum_importance_points_done()
     ]]></field>
 <!--    <field name="unit">pts</field>-->
     <field name="display_mode">progress</field>

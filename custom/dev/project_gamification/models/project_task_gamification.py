@@ -13,19 +13,20 @@ class ProjectTask(models.Model):
     )
 
     @api.model
-    def _get_approved_not_consumed_tasks(self):
-        """Tasks eligible for the goal computation."""
+    def _get_done_not_consumed_tasks(self):
+        """Tasks eligible for the goal computation, filtered by assignee."""
         domain = [
-            ("state", "=", "03_approved"),
+            ("state", "=", "1_done"),
             ("importance_type_id", "!=", False),
             ("points_consumed", "=", False),
+            ("user_ids", "in", [self.env.uid]),
         ]
         return self.search(domain)
 
     @api.model
-    def _sum_importance_points_approved(self):
+    def _sum_importance_points_done(self):
         """Sum points for approved & not-consumed tasks."""
-        tasks = self._get_approved_not_consumed_tasks()
+        tasks = self._get_done_not_consumed_tasks()
         # importance points are on the type
         return sum(int(t.importance_type_id.points or 0) for t in tasks)
 
@@ -34,7 +35,7 @@ class ProjectTask(models.Model):
         """
         After goal period closes (or daily), mark approved tasks as consumed and close them.
         """
-        tasks = self._get_approved_not_consumed_tasks()
+        tasks = self._get_done_not_consumed_tasks()
         if not tasks:
             return 0
         # mark consumed
