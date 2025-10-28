@@ -3,7 +3,7 @@
   <!-- Point the webclient to our custom manifest -->
   <template id="override_manifest_href" inherit_id="web.webclient_bootstrap" name="Override Manifest Href">
     <xpath expr="//link[@rel='manifest']" position="attributes">
-      <attribute name="href">/custom_pwa/manifest.webmanifest</attribute>
+      <attribute name="href">/custom_pwa/manifest.webmanifest?v=3</attribute>
       <attribute name="crossorigin">use-credentials</attribute>
     </xpath>
     <!-- Optional: sync theme color with manifest -->
