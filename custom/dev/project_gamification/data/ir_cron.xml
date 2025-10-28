@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="ir_cron_project_task_prune_images" model="ir.cron">
+    <field name="name">Project: Prune Task Images (older than 60 days)</field>
+    <field name="model_id" ref="base.model_ir_actions_server"/>
+    <field name="state">code</field>
+    <field name="code">env["project_task_auto_prune_images.cleanup"].cron_purge_old_task_images()</field>
+    <field name="active">True</field>
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <field name="numbercall">-1</field>
+    <field name="doall">False</field>
+    <field name="user_id" ref="base.user_admin"/>
+  </record>
+
+  <!-- Cron: consume points daily & close tasks -->
+  <record id="cron_consume_approved_points" model="ir.cron">
+    <field name="name">Consume Approved Importance Points</field>
+    <field name="model_id" ref="project.model_project_task"/>
+    <field name="state">code</field>
+    <field name="code">env['project.task'].action_consume_approved_points_cron()</field>
+    <!-- run once per month -->
+    <field name="interval_number">1</field>
+    <field name="interval_type">months</field>
+    <field name="numbercall">-1</field>
+    <field name="active">True</field>
+    <!-- set first run on the 3rd day -->
+    <field name="nextcall">2025-11-03 00:10:00</field>
+</record>
+
+</odoo>

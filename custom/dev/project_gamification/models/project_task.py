@@ -58,3 +58,40 @@ class ProjectTask(models.Model):
                 })
                 task.displayed_image_id = att.id
         return tasks
+
+        # Helper: True when user is a Project User but NOT a Project Manager
+
+    @api.model
+    def _is_project_user_only(self) -> bool:
+        return (
+                self.user_has_groups("project.group_project_user")
+                and not self.user_has_groups("project.group_project_manager")
+        )
+
+    # Validation (fires on create/write and rolls back if violated)
+    @api.constrains("state")
+    def _check_done_for_project_user(self):
+        if self._is_project_user_only():
+            for rec in self:
+                if rec.state == '1_done':
+                    raise ValidationError(_("You are not allowed to set tasks to Done."))
+
+    # Optional: also block at write-time (gives immediate error)
+    @api.model
+    def write(self, vals):
+        # If user tries to change the stage_id and is not a manager
+        if 'state' in vals and not self.env.user.has_group('project.group_project_manager'):
+            raise ValidationError(_("You are not allowed to change the stage."))
+        return super().write(vals)
+
+    def action_set_cover_image(self):
+        """Open wizard to upload a cover image for this task."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Set Cover Image'),
+            'res_model': 'project.task.set.cover.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_task_id': self.id},
+        }

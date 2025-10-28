@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Point the webclient to our custom manifest -->
+  <template id="override_manifest_href" inherit_id="web.webclient_bootstrap" name="Override Manifest Href">
+    <xpath expr="//link[@rel='manifest']" position="attributes">
+      <attribute name="href">/custom_pwa/manifest.webmanifest</attribute>
+      <attribute name="crossorigin">use-credentials</attribute>
+    </xpath>
+    <!-- Optional: sync theme color with manifest -->
+    <xpath expr="//meta[@name='theme-color']" position="attributes">
+      <attribute name="content">#053f9c</attribute>
+    </xpath>
+    <!-- Optional: iOS icon -->
+    <xpath expr="//link[@rel='apple-touch-icon']" position="attributes">
+      <attribute name="href">/custom_pwa_brand/static/img/app-512.png</attribute>
+    </xpath>
+  </template>
+</odoo>

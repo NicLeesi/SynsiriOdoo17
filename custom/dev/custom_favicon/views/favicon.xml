@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Change the global favicon for ALL pages that use web.layout (includes login) -->
+  <template id="override_favicon_href" inherit_id="web.layout" name="Override Favicon">
+    <xpath expr="//link[@rel='shortcut icon']" position="attributes">
+      <!-- Use your module asset path -->
+      <attribute name="t-att-href">'/custom_favicon/static/img/favicon.ico'</attribute>
+    </xpath>
+  </template>
+</odoo>
