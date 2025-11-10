@@ -40,7 +40,8 @@ class HrInsurance(models.Model):
                                        required=True, default='permanent',
                                        string='Policy Coverage',
                                        help="During of the policy(If blank mean permanent period")
-    policy_fix_amount = fields.active = fields.Boolean('Policy Fix Amount', default=True, help="check for fix premium amount")
+    # policy_fix_amount = fields.active = fields.Boolean('Policy Fix Amount', default=True, help="check for fix premium amount")
+    policy_fix_amount = fields.Boolean('Policy Fix Amount', default=True, help="Check for fixed premium amount")
     fix_amount = fields.Float(string='Fix Amount', help="Total amount for Premium payable")
 
     date_from = fields.Date(string='Date From',
@@ -54,7 +55,7 @@ class HrInsurance(models.Model):
     company_id = fields.Many2one('res.company', string='Company',
                                  required=True, help="Company",
                                  default=lambda self: self.env.user.company_id)
-    policy_amount = fields.Float(string="Policy Amount")
+    policy_amount = fields.Float(string="Policy Amount", default=0.0)
 
 
     # @api.depends('policy_coverage','resignation_id')
@@ -93,41 +94,65 @@ class HrInsurance(models.Model):
     #         else:
     #             rec.state = 'expired'
 
+    # @api.depends('policy_coverage', 'date_from')
+    # def get_status(self):
+    #     """This function gets and sets the state."""
+    #     current_date = fields.Date.today()
+    #
+    #     for rec in self:
+    #
+    #         approved_resignation = self.env['hr.resignation'].search([
+    #             ('employee_id.name', '=', rec.employee_id.name),
+    #             ('state', '=', 'approved')
+    #         ])
+    #
+    #         last_approved_revealing_date = self.env['hr.resignation'].search([
+    #             ('employee_id.name', '=', rec.employee_id.name),
+    #             ('state', '=', 'approved')
+    #         ], order='approved_revealing_date desc', limit=1)
+    #
+    #         if last_approved_revealing_date:
+    #             last_approved_date = last_approved_revealing_date.approved_revealing_date
+    #         else:
+    #             last_approved_date = False
+    #         if rec.policy_coverage == 'monthly':
+    #             rec.date_to = fields.Date.end_of(rec.date_from, 'month')
+    #         elif rec.policy_coverage == 'yearly':
+    #             rec.date_to = fields.Date.end_of(rec.date_from, 'year')
+    #         elif rec.policy_coverage == 'Permanent':
+    #             rec.date_to = False
+    #
+    #         # Determine the state of the insurance
+    #         if rec.date_from <= current_date:
+    #             if not rec.date_to or rec.date_to >= current_date:
+    #                 rec.state = 'active'
+    #                 if last_approved_date and rec.date_from <= last_approved_date:
+    #                     rec.state = 'expired'
+    #             else:
+    #                 rec.state = 'expired'
+    #         else:
+    #             rec.state = 'active'
+
     @api.depends('policy_coverage', 'date_from')
     def get_status(self):
-        """This function gets and sets the state."""
+        """Compute insurance state and end date from coverage & dates."""
         current_date = fields.Date.today()
-
         for rec in self:
-
-            approved_resignation = self.env['hr.resignation'].search([
-                ('employee_id.name', '=', rec.employee_id.name),
-                ('state', '=', 'approved')
-            ])
-
-            last_approved_revealing_date = self.env['hr.resignation'].search([
-                ('employee_id.name', '=', rec.employee_id.name),
-                ('state', '=', 'approved')
-            ], order='approved_revealing_date desc', limit=1)
-
-            if last_approved_revealing_date:
-                last_approved_date = last_approved_revealing_date.approved_revealing_date
-            else:
-                last_approved_date = False
+            # compute date_to from coverage
             if rec.policy_coverage == 'monthly':
-                rec.date_to = fields.Date.end_of(rec.date_from, 'month')
+                rec.date_to = fields.Date.end_of(rec.date_from, 'month') if rec.date_from else False
             elif rec.policy_coverage == 'yearly':
-                rec.date_to = fields.Date.end_of(rec.date_from, 'year')
-            elif rec.policy_coverage == 'Permanent':
+                rec.date_to = fields.Date.end_of(rec.date_from, 'year') if rec.date_from else False
+            elif rec.policy_coverage == 'permanent':  # ✅ correct key
                 rec.date_to = False
 
-            # Determine the state of the insurance
-            if rec.date_from <= current_date:
+            # state logic
+            if rec.date_from and rec.date_from <= current_date:
                 if not rec.date_to or rec.date_to >= current_date:
                     rec.state = 'active'
-                    if last_approved_date and rec.date_from <= last_approved_date:
-                        rec.state = 'expired'
                 else:
                     rec.state = 'expired'
             else:
+                # if start is in future, consider not active; but your original set it to active.
+                # keep your original intent:
                 rec.state = 'active'
