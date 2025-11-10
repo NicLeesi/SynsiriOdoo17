@@ -133,20 +133,23 @@ class HrEmployee(models.Model):
                         fix_cap = ins.fix_amount or 0.0
                         if insurance_account_total >= fix_cap:
                             difference_amount = fix_cap - emp.insurance_account
-                            if 'policy_amount' in ins._fields:
-                                ins.policy_amount = difference_amount
+                            ins.policy_amount = difference_amount
                         else:
                             ins.policy_amount = policy_amount_month
                     else:
                             ins.policy_amount = policy_amount_month
                 else:
-                    if 'policy_amount' in ins._fields:
                         ins.policy_amount = 0.0
 
             emp.deduced_amount_per_year = total_yearly_amount
             emp.deduced_amount_per_month = (total_yearly_amount / 12.0) if total_yearly_amount else 0.0
 
-    @api.depends('payroll_id', 'probation_status', 'insurance_payment_status', 'insurance_fix_amount_total', 'insurance_account')
+    @api.depends('payroll_id',
+                 'probation_status',
+                 'insurance_payment_status',
+                 'insurance_fix_amount_total',
+                 'insurance_account',
+                 )
     def get_paid_insurance(self):
         """Calculate the total insurance amount paid by the employee"""
         for rec in self:
@@ -189,10 +192,7 @@ class HrEmployee(models.Model):
             # 7) Set final (safe guard)
             rec.insurance_account = max(0.0, value)
 
-            if (
-                    (rec.insurance_fix_amount_total or 0.0) > 0.0
-                    and (rec.insurance_account or 0.0) >= (rec.insurance_fix_amount_total or 0.0)
-            ):
+            if ((rec.insurance_fix_amount_total or 0.0) > 0.0 and (rec.insurance_account or 0.0) >= (rec.insurance_fix_amount_total or 0.0)):
                 rec.insurance_payment_status = 'complete'
                 rec.probation_status = 'pass_probation'
             else:

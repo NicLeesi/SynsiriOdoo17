@@ -89,7 +89,8 @@ class HrEmployee(models.Model):
 
             # 5) Add probation bump (only if not completed)
             if rec.probation_status == 'pass_probation' and rec.insurance_fix_amount_total:
-                value += 1000.0
+                value += rec.probation_bonus or 0.0
+                rec.probation_bonus = 0
 
             # 6) If marked complete → force to full cap and ignore bump
             if rec.insurance_payment_status == 'complete':
@@ -109,7 +110,7 @@ class HrEmployee(models.Model):
                 rec.insurance_payment_status = 'incomplete'
 
 
-    @api.depends('insurance_ids', 'insurance_account', 'resignation_ids.state')
+    @api.depends('resignation_ids.state')
     def get_deduced_amount(self):
         """
         Extend insurance logic to consider resignation confirmation.
@@ -119,6 +120,42 @@ class HrEmployee(models.Model):
         current_date = fields.Date.today()
 
         for emp in self:
+            total_yearly_amount = 0.0
+
+            for ins in emp.insurance_ids:
+                policy_amount = 0.0
+                policy_amount_month = 0.0
+
+                if ins.date_from and (not ins.date_to or ins.date_to >= current_date) and ins.state == 'active':
+                    # yearly amount by coverage
+                    if ins.policy_coverage in ('monthly', 'permanent'):
+                        yearly_amount = (ins.amount or 0.0) * 12.0
+                    else:
+                        yearly_amount = (ins.amount or 0.0)
+                    pct = emp.insurance_percentage or 0.0
+                    policy_amount = yearly_amount - ((yearly_amount * pct) / 100.0)
+                    policy_amount = max(policy_amount, 0.0)
+
+                    total_yearly_amount += policy_amount
+                    policy_amount_month = policy_amount / 12.0 if policy_amount else 0.0
+
+                    # cap handling on the policy
+                    if ins.policy_fix_amount:
+                        insurance_account_total = (emp.insurance_account or 0.0) + policy_amount_month
+                        fix_cap = ins.fix_amount or 0.0
+                        if insurance_account_total >= fix_cap:
+                            difference_amount = fix_cap - emp.insurance_account
+                            ins.policy_amount = difference_amount
+                        else:
+                            ins.policy_amount = policy_amount_month
+                    else:
+                        ins.policy_amount = policy_amount_month
+                else:
+                    ins.policy_amount = 0.0
+
+            emp.deduced_amount_per_year = total_yearly_amount
+            emp.deduced_amount_per_month = (total_yearly_amount / 12.0) if total_yearly_amount else 0.0
+
             # Check for confirmed resignation
             confirmed_resignation = self.env['hr.resignation'].search([
                 ('employee_id', '=', emp.id),
@@ -129,7 +166,7 @@ class HrEmployee(models.Model):
                 for ins in emp.insurance_ids:
 
                     # Only modify active policies
-                    if ins.state == 'active' and (not ins.date_to or ins.date_to >= current_date) and ins.policy_id.code == 'INSUR' :
+                    if ins.state == 'active' and (not ins.date_to or ins.date_to >= current_date) and ins.policy_id.code == 'INSUR':
                         ins.policy_amount = 0.0
 
                 # Reset deductions
