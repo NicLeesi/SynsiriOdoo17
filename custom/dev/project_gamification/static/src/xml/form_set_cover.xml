@@ -1,0 +1,23 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<templates id="template" xml:space="preserve">-->
+<!--    <t t-name="odoo_owl_form.FormView" t-inherit="web.FormView" t-inherit-mode="extension">-->
+<!--        <xpath expr="//button[hasclass('o_form_button_create')]" position="after">-->
+<!--            <button class="o_btn_hello btn btn-primary" type="button">-->
+<!--                Customers-->
+<!--            </button>-->
+<!--        </xpath>-->
+<!--    </t>-->
+<!--</templates>-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="project_gamification.FormView" t-inherit="web.FormView" t-inherit-mode="extension">
+        <xpath expr="//Layout" position="inside">
+            <t t-set-slot="control-panel-reload-button">
+                <button class="btn btn-primary o_btn_customers" type="button" title="Cus">
+                    Cus
+                </button>
+            </t>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,464 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* project_gamification
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-10 05:47+0000\n"
+"PO-Revision-Date: 2025-11-10 05:47+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: project_gamification
+#: model_terms:ir.ui.view,arch_db:project_gamification.view_task_quick_create_importance
+msgid "--&gt;"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "/ 8 images"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task_importance_type__active
+msgid "Active"
+msgstr ""
+
+#. module: project_gamification
+#: model:gamification.goal.definition,name:project_gamification.goal_def_importance_points_approved
+msgid "Approved Importance Points"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task__user_ids
+msgid "Assignees"
+msgstr "ผู้รับมอบหมาย"
+
+#. module: project_gamification
+#: model:ir.model,name:project_gamification.model_project_task_auto_prune_images_cleanup
+msgid "Auto-delete project.task image attachments older than 60 days"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/js/form_set_cover.js:0
+#, python-format
+msgid "Choose Cover Image"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/form_set_cover.xml:0
+#, python-format
+msgid "Choose from gallery or upload multiple images"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Click to preview"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Close (Esc)"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Close | Click outside to close"
+msgstr ""
+
+#. module: project_gamification
+#: model:gamification.goal.definition,suffix:project_gamification.goal_def_importance_points_approved
+msgid "Coin"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task_importance_type__color
+msgid "Color"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.actions.server,name:project_gamification.cron_consume_approved_points_ir_actions_server
+msgid "Consume Approved Importance Points"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task__cover_image
+#: model_terms:ir.ui.view,arch_db:project_gamification.view_task_form_importance_inherit
+msgid "Cover Image"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task_importance_type__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task_importance_type__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task_importance_type__description
+msgid "Description"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task_importance_type__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Download"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Download Image"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Esc"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model,name:project_gamification.model_gamification_challenge
+msgid "Gamification Challenge"
+msgstr "ความท้าทายในรูปแบบเกม"
+
+#. module: project_gamification
+#: model:ir.model,name:project_gamification.model_gamification_goal
+msgid "Gamification goal"
+msgstr "เป้าหมายของเกม"
+
+#. module: project_gamification
+#: model_terms:ir.ui.view,arch_db:project_gamification.view_task_search_importance_inherit
+msgid "Group By"
+msgstr ""
+
+#. module: project_gamification
+#: model_terms:ir.ui.view,arch_db:project_gamification.view_task_search_importance_inherit
+msgid "Has Importance"
+msgstr ""
+
+#. module: project_gamification
+#: model_terms:ir.ui.view,arch_db:project_gamification.view_task_search_stage_inherit
+msgid "Has Stage"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task_importance_type__id
+msgid "ID"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/js/form_set_cover.js:0
+#: model_terms:ir.ui.view,arch_db:project_gamification.view_task_form_importance_inherit
+#, python-format
+msgid "Image Gallery"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task__importance_type_id
+#: model_terms:ir.ui.view,arch_db:project_gamification.view_task_search_importance_inherit
+msgid "Importance"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task__importance_color
+msgid "Importance Color"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task__consumed_by_user_ids
+msgid "Importance Points Consumed By"
+msgstr ""
+
+#. module: project_gamification
+#: model_terms:ir.ui.view,arch_db:project_gamification.view_importance_type_form
+msgid "Importance Type"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.actions.act_window,name:project_gamification.action_importance_type
+#: model:ir.ui.menu,name:project_gamification.menu_project_importance_root
+msgid "Importance Types"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task_importance_type__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task_importance_type__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/js/form_set_cover.js:0
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Loading images..."
+msgstr ""
+
+#. module: project_gamification
+#: model:gamification.challenge,name:project_gamification.challenge_approved_points
+msgid "Monthly Approved Importance Points"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task_importance_type__name
+msgid "Name"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Navigate |"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/js/form_set_cover.js:0
+#, python-format
+msgid "New"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Next (→ Arrow Key)"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/js/form_set_cover.js:0
+#, python-format
+msgid "No images found for this task."
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "No images yet. Use the buttons above to add images."
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,help:project_gamification.field_project_task_importance_type__points
+msgid "Point value awarded when this importance type is selected on a task."
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task_importance_type__points
+msgid "Points"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-python
+#: code:addons/project_gamification/models/project_task_importance.py:0
+#, python-format
+msgid "Points must be zero or a positive integer."
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Previous (← Arrow Key)"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Print"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Print Image"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.actions.server,name:project_gamification.ir_cron_project_task_prune_images_ir_actions_server
+msgid "Project: Prune Task Images (older than 60 days)"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Reset Zoom"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Rotate Left"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Rotate Right"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,help:project_gamification.field_project_task__importance_type_id
+msgid "Select one importance type for this task."
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,field_description:project_gamification.field_project_task_importance_type__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/form_set_cover.xml:0
+#, python-format
+msgid "Set Cover & Upload Images"
+msgstr "อัพโหลด และ ตั้งหน้าปก"
+
+#. module: project_gamification
+#: model_terms:ir.ui.view,arch_db:project_gamification.goal_form_view_inherit_set_to_draft
+msgid "Set to Draft"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model,name:project_gamification.model_project_task
+msgid "Task"
+msgstr "งาน"
+
+#. module: project_gamification
+#: model:ir.model,name:project_gamification.model_project_task_importance_type
+msgid "Task Importance Type"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/js/form_set_cover.js:0
+#, python-format
+msgid ""
+"Tip: Press Ctrl+V to paste an image from clipboard or click Upload Images to"
+" select multiple files"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/project_task_custom_button.xml:0
+#, python-format
+msgid "Upload & Set Cover"
+msgstr "อัพโหลด และ ตั้งหน้าปก"
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/form_set_cover.xml:0
+#, python-format
+msgid "Upload Cover"
+msgstr "อัพโหลดหน้าปก"
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/js/form_set_cover.js:0
+#, python-format
+msgid "Upload Images"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/form_set_cover.xml:0
+#, python-format
+msgid "Upload a single image and set as cover"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/js/form_set_cover.js:0
+#, python-format
+msgid "Upload images to get started."
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/js/form_set_cover.js:0
+#, python-format
+msgid "Uploading"
+msgstr ""
+
+#. module: project_gamification
+#: model:ir.model.fields,help:project_gamification.field_project_task__consumed_by_user_ids
+msgid "Users who already consumed this task's importance points."
+msgstr ""
+
+#. module: project_gamification
+#. odoo-python
+#: code:addons/project_gamification/models/project_task.py:0
+#, python-format
+msgid "You are not allowed to change the stage."
+msgstr ""
+
+#. module: project_gamification
+#. odoo-python
+#: code:addons/project_gamification/models/project_task.py:0
+#, python-format
+msgid "You are not allowed to set tasks to Done."
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Zoom In"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
+#, python-format
+msgid "Zoom Out"
+msgstr ""
+
+#. module: project_gamification
+#. odoo-javascript
+#: code:addons/project_gamification/static/src/js/form_set_cover.js:0
+#, python-format
+msgid "images..."
+msgstr ""
