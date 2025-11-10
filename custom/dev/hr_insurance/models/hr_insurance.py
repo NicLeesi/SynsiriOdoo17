@@ -40,8 +40,9 @@ class HrInsurance(models.Model):
                                        required=True, default='permanent',
                                        string='Policy Coverage',
                                        help="During of the policy(If blank mean permanent period")
-    # policy_fix_amount = fields.active = fields.Boolean('Policy Fix Amount', default=True, help="check for fix premium amount")
-    policy_fix_amount = fields.Boolean('Policy Fix Amount', default=True, help="Check for fixed premium amount")
+
+    policy_fix_amount = fields.Boolean('Policy Fix Amount', default=False,
+                                       help="Check for fixed premium amount", store=True)
     fix_amount = fields.Float(string='Fix Amount', help="Total amount for Premium payable")
 
     date_from = fields.Date(string='Date From',

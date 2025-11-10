@@ -51,7 +51,8 @@ class HrEmployee(models.Model):
                                               help="Stores the previous insurance account before refund", store=False)
     insurance_fix_amount_total = fields.Float(string="Total Premium Fix Amount",
                                               compute="_compute_insurance_fix_amount_total",
-                                              help="Total sum of Premium fix amounts for the employee", readonly=True)
+                                              help="Total sum of Premium fix amounts for the employee", readonly=True,
+                                              store=True)
     probation_status = fields.Selection(selection=[('on_probation', 'On Probation'),('pass_probation', 'Pass Probation')],
                                         string='Probation Status', default='on_probation', copy=False)
     insurance_payment_status = fields.Selection(selection=[('incomplete', 'Incomplete Insurance Payment'),
@@ -88,12 +89,13 @@ class HrEmployee(models.Model):
     def action_set_incomplete_insurance_payment(self):
         self.write({'insurance_payment_status': 'incomplete'})
 
-    @api.depends('insurance_ids.fix_amount', 'insurance_ids.state')
+    @api.depends('insurance_ids.fix_amount', 'insurance_ids.state', 'insurance_ids.policy_fix_amount')
     def _compute_insurance_fix_amount_total(self):
         for employee in self:
             total_fix_amount = sum(
                 ins.fix_amount for ins in employee.insurance_ids
-                if ins.policy_fix_amount and ins.state == 'active' or 'resignation_confirm')
+                if ins.policy_fix_amount and ins.state in ('active', 'resignation_confirm')
+            )
             employee.insurance_fix_amount_total = total_fix_amount
 
 
