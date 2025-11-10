@@ -4,3 +4,4 @@ from . import project_task_deadline
 from . import project_task_gamification
 from . import cleanup
 from . import gamification_challenge
+from . import gamification_goal

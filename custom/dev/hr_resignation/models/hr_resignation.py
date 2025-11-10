@@ -261,9 +261,12 @@ class HrResignation(models.Model):
                     resignation.resign_confirm_date):
                 employee_contract = self.env['hr.contract'].search(
                     [('employee_id', '=', self.employee_id.id)])
-                # if not employee_contract:
-                #     raise ValidationError(
-                #         _("There are no Contracts found for this employee"))
+                if not employee_contract:
+                    if resignation.approved_revealing_date:
+                        resignation.state = 'approved'
+                    else:
+                        resignation.approved_revealing_date = (
+                            resignation.expected_revealing_date)
                 for contract in employee_contract:
                     if contract.state == 'open':
                         resignation.employee_contract = contract.name

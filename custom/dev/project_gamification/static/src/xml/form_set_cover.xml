@@ -1,22 +1,31 @@
-<!--<?xml version="1.0" encoding="UTF-8"?>-->
-<!--<templates id="template" xml:space="preserve">-->
-<!--    <t t-name="odoo_owl_form.FormView" t-inherit="web.FormView" t-inherit-mode="extension">-->
-<!--        <xpath expr="//button[hasclass('o_form_button_create')]" position="after">-->
-<!--            <button class="o_btn_hello btn btn-primary" type="button">-->
-<!--                Customers-->
-<!--            </button>-->
-<!--        </xpath>-->
-<!--    </t>-->
-<!--</templates>-->
-
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
+    <t t-name="project_gamification.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_control_panel_collapsed_create')]" position="before">
+            <t t-slot="control-panel-upload-button"/>
+        </xpath>
+    </t>
     <t t-name="project_gamification.FormView" t-inherit="web.FormView" t-inherit-mode="extension">
         <xpath expr="//Layout" position="inside">
-            <t t-set-slot="control-panel-reload-button">
-                <button class="btn btn-primary o_btn_customers" type="button" title="Cus">
-                    Cus
-                </button>
+            <t t-set-slot="control-panel-upload-button">
+                <t t-if="props.resModel === 'project.task'">
+                    <!-- Button 1: Upload Single Cover Image -->
+                    <button class="btn btn-primary me-2"
+                            type="button"
+                            t-on-click="onClickSetCoverImage"
+                            title="Upload a single image and set as cover">
+                        <i class="fa fa-upload me-1"/>
+                        Upload Cover
+                    </button>
+                    <!-- Button 2: Choose/Upload Multiple Images -->
+                    <button class="btn btn-primary me-2"
+                            type="button"
+                            t-on-click="onClickChooseExistingCover"
+                            title="Choose from gallery or upload multiple images">
+                        <i class="fa fa-images me-1"/>
+                        Set Cover &amp; Upload Images
+                    </button>
+                </t>
             </t>
         </xpath>
     </t>

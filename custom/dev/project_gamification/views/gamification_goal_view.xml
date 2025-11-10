@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="goal_form_view_inherit_set_to_draft" model="ir.ui.view">
+    <field name="name">gamification.goal.form.inherit.set_to_draft</field>
+    <field name="model">gamification.goal</field>
+    <field name="inherit_id" ref="gamification.goal_form_view"/>  <!-- original form ID -->
+    <field name="arch" type="xml">
+      <xpath expr="//header" position="inside">
+        <button name="action_set_to_draft"
+                type="object"
+                string="Set to Draft"
+                class="btn-secondary"
+        />
+      </xpath>
+    </field>
+  </record>
+</odoo>

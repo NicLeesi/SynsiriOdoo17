@@ -52,7 +52,7 @@ msgstr ""
 #: code:addons/project_gamification/static/src/js/form_set_cover.js:0
 #, python-format
 msgid "Choose Cover Image"
-msgstr ""
+msgstr "เลือกรูปหน้าปก"
 
 #. module: project_gamification
 #. odoo-javascript
@@ -73,14 +73,14 @@ msgstr ""
 #: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
 #, python-format
 msgid "Close (Esc)"
-msgstr ""
+msgstr "ปิดหน้าต่าง"
 
 #. module: project_gamification
 #. odoo-javascript
 #: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
 #, python-format
 msgid "Close | Click outside to close"
-msgstr ""
+msgstr "ปิด | คลิ๊กข้างนอกเพื่อปิดป็อปอัพ"
 
 #. module: project_gamification
 #: model:gamification.goal.definition,suffix:project_gamification.goal_def_importance_points_approved
@@ -142,7 +142,7 @@ msgstr ""
 #: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
 #, python-format
 msgid "Esc"
-msgstr ""
+msgstr "ปิด"
 
 #. module: project_gamification
 #: model:ir.model,name:project_gamification.model_gamification_challenge
@@ -162,12 +162,12 @@ msgstr ""
 #. module: project_gamification
 #: model_terms:ir.ui.view,arch_db:project_gamification.view_task_search_importance_inherit
 msgid "Has Importance"
-msgstr ""
+msgstr "การระบุประเภทความสำคัญ"
 
 #. module: project_gamification
 #: model_terms:ir.ui.view,arch_db:project_gamification.view_task_search_stage_inherit
 msgid "Has Stage"
-msgstr ""
+msgstr "การระบุการดำเนินการ"
 
 #. module: project_gamification
 #: model:ir.model.fields,field_description:project_gamification.field_project_task_importance_type__id
@@ -180,18 +180,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project_gamification.view_task_form_importance_inherit
 #, python-format
 msgid "Image Gallery"
-msgstr ""
+msgstr "คลังรูปภาพ อัพได้มากสุด 8 รูป "
 
 #. module: project_gamification
 #: model:ir.model.fields,field_description:project_gamification.field_project_task__importance_type_id
 #: model_terms:ir.ui.view,arch_db:project_gamification.view_task_search_importance_inherit
 msgid "Importance"
-msgstr ""
+msgstr "ความสำคัญของงาน"
 
 #. module: project_gamification
 #: model:ir.model.fields,field_description:project_gamification.field_project_task__importance_color
 msgid "Importance Color"
-msgstr ""
+msgstr "สี"
 
 #. module: project_gamification
 #: model:ir.model.fields,field_description:project_gamification.field_project_task__consumed_by_user_ids
@@ -201,13 +201,13 @@ msgstr ""
 #. module: project_gamification
 #: model_terms:ir.ui.view,arch_db:project_gamification.view_importance_type_form
 msgid "Importance Type"
-msgstr ""
+msgstr "ประเภทความสำคัญ"
 
 #. module: project_gamification
 #: model:ir.actions.act_window,name:project_gamification.action_importance_type
 #: model:ir.ui.menu,name:project_gamification.menu_project_importance_root
 msgid "Importance Types"
-msgstr ""
+msgstr "ประเภทความสำคัญ"
 
 #. module: project_gamification
 #: model:ir.model.fields,field_description:project_gamification.field_project_task_importance_type__write_uid
@@ -225,7 +225,7 @@ msgstr ""
 #: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
 #, python-format
 msgid "Loading images..."
-msgstr ""
+msgstr "กำลังโหลดรูป"
 
 #. module: project_gamification
 #: model:gamification.challenge,name:project_gamification.challenge_approved_points
@@ -249,7 +249,7 @@ msgstr ""
 #: code:addons/project_gamification/static/src/js/form_set_cover.js:0
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "สร้างใหม่"
 
 #. module: project_gamification
 #. odoo-javascript
@@ -263,14 +263,14 @@ msgstr ""
 #: code:addons/project_gamification/static/src/js/form_set_cover.js:0
 #, python-format
 msgid "No images found for this task."
-msgstr ""
+msgstr "ไม่พบรูปในงานโปรเจคนี้"
 
 #. module: project_gamification
 #. odoo-javascript
 #: code:addons/project_gamification/static/src/xml/image_gallery_widget.xml:0
 #, python-format
 msgid "No images yet. Use the buttons above to add images."
-msgstr ""
+msgstr "ยังไม่มีรูปภาพ ใช้ปุ่มด้านบนเพื่อเพิ่มรูปภาพ"
 
 #. module: project_gamification
 #: model:ir.model.fields,help:project_gamification.field_project_task_importance_type__points
@@ -377,7 +377,7 @@ msgstr ""
 msgid ""
 "Tip: Press Ctrl+V to paste an image from clipboard or click Upload Images to"
 " select multiple files"
-msgstr ""
+msgstr "เคล็ดลับ: กด Ctrl+V เพื่อวางรูปภาพจากคลิปบอร์ด หรือคลิก ปุ่ม [อัปโหลดลงคลังรูป] เพื่ออัพได้หลายรูปพร้อมกัน
 
 #. module: project_gamification
 #. odoo-javascript
@@ -398,7 +398,7 @@ msgstr "อัพโหลดหน้าปก"
 #: code:addons/project_gamification/static/src/js/form_set_cover.js:0
 #, python-format
 msgid "Upload Images"
-msgstr ""
+msgstr "อัพโหลดลงคลังรูป"
 
 #. module: project_gamification
 #. odoo-javascript

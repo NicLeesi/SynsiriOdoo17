@@ -18,7 +18,7 @@ msgstr ""
 #. module: hr_insurance
 #: model:ir.model.fields.selection,name:hr_insurance.selection__hr_insurance__state__active
 msgid "Active"
-msgstr ""
+msgstr "เปิดใช้งาน"
 
 #. module: hr_insurance
 #: model:ir.model.fields,help:hr_insurance.field_hr_employee__deduced_amount_per_month
@@ -140,7 +140,7 @@ msgstr "วันที่สิ้นสุดการคุ้มครอง
 #. module: hr_insurance
 #: model:ir.model.fields.selection,name:hr_insurance.selection__hr_insurance__state__expired
 msgid "Expired"
-msgstr ""
+msgstr "ปิดใช้งาน"
 
 #. module: hr_insurance
 #: model_terms:ir.ui.view,arch_db:hr_insurance.insurance_policy_view_form
@@ -237,7 +237,7 @@ msgstr "ผ่านทดลองงาน"
 #. module: hr_insurance
 #: model:ir.model.fields.selection,name:hr_insurance.selection__hr_insurance__policy_coverage__monthly
 msgid "Monthly"
-msgstr ""
+msgstr "รายเดือน"
 
 #. module: hr_insurance
 #: model:ir.model.fields,field_description:hr_insurance.field_insurance_policy__name
@@ -273,7 +273,7 @@ msgstr ""
 #. module: hr_insurance
 #: model:ir.model.fields.selection,name:hr_insurance.selection__hr_insurance__policy_coverage__permanent
 msgid "Permanent"
-msgstr ""
+msgstr "ตลอดอายุงานหรือครบยอดประกัน"
 
 #. module: hr_insurance
 #: model:ir.model.fields,field_description:hr_insurance.field_hr_insurance__policy_id
@@ -400,7 +400,7 @@ msgstr "ยกเลิกสถานะการชำระประกัน
 #. module: hr_insurance
 #: model:ir.model.fields.selection,name:hr_insurance.selection__hr_insurance__policy_coverage__yearly
 msgid "Yearly"
-msgstr ""
+msgstr "รายปี"
 
 #. module: hr_insurance
 #: model_terms:ir.actions.act_window,help:hr_insurance.hr_insurance_action

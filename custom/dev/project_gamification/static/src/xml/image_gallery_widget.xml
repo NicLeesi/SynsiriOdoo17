@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Full-Screen Image Overlay with More Transparent Background -->
+    <t t-name="project_gamification.ImagePreviewOverlay">
+        <div class="o_image_preview_overlay"
+             style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                    background: rgba(0,0,0,0.6); z-index: 9999;
+                    display: flex; flex-direction: column;"
+             t-on-click="onBackdropClick">
+
+            <!-- Header Bar -->
+            <div class="d-flex justify-content-between align-items-center p-3"
+                 style="background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);"
+                 t-on-click.stop="">
+                <h4 style="margin: 0;">
+                    <i class="fa fa-image"/>
+                    <t t-esc="currentImage.name"/>
+                </h4>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="badge bg-secondary">
+                        <t t-esc="state.currentIndex + 1"/> / <t t-esc="props.images.length"/>
+                    </span>
+                    <button class="btn btn-sm btn-dark"
+                            t-on-click="props.close"
+                            title="Close (Esc)">
+                        <i class="fa fa-times fa-lg"/>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Image Area -->
+            <div class="flex-grow-1 position-relative d-flex align-items-center justify-content-center"
+                 style="overflow: auto; padding: 40px;">
+
+                <!-- Navigation Arrows -->
+                <button t-if="hasPrevious"
+                        class="btn btn-light btn-lg"
+                        t-on-click.stop="previous"
+                        style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); z-index: 10; opacity: 0.9;"
+                        title="Previous (← Arrow Key)">
+                    <i class="fa fa-chevron-left fa-2x"/>
+                </button>
+
+                <button t-if="hasNext"
+                        class="btn btn-light btn-lg"
+                        t-on-click.stop="next"
+                        style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); z-index: 10; opacity: 0.9;"
+                        title="Next (→ Arrow Key)">
+                    <i class="fa fa-chevron-right fa-2x"/>
+                </button>
+
+                <!-- The Image - Constrained Size -->
+                <img t-att-src="'/web/image/' + currentImage.id"
+                     t-att-alt="currentImage.name"
+                     t-att-style="imageStyle"
+                     t-on-click.stop=""
+                     style="max-width: 90vw;
+                            max-height: calc(100vh - 250px);
+                            width: auto;
+                            height: auto;
+                            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+                            cursor: default;
+                            border-radius: 8px;
+                            background: white;
+                            padding: 10px;"/>
+            </div>
+
+            <!-- Control Buttons Bar -->
+            <div class="d-flex justify-content-center gap-2 p-3"
+                 style="background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); flex-shrink: 0;"
+                 t-on-click.stop="">
+
+                <!-- Rotate Buttons -->
+                <button class="btn btn-outline-secondary"
+                        t-on-click="rotateLeft"
+                        title="Rotate Left">
+                    <i class="fa fa-undo"/> Rotate Left
+                </button>
+
+                <button class="btn btn-outline-secondary"
+                        t-on-click="rotateRight"
+                        title="Rotate Right">
+                    <i class="fa fa-repeat"/> Rotate Right
+                </button>
+
+                <!-- Zoom Buttons -->
+                <button class="btn btn-outline-secondary"
+                        t-on-click="zoomOut"
+                        title="Zoom Out"
+                        t-att-disabled="state.zoom &lt;= 0.5">
+                    <i class="fa fa-search-minus"/> Zoom Out
+                </button>
+
+                <button class="btn btn-outline-secondary"
+                        t-on-click="resetZoom"
+                        title="Reset Zoom">
+                    <i class="fa fa-search"/> <t t-esc="Math.round(state.zoom * 100)"/>%
+                </button>
+
+                <button class="btn btn-outline-secondary"
+                        t-on-click="zoomIn"
+                        title="Zoom In"
+                        t-att-disabled="state.zoom >= 3">
+                    <i class="fa fa-search-plus"/> Zoom In
+                </button>
+
+                <!-- Divider -->
+                <div style="border-left: 2px solid #ddd; margin: 0 10px;"/>
+
+                <!-- Print Button -->
+                <button class="btn btn-outline-primary"
+                        t-on-click="printImage"
+                        title="Print Image">
+                    <i class="fa fa-print"/> Print
+                </button>
+
+                <!-- Download Button -->
+                <button class="btn btn-outline-success"
+                        t-on-click="downloadImage"
+                        title="Download Image">
+                    <i class="fa fa-download"/> Download
+                </button>
+            </div>
+
+            <!-- Keyboard Hints -->
+            <div class="text-center p-2"
+                 style="font-size: 0.85em; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); flex-shrink: 0;"
+                 t-on-click.stop="">
+                <i class="fa fa-keyboard-o"/>
+                <kbd>←</kbd> <kbd>→</kbd> Navigate |
+                <kbd>Esc</kbd> Close | Click outside to close
+            </div>
+        </div>
+    </t>
+
+    <!-- Main Gallery Widget with Grid Layout (5 per row) -->
+        <t t-name="project_gamification.ImageGalleryWidget">
+            <div class="o_field_image_gallery">
+                <t t-if="state.loading">
+                    <div style="text-align: center; padding: 20px;">
+                        <i class="fa fa-spinner fa-spin"/> Loading images...
+                    </div>
+                </t>
+
+                <t t-elif="state.images.length === 0">
+                    <div class="alert alert-info" style="margin: 10px 0;">
+                        <i class="fa fa-info-circle"/> No images yet. Use the buttons above to add images.
+                    </div>
+                </t>
+
+                <t t-else="">
+                    <div class="image-gallery-grid"
+                         style="display: grid;
+                                grid-template-columns: repeat(5, 225px);
+                                gap: 15px;
+                                padding: 15px 0;">
+                        <t t-foreach="state.images" t-as="image" t-key="image.id">
+                            <div class="gallery-item"
+                                 t-on-click="() => this.openPreview(image.id)"
+                                 style="cursor: pointer; border: 2px solid #ddd; border-radius: 8px;
+                                        overflow: hidden; transition: all 0.2s;
+                                        width: 225px; height: 225px; position: relative;">
+
+                                <img t-att-src="'/web/image/' + image.id"
+                                     t-att-alt="image.name"
+                                     style="width: 100%; height: 100%; object-fit: cover;"/>
+
+                                <div class="overlay"
+                                     style="position: absolute; bottom: 0; left: 0; right: 0;
+                                            background: rgba(0,0,0,0.7); color: white; padding: 8px;
+                                            font-size: 0.9em; text-align: center; white-space: nowrap;
+                                            overflow: hidden; text-overflow: ellipsis;">
+                                    <i class="fa fa-search-plus"/> Click to preview
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+
+                    <div style="margin-top: 5px; font-size: 0.85em; color: #666;">
+                        <i class="fa fa-images"/>
+                        <t t-esc="state.images.length"/> / 8 images
+                    </div>
+                </t>
+            </div>
+        </t>
+</templates>

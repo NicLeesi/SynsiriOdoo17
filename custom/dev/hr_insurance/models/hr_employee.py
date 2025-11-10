@@ -18,7 +18,8 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 #############################################################################
-from odoo import models, fields, api
+from odoo import _, models, fields, api
+from odoo.exceptions import UserError
 from datetime import datetime
 import pytz
 
@@ -45,7 +46,7 @@ class HrEmployee(models.Model):
     payroll_id = fields.Many2one('hr.payslip',
                                     string="payroll_id",)
     insurance_account = fields.Float(string="insurance_account",help="Total Amount that employee has paid"
-                                     ,compute="get_paid_insurance")
+                                     ,compute="get_paid_insurance", store=True)
     previous_insurance_account = fields.Float(string="Previous Insurance Account",
                                               help="Stores the previous insurance account before refund", store=False)
     insurance_fix_amount_total = fields.Float(string="Total Premium Fix Amount",
@@ -56,13 +57,30 @@ class HrEmployee(models.Model):
     insurance_payment_status = fields.Selection(selection=[('incomplete', 'Incomplete Insurance Payment'),
                                                            ('complete', 'Complete Insurance Payment')],
                                                             string='Insurance Payment', default='incomplete', copy=False)
+    probation_bonus = fields.Float(string="Probation Bonus",help="Temporary value entered from the probation wizard.")
 
 
     def action_set_on_probation(self):
         self.write({'probation_status': 'on_probation'})
 
     def action_set_pass_probation(self):
-        self.write({'probation_status': 'pass_probation'})
+        for rec in self:
+            # Check if employee has at least one active insurance line with fix_amount > 0
+            has_fix_line = rec.insurance_ids.filtered(
+                lambda l: l.policy_fix_amount and l.fix_amount > 0 and l.state == 'active'
+            )
+            if not has_fix_line:
+                raise UserError(_(
+                    "Cannot pass probation.\n\n"
+                    "Please add at least one active insurance line with a fixed amount before proceeding."
+                ))
+        return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'hr.probation.wizard',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {'active_ids': self.ids},
+                }
 
     def action_set_complete_insurance_payment(self):
         self.write({'insurance_payment_status': 'complete'})
@@ -128,7 +146,7 @@ class HrEmployee(models.Model):
             emp.deduced_amount_per_year = total_yearly_amount
             emp.deduced_amount_per_month = (total_yearly_amount / 12.0) if total_yearly_amount else 0.0
 
-    @api.depends('payroll_id', 'probation_status', 'insurance_payment_status', 'insurance_fix_amount_total','insurance_account')
+    @api.depends('payroll_id', 'probation_status', 'insurance_payment_status', 'insurance_fix_amount_total', 'insurance_account')
     def get_paid_insurance(self):
         """Calculate the total insurance amount paid by the employee"""
         for rec in self:
@@ -162,8 +180,8 @@ class HrEmployee(models.Model):
 
             # 5) Add probation bump (only if not completed)
             if rec.probation_status == 'pass_probation':
-                value += 1000.0
-
+                value += rec.probation_bonus or 0.0
+                rec.probation_bonus = 0
             # 6) If marked complete → force to full cap and ignore bump
             if rec.insurance_payment_status == 'complete':
                 value = cap

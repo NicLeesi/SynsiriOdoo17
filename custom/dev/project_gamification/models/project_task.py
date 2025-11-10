@@ -39,7 +39,8 @@ class ProjectTask(models.Model):
     )
 
     # UI-only for quick-create (click to upload)
-    cover_image = fields.Image(string="Cover Image", max_width=1920, max_height=1920, store=False)
+    cover_image = fields.Image(string="Cover Image", max_width=1024, max_height=768, store=False)
+
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -84,14 +85,27 @@ class ProjectTask(models.Model):
             raise ValidationError(_("You are not allowed to change the stage."))
         return super().write(vals)
 
+
     def action_set_cover_image(self):
-        """Open wizard to upload a cover image for this task."""
+        """Open a popup window like the default Odoo 'Set Cover Image'."""
         self.ensure_one()
         return {
+            'name': 'Set a Cover Image',
             'type': 'ir.actions.act_window',
-            'name': _('Set Cover Image'),
-            'res_model': 'project.task.set.cover.wizard',
+            'res_model': 'project.task.cover.wizard',
             'view_mode': 'form',
             'target': 'new',
             'context': {'default_task_id': self.id},
+        }
+
+    def action_open_chatter_upload(self):
+        """Open the same multi-file upload popup as the chatter paperclip."""
+        self.ensure_one()
+        return {
+            "type": "ir.actions.client",
+            "tag": "mail.attachment_upload",  # ← this is the native Odoo uploader tag
+            "context": {
+                "default_res_model": "project.task",
+                "default_res_id": self.id,
+            },
         }
