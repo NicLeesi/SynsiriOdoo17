@@ -76,6 +76,7 @@ class HrEmployee(models.Model):
                     "Please add at least one active insurance line with a fixed amount before proceeding."
                 ))
         return {
+                'name': _('Paid insurance in Probation state for %s', self.name),
                 'type': 'ir.actions.act_window',
                 'res_model': 'hr.probation.wizard',
                 'view_mode': 'form',

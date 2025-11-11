@@ -1,0 +1,510 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_resignation
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-11 02:57+0000\n"
+"PO-Revision-Date: 2025-11-11 02:57+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__other_deduction
+msgid ""
+"Amount that is deduct for other reasons, such as liability, company's asset "
+"damaged"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__return_insurance
+msgid "Amount that is return from employee's insurance account"
+msgstr ""
+
+#. module: hr_resignation
+#: model_terms:ir.ui.view,arch_db:hr_resignation.hr_resignation_view_form
+msgid "Approve"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields.selection,name:hr_resignation.selection__hr_resignation__state__approved
+msgid "Approved"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__approved_revealing_date
+msgid "Approved Last Day Of Employee"
+msgstr "ยืนยันวันสุดท้ายที่มาทำงานจริง"
+
+#. module: hr_resignation
+#: model:ir.actions.act_window,name:hr_resignation.hr_resignation_approved_action
+#: model:ir.ui.menu,name:hr_resignation.hr_resignation_menu_approved_request
+#: model_terms:ir.actions.act_window,help:hr_resignation.hr_resignation_approved_action
+msgid "Approved Resignation"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: hr_resignation
+#: model_terms:ir.ui.view,arch_db:hr_resignation.hr_resignation_view_form
+msgid "Cancel"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__change_employee
+msgid "Change Employee"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__check_return_insurance
+msgid "Checks , for return insurance to the employee"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__check_other_deduction
+msgid "Checks , if the employee has other deduction"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__change_employee
+msgid "Checks , if the user has permission to change the employee"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields.selection,name:hr_resignation.selection__hr_resignation__state__confirm
+#: model_terms:ir.ui.view,arch_db:hr_resignation.hr_resignation_view_form
+msgid "Confirm"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__resign_confirm_date
+msgid "Confirmed Date"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__employee_contract
+msgid "Contract"
+msgstr "สัญญา"
+
+#. module: hr_resignation
+#: model_terms:ir.actions.act_window,help:hr_resignation.hr_resignation_action
+msgid "Create the First Resignation"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_employee__resign_date
+msgid "Date of the resignation"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__resign_confirm_date
+msgid "Date on which the request is confirmed by the employee."
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__approved_revealing_date
+msgid "Date on which the request is confirmed by the manager."
+msgstr ""
+
+#. module: hr_resignation
+#: model_terms:ir.ui.view,arch_db:hr_resignation.hr_resignation_view_form
+msgid "Dates"
+msgstr "วันที่"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__other_deduction
+msgid "Deduct other Amount"
+msgstr "จำนวนที่เงินที่ต้องหัก(บาท)"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__department_id
+msgid "Department"
+msgstr "แผนก"
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__department_id
+msgid "Department of the employee"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields.selection,name:hr_resignation.selection__hr_resignation__state__draft
+msgid "Draft"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model,name:hr_resignation.model_hr_employee
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__employee_id
+msgid "Employee"
+msgstr "ชื่อพนักงาน"
+
+#. module: hr_resignation
+#: model_terms:ir.ui.view,arch_db:hr_resignation.hr_resignation_view_form
+msgid "Employee Details"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.actions.act_window,name:hr_resignation.hr_resignation_action
+#: model_terms:ir.ui.view,arch_db:hr_resignation.hr_resignation_view_form
+#: model_terms:ir.ui.view,arch_db:hr_resignation.hr_resignation_view_tree
+msgid "Employee Resignation"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__expected_revealing_date
+msgid ""
+"Employee requested date on which employee is revealing from the company."
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_employee__fired
+msgid "Fired"
+msgstr "ถูกให้ออก"
+
+#. module: hr_resignation
+#: model_terms:ir.ui.view,arch_db:hr_resignation.view_employee_filter
+msgid "Fired Employees"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields.selection,name:hr_resignation.selection__hr_resignation__resignation_type__fired
+msgid "Fired by the company"
+msgstr "ถูกให้ออก โดยบริษัท"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model,name:hr_resignation.model_hr_resignation
+msgid "HR Resignation"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.actions.server,name:hr_resignation.ir_cron_employee_resignation_ir_actions_server
+msgid "HR Resignation: Update Employee Status"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__has_message
+msgid "Has Message"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__id
+msgid "ID"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_employee__fired
+msgid "If checked then employee has fired"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_employee__resigned
+msgid "If checked then employee has resigned"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__message_has_error
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__joined_date
+msgid "Join Date"
+msgstr "วันที่เริ่มเข้าทำงาน"
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__joined_date
+msgid "Joining date of the employee.i.e Start date of the first contract"
+msgstr "วันที่เริ่มงานของพนักงาน คือ วันที่เริ่มงานสัญญาฉบับแรก"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__expected_revealing_date
+msgid "Last Day of Employee"
+msgstr "วันสุดท้ายที่ทำงาน(แจ้งโดยพนักงาน)"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_resignation
+#. odoo-python
+#: code:addons/hr_resignation/models/hr_resignation.py:0
+#, python-format
+msgid "Last date of the Employee must be anterior to Joining date"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_employee__resignation_ids
+msgid "List of resignation requests for this employee"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__employee_id
+msgid "Name of the employee for whom the request is creating"
+msgstr ""
+
+#. module: hr_resignation
+#. odoo-python
+#: code:addons/hr_resignation/models/hr_resignation.py:0
+#: code:addons/hr_resignation/models/hr_resignation.py:0
+#: code:addons/hr_resignation/models/hr_resignation.py:0
+#: code:addons/hr_resignation/models/hr_resignation.py:0
+#, python-format
+msgid "New"
+msgstr "ใหม่"
+
+#. module: hr_resignation
+#: model:ir.model.fields.selection,name:hr_resignation.selection__hr_resignation__resignation_type__resigned
+msgid "Normal Resignation"
+msgstr "ลาออก ด้วยตนเอง"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__notice_period
+msgid "Notice Period"
+msgstr "ระยะเตือนร่วงหน้า"
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__notice_period
+msgid "Notice Period of the employee."
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__name
+msgid "Order Reference"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__check_other_deduction
+msgid "Other Deduction"
+msgstr "ติ๊กถ้ามีการหักเงิน อย่างอื่น"
+
+#. module: hr_resignation
+#: model:ir.model,name:hr_resignation.model_hr_payslip
+msgid "Pay Slip"
+msgstr ""
+
+#. module: hr_resignation
+#. odoo-python
+#: code:addons/hr_resignation/models/hr_resignation.py:0
+#, python-format
+msgid "Please Enter Valid Dates."
+msgstr ""
+
+#. module: hr_resignation
+#. odoo-python
+#: code:addons/hr_resignation/models/hr_resignation.py:0
+#, python-format
+msgid "Please set a Joining Date for employee"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__rating_ids
+msgid "Ratings"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__reason
+msgid "Reason"
+msgstr "เหตุผล"
+
+#. module: hr_resignation
+#: model_terms:ir.ui.view,arch_db:hr_resignation.hr_resignation_view_form
+msgid "Reject"
+msgstr "ปฎิเสธ"
+
+#. module: hr_resignation
+#: model:ir.model.fields.selection,name:hr_resignation.selection__hr_resignation__state__cancel
+msgid "Rejected"
+msgstr "ถูกประฎิเสธ"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_employee__resign_date
+msgid "Resign Date"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.ui.menu,name:hr_resignation.hr_resignation_menu_root
+msgid "Resignation"
+msgstr "การลาออก"
+
+#. module: hr_resignation
+#: model_terms:ir.ui.view,arch_db:hr_resignation.hr_resignation_view_form
+msgid "Resignation Details"
+msgstr "รายละเอียดการลาออก"
+
+#. module: hr_resignation
+#: model:ir.ui.menu,name:hr_resignation.hr_resignation_menu_request
+msgid "Resignation Request"
+msgstr "ยื่นขอ ลาออก"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__resignation_type
+msgid "Resignation Type"
+msgstr "รูปแบบการลาออก"
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_payslip__resignation_ids
+msgid "Resignation records of the employee"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_employee__resignation_ids
+msgid "Resignations"
+msgstr "การลาออก"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_employee__resigned
+msgid "Resigned"
+msgstr "ลาออกแล้ว"
+
+#. module: hr_resignation
+#: model_terms:ir.ui.view,arch_db:hr_resignation.view_employee_filter
+msgid "Resigned Employees"
+msgstr "พนักงาน ที่ลาออกแล้ว"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__check_return_insurance
+msgid "Return Insurance"
+msgstr "คืน เงินประกัน"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__return_insurance
+msgid "Return Insurance Amount"
+msgstr "จำนวนเงินประกันที่คืน"
+
+#. module: hr_resignation
+#: model_terms:ir.ui.view,arch_db:hr_resignation.hr_resignation_view_form
+msgid "Return Insurance Details"
+msgstr "รายละเอียดการคืนเงินประกัน"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__resignation_type
+msgid ""
+"Select the type of resignation: normal resignation or fired by the company"
+msgstr "เลือกประเภทการลาออก: ลาออกปกติ หรือ ถูกไล่ออกจากบริษัท"
+
+#. module: hr_resignation
+#: model_terms:ir.ui.view,arch_db:hr_resignation.hr_resignation_view_form
+msgid "Set to Draft"
+msgstr "ตั้งค่าเป็นแบบร่าง"
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__reason
+msgid "Specify reason for leaving the company"
+msgstr "ระบุเหตุผลในการออกจากบริษัท"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__state
+msgid "Status"
+msgstr "สถานะ"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_resignation__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: hr_resignation
+#: model:ir.model.fields,help:hr_resignation.field_hr_resignation__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: hr_resignation
+#. odoo-python
+#: code:addons/hr_resignation/models/hr_resignation.py:0
+#, python-format
+msgid "You cannot create a request for other employees"
+msgstr "คุณไม่สามารถสร้างคำขอสำหรับพนักงานอื่นได้"
+
+#. module: hr_resignation
+#: model:ir.model.fields,field_description:hr_resignation.field_hr_payslip__resignation_ids
+msgid "resignation return insurance"
+msgstr "สำหรับการคืนเงินประกัน เมื่อลาออก"
