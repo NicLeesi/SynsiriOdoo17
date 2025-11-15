@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_steel_price_filter_wizard" model="ir.actions.act_window">
+        <field name="name">Select Items for Graph</field>
+        <field name="res_model">steel.price.history.filter.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_steel_price_filter_wizard" model="ir.ui.view">
+        <field name="name">steel.price.history.filter.wizard.form</field>
+        <field name="model">steel.price.history.filter.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select Items to Display" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <field name="item_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </group>
+                    <footer>
+                        <button string="Show Graph"
+                                type="object"
+                                name="action_view_graph"
+                                class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem id="menu_steel_graph_filter"
+              name="Steel Price (Custom Select)"
+              parent="menu_steel_root"
+              action="action_steel_price_filter_wizard"
+              sequence="26"/>
+
+</odoo>

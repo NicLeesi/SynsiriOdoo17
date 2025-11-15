@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Action FIRST -->
+    <record id="action_steel_price_history" model="ir.actions.act_window">
+        <field name="name">Steel Price History</field>
+        <field name="res_model">steel.price.history</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <!-- THEN Menus -->
+    <menuitem id="menu_steel_root" name="Steel Prices" sequence="10" web_icon="steel_price_history,static/description/icon.png"/>
+    <menuitem id="menu_steel_history"
+              name="Price History"
+              parent="menu_steel_root"
+              action="steel_price_history.action_steel_price_history"
+              sequence="1"/>
+    <!-- Tree View -->
+    <record id="view_steel_price_tree" model="ir.ui.view">
+        <field name="name">steel.price.history.tree</field>
+        <field name="model">steel.price.history</field>
+        <field name="arch" type="xml">
+            <tree string="Steel Price History" create="false" edit="false">
+                <field name="date"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="category_name"/>
+                <field name="uom"/>
+                <field name="price"/>
+                <field name="price_per_weight"/>
+                <field name="daily_price_change"/>
+                <field name="weekly_price_change"/>
+                <field name="monthly_price_change"/>
+                <field name="price_change_display" string="Change vs Last" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_steel_price_form" model="ir.ui.view">
+        <field name="name">steel.price.history.form</field>
+        <field name="model">steel.price.history</field>
+        <field name="arch" type="xml">
+            <form string="Steel Price" create="false" >
+                <header>
+                    <field name="name"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="date"/>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="category_name"/>
+                        <field name="description"/>
+                        <field name="weight"/>
+                        <field name="uom"/>
+                        <field name="price"/>
+                        <field name="price_per_weight"/>
+                        <field name="daily_price_change"/>
+                        <field name="weekly_price_change"/>
+                        <field name="monthly_price_change"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_steel_price_graph" model="ir.ui.view">
+        <field name="name">steel.price.history.graph</field>
+        <field name="model">steel.price.history</field>
+        <field name="arch" type="xml">
+            <graph string="Steel Price History" type="line" stacked="False">
+                <!-- X-axis: date (day by day) -->
+                <field name="date" interval="day" type="row"/>
+
+                <!-- Group by item for color separation (different lines) -->
+                <field name="name" type="col"/>
+
+                <!-- Y-axis: prices -->
+                <field name="price" type="measure"/>
+                <field name="price_per_weight" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+
+    <!-- Action to open graph view -->
+    <record id="action_steel_price_graph" model="ir.actions.act_window">
+        <field name="name">Price Trend (Graph)</field>
+        <field name="res_model">steel.price.history</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="context">{'create': False}</field>
+    </record>
+
+
+
+<!--    <record id="view_steel_price_search" model="ir.ui.view">-->
+<!--        <field name="name">steel.price.history.search</field>-->
+<!--        <field name="model">steel.price.history</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <search string="Steel Price Search">-->
+<!--                <filter name="specific_products"-->
+<!--                        string="Selected Codes"-->
+<!--                        domain="[('code', 'in', ['2S2406100','2S2409100','2S4012100','2S4016100','2S4020100','2S4025100'])]"/>-->
+<!--                <field name="code"/>-->
+<!--                <field name="name"/>-->
+<!--                <field name="date"/>-->
+<!--                <field name="price_change_display"/>-->
+<!--            </search>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <!-- Graph view (cleaned up) -->
+    <record id="view_steel_price_graph_all" model="ir.ui.view">
+        <field name="name">steel.price.history.graph.specific</field>
+        <field name="model">steel.price.history</field>
+        <field name="arch" type="xml">
+            <graph string="All Steel Price Trend" type="line" stacked="False">
+                <field name="date" interval="day" type="row"/>
+                <field name="name" type="col"/>
+                <field name="daily_price_change" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_steel_price_graph_steelbar" model="ir.ui.view">
+        <field name="name">steel.price.history.graph.specific</field>
+        <field name="model">steel.price.history</field>
+        <field name="arch" type="xml">
+            <graph string="Steel Bar Price Trend" type="line" stacked="False">
+                <field name="date" interval="day" type="row"/>
+                <field name="name" type="col"/>
+                <field name="daily_price_change" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Action for Graph -->
+    <record id="action_steel_price_graph_all" model="ir.actions.act_window">
+        <field name="name">All Steel Price Trend</field>
+        <field name="res_model">steel.price.history</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_steel_price_graph_all"/>
+        <field name="domain">[('code', 'in', ["2S4016100", "2RTT10005002.3T", "2CTC10050202.3", "2CGI10050202.1F", "2PLT4806.0", "2RTG05002501.15"])]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="action_steel_price_graph_steelbar" model="ir.actions.act_window">
+        <field name="name">Steel Bar Price Trend</field>
+        <field name="res_model">steel.price.history</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_steel_price_graph_steelbar"/>
+        <field name="domain">[('code', 'in', ["2S2406100", "2S2409100", "2S4012100", "2S4016100", "2S4020100", "2S4025100"])]</field>
+        <field name="context">{}</field>
+    </record>
+
+
+
+    <!-- Menu Item -->
+    <menuitem id="menu_steel_price_graph_specific"
+              name="Steel Price "
+              parent="menu_steel_root"
+              sequence="24"/>
+    <menuitem id="menu_steel_price_graph_all"
+              name="ALL Prices"
+              parent="steel_price_history.menu_steel_price_graph_specific"
+              action="action_steel_price_graph_all"
+              sequence="25"/>
+    <menuitem id="menu_steel_price_graph_steelbar"
+              name="Steel Bar Prices"
+              parent="steel_price_history.menu_steel_price_graph_specific"
+              action="action_steel_price_graph_steelbar"
+              sequence="25"/>
+
+
+    <!-- Settings -->
+<!--    <record id="res_config_settings_view_form_inherit_steel" model="ir.ui.view">-->
+<!--        <field name="name">res.config.settings.view.form.steel</field>-->
+<!--        <field name="model">res.config.settings</field>-->
+<!--        <field name="inherit_id" ref="base.view_res_config_settings"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//div[hasclass('settings')]" position="inside">-->
+<!--                <div class="app_settings_block" data-string="Steel Price Settings" string="Steel Price Settings">-->
+<!--                    <h2>SteelBestBuy API</h2>-->
+<!--                    <group>-->
+<!--                        <field name="steelbestbuy_api_key" password="True"/>-->
+<!--                    </group>-->
+<!--                </div>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+</odoo>

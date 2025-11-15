@@ -1,0 +1,229 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#   * steel_price_history
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-15 06:06+0000\n"
+"PO-Revision-Date: 2025-11-15 06:06+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+"Language: th\n"
+
+#. module: steel_price_history
+#: model:ir.ui.menu,name:steel_price_history.menu_steel_price_graph_all
+msgid "ALL Prices"
+msgstr "ราคา เหล็กโดยรวม"
+
+#. module: steel_price_history
+#: model:ir.actions.act_window,name:steel_price_history.action_steel_price_graph_all
+#: model_terms:ir.ui.view,arch_db:steel_price_history.view_steel_price_graph_all
+msgid "All Steel Price Trend"
+msgstr "แนวโน้ม เหล็กโดยรวม"
+
+#. module: steel_price_history
+#: model_terms:ir.ui.view,arch_db:steel_price_history.view_steel_price_filter_wizard
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__category_name
+msgid "Category"
+msgstr "หมวดหมู่"
+
+#. module: steel_price_history
+#: model_terms:ir.ui.view,arch_db:steel_price_history.view_steel_price_tree
+msgid "Change vs Last"
+msgstr "การเปลี่ยนแปลงเทียบกับก่อนหน้า"
+
+#. module: steel_price_history
+#: model:ir.model.fields,help:steel_price_history.field_steel_price_history_filter_wizard__item_ids
+msgid "Choose which items you want to display in the graph."
+msgstr "เลือกรายการสินค้าที่ต้องการแสดงในกราฟ"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__code
+msgid "Code"
+msgstr "รหัสสินค้า"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__create_uid
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history_filter_wizard__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__create_date
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history_filter_wizard__create_date
+msgid "Created on"
+msgstr "วันที่สร้าง"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__daily_price_change
+msgid "Daily Change"
+msgstr "การเปลี่ยนแปลงรายวัน"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__price_change_display
+msgid "Daily change p/kg(Baht)"
+msgstr "เปลี่ยนแปลงรายวันราคา/กก.(บาท)"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__description
+msgid "Description"
+msgstr "คำอธิบาย"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__display_name
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history_filter_wizard__display_name
+msgid "Display Name"
+msgstr "ชื่อที่แสดง"
+
+#. module: steel_price_history
+#: model:ir.actions.server,name:steel_price_history.ir_cron_fetch_steel_prices_ir_actions_server
+msgid "Fetch Daily Steel Prices"
+msgstr "ดึงข้อมูลราคารายวัน"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__date
+msgid "Fetched On"
+msgstr "วันที่ดึงข้อมูล"
+
+#. module: steel_price_history
+#: model:ir.model,name:steel_price_history.model_steel_price_history_filter_wizard
+msgid "Filter Steel Price History"
+msgstr "ตัวกรองประวัติราคาเหล็ก"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__id
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history_filter_wizard__id
+msgid "ID"
+msgstr "รหัส"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__write_uid
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history_filter_wizard__write_uid
+msgid "Last Updated by"
+msgstr "แก้ไขล่าสุดโดย"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__write_date
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history_filter_wizard__write_date
+msgid "Last Updated on"
+msgstr "วันที่แก้ไขล่าสุด"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__monthly_price_change
+msgid "Monthly Change"
+msgstr "การเปลี่ยนแปลงรายเดือน"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: steel_price_history
+#: model:ir.model.fields,help:steel_price_history.field_steel_price_history__price_change_display
+msgid ""
+"Numeric difference from the previous record's price for the same item code."
+msgstr "ส่วนต่างราคาจากรายการก่อนหน้าของรหัสสินค้ารายเดียวกัน"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__price
+msgid "Price"
+msgstr "ราคา/เส้น"
+
+#. module: steel_price_history
+#: model:ir.ui.menu,name:steel_price_history.menu_steel_history
+msgid "Price History"
+msgstr "ประวัติราคา"
+
+#. module: steel_price_history
+#: model:ir.actions.act_window,name:steel_price_history.action_steel_price_graph
+msgid "Price Trend (Graph)"
+msgstr "แนวโน้มราคา (กราฟ)"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__price_per_weight
+msgid "Price per Weight"
+msgstr "ราคา/น้ำหนัก"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history_filter_wizard__item_ids
+msgid "Select Items"
+msgstr "เลือกรายการ"
+
+#. module: steel_price_history
+#: model:ir.actions.act_window,name:steel_price_history.action_steel_price_filter_wizard
+msgid "Select Items for Graph"
+msgstr "เลือกรายการเพื่อแสดงในกราฟ"
+
+#. module: steel_price_history
+#: model_terms:ir.ui.view,arch_db:steel_price_history.view_steel_price_filter_wizard
+msgid "Select Items to Display"
+msgstr "เลือกรายการที่ต้องการแสดง"
+
+#. module: steel_price_history
+#: model_terms:ir.ui.view,arch_db:steel_price_history.view_steel_price_filter_wizard
+msgid "Show Graph"
+msgstr "แสดงกราฟ"
+
+#. module: steel_price_history
+#: model:ir.actions.act_window,name:steel_price_history.action_steel_price_graph_steelbar
+#: model_terms:ir.ui.view,arch_db:steel_price_history.view_steel_price_graph_steelbar
+msgid "Steel Bar Price Trend"
+msgstr "แนวโน้มราคาเหล็กเส้น"
+
+#. module: steel_price_history
+#: model:ir.ui.menu,name:steel_price_history.menu_steel_price_graph_steelbar
+msgid "Steel Bar Prices"
+msgstr "ราคาเหล็กเส้น"
+
+#. module: steel_price_history
+#: model_terms:ir.ui.view,arch_db:steel_price_history.view_steel_price_form
+msgid "Steel Price"
+msgstr "ราคาเหล็ก"
+
+#. module: steel_price_history
+#: model:ir.ui.menu,name:steel_price_history.menu_steel_price_graph_specific
+msgid "Steel Price "
+msgstr "ราคาเหล็กเฉพาะกลุ่ม"
+
+#. module: steel_price_history
+#: model:ir.ui.menu,name:steel_price_history.menu_steel_graph_filter
+msgid "Steel Price (Custom Select)"
+msgstr "ราคาเหล็ก (เลือกเอง)"
+
+#. module: steel_price_history
+#: model:ir.actions.act_window,name:steel_price_history.action_steel_price_history
+#: model:ir.model,name:steel_price_history.model_steel_price_history
+#: model_terms:ir.ui.view,arch_db:steel_price_history.view_steel_price_graph
+#: model_terms:ir.ui.view,arch_db:steel_price_history.view_steel_price_tree
+msgid "Steel Price History"
+msgstr "ประวัติราคาเหล็ก"
+
+#. module: steel_price_history
+#: model:ir.ui.menu,name:steel_price_history.menu_steel_root
+msgid "Steel Prices"
+msgstr "ราคาเหล็ก"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__uom
+msgid "UoM"
+msgstr "หน่วยนับ"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__weekly_price_change
+msgid "Weekly Change"
+msgstr "การเปลี่ยนแปลงรายสัปดาห์"
+
+#. module: steel_price_history
+#: model:ir.model.fields,field_description:steel_price_history.field_steel_price_history__weight
+msgid "Weight"
+msgstr "น้ำหนัก"

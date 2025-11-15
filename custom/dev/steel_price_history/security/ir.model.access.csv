@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_steel_price_history_user,steel.price.history,model_steel_price_history,purchase.group_purchase_user,1,0,0,0
+access_steel_price_filter_wizard_user,steel.price.history.filter.wizard,model_steel_price_history_filter_wizard,purchase.group_purchase_user,1,0,1,0
+
+
+
+
