@@ -32,4 +32,45 @@
             </div>
         </field>
     </record>
+
+
+    <record id="view_employee_search_no_checkin" model="ir.ui.view">
+            <field name="name">hr.employee.search.no.checkin</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search/filter[@name='message_needaction']" position="inside">
+                    <separator/>
+                    <filter name="no_checkin_today"
+                            string="No Check-In Today"
+                            domain="['|', ('last_check_in', '=', False), '|', ('last_check_in', '&lt;', context_today().strftime('%Y-%m-%d 00:00:00')), ('last_check_in', '&gt;', context_today().strftime('%Y-%m-%d 23:59:59'))]"/>
+
+                    <filter name="never_checked_in"
+                            string="Never Checked In"
+                            domain="[('last_check_in', '=', False)]"/>
+
+                    <filter name="checked_in_today"
+                            string="Checked In Today"
+                            domain="[('last_check_in', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00')), ('last_check_in', '&lt;=', context_today().strftime('%Y-%m-%d 23:59:59'))]"/>
+                    <separator/>
+                    <!-- Work Status -->
+                    <filter name="day_off_today"
+                            string="Day Off Today"
+                            domain="[('is_day_off_today', '=', True)]"
+                            help="Weekend, Holiday, or Approved Leave"/>
+
+                    <filter name="working_today"
+                            string="Working Today"
+                            domain="[('is_day_off_today', '=', False)]"/>
+
+                    <separator/>
+                    <!-- Combined Filters -->
+                    <filter name="absent_without_leave"
+                            string="Absent (No Day Off)"
+                            domain="[('is_day_off_today', '=', False), ('last_check_in', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00')), ('last_check_in', '&lt;=', context_today().strftime('%Y-%m-%d 23:59:59'))]"
+                            help="Should be working but no check-in"/>
+                </xpath>
+            </field>
+        </record>
+
 </odoo>

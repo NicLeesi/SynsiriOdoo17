@@ -1,0 +1,892 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* employee_late_check_in
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-20 06:37+0000\n"
+"PO-Revision-Date: 2025-11-20 06:37+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.res_config_settings_view_form
+msgid "<span>Minutes</span>"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:hr.salary.rule,name:employee_late_check_in.hr_attendance
+msgid "Absences(เงินวันทำงาน)"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__is_absent
+#: model:ir.model.fields.selection,name:employee_late_check_in.selection__hr_attendance_report_line__status__absent
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_report_line_search
+msgid "Absent"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.view_employee_search_no_checkin
+msgid "Absent (No Day Off)"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__absent_deduction
+msgid "Absent Deduction"
+msgstr "ขาด-มา"
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in__penalty_amount
+msgid "Amount"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.res_config_settings_view_form
+msgid ""
+"Amount to be deducted from payslip.                                 (If Per "
+"Minutes is chosen then for each                                 minute given"
+" amount is deducted,                                 if Per Total is chosen "
+"then given amount is                                 deducted from the "
+"payslip.)"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_late_check_in__penalty_amount
+msgid "Amount to deduct based on progressive rate or system config."
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.late_check_in_view_form
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.late_check_in_view_tree
+msgid "Approve"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields.selection,name:employee_late_check_in.selection__late_check_in__state__approved
+msgid "Approved"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "April"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "At Work"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model,name:employee_late_check_in.model_hr_attendance
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_commission_payslip__attendance_ids
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_payslip__attendance_ids
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in__attendance_id
+msgid "Attendance"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_pivot_inherit_late
+msgid "Attendance Analysis"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.actions.act_window,name:employee_late_check_in.action_hr_attendance_report_wizard
+#: model:ir.ui.menu,name:employee_late_check_in.menu_hr_attendance_report_wizard
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_report_line_pivot
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_report_line_search
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_report_line_tree
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_report_wizard_form
+msgid "Attendance Report"
+msgstr "รายงาน ขาด-ลา-มาสาย"
+
+#. module: employee_late_check_in
+#: model:ir.model,name:employee_late_check_in.model_hr_attendance_report_line
+msgid "Attendance Report Line"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model,name:employee_late_check_in.model_hr_attendance_report_wizard
+msgid "Attendance Report Wizard"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_hr_commission_payslip__attendance_ids
+#: model:ir.model.fields,help:employee_late_check_in.field_hr_payslip__attendance_ids
+msgid "Attendance records of the employee"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.actions.server,name:employee_late_check_in.ir_cron_late_check_in_ir_actions_server
+msgid "Attendance: Late Check-in"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_late_check_in__attendance_id
+msgid "Attendence of the employee"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "August"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_report_wizard_form
+msgid "Cancel"
+msgstr ""
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "Check In"
+msgstr "เข้างาน"
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_slot__check_in_change
+msgid "Check In change time to"
+msgstr "เปลี่ยนเวลาเข้างานเป็น"
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance__check_in_hour
+#: model:ir.model.fields,field_description:employee_late_check_in.field_zk_machine_attendance__check_in_hour
+msgid "Check-In Hour"
+msgstr "ชั่วโมงที่เข้างาน"
+
+#. module: employee_late_check_in
+#: model:ir.actions.act_window,name:employee_late_check_in.action_late_check_in_progressive_rate
+msgid "Check-in Progressive Rate"
+msgstr "อัตราหักเงินเข้างานสายแบบขั้นบันได"
+
+#. module: employee_late_check_in
+#: model:ir.ui.menu,name:employee_late_check_in.menu_late_check_in_config
+msgid "Check-in Slots"
+msgstr "ช่วงเวลาเข้างาน"
+
+#. module: employee_late_check_in
+#: model:ir.actions.act_window,name:employee_late_check_in.action_late_check_in_slot
+msgid "Check-in Time Slots"
+msgstr "ช่วงเวลาอนุญาตให้เข้างาน"
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.view_employee_search_no_checkin
+msgid "Checked In Today"
+msgstr "เข้างานวันนี้แล้ว"
+
+#. module: employee_late_check_in
+#: model:ir.model,name:employee_late_check_in.model_hr_commission_payslip
+msgid "Commission Slip"
+msgstr "สลิปค่าคอมมิชชั่น"
+
+#. module: employee_late_check_in
+#: model:ir.model,name:employee_late_check_in.model_res_company
+msgid "Companies"
+msgstr "บริษัท"
+
+#. module: employee_late_check_in
+#: model:ir.model,name:employee_late_check_in.model_res_config_settings
+msgid "Config Settings"
+msgstr "การตั้งค่า"
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_hr_employee__late_check_in_count
+#: model:ir.model.fields,help:employee_late_check_in.field_hr_employee_public__late_check_in_count
+msgid "Count of employee's late checkin"
+msgstr "จำนวนครั้งที่พนักงานเข้างานสาย"
+
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__create_uid
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_wizard__create_uid
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in__create_uid
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_progressive_rate__create_uid
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_slot__create_uid
+#: model:ir.model.fields,field_description:employee_late_check_in.field_progressive_rate__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__create_date
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_wizard__create_date
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in__create_date
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_progressive_rate__create_date
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_slot__create_date
+#: model:ir.model.fields,field_description:employee_late_check_in.field_progressive_rate__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_res_company__currency_id
+#: model:ir.model.fields,field_description:employee_late_check_in.field_res_config_settings__currency_id
+msgid "Currency"
+msgstr "สกุลเงิน"
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_late_check_in__date
+msgid "Current date"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__date
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in__date
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_report_line_search
+msgid "Date"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_employee__is_day_off_today
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.view_employee_search_no_checkin
+msgid "Day Off Today"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_res_config_settings__day_work_count_ratio
+msgid "Day work count ratio"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_res_config_settings__day_off_start_morning
+msgid "Day-off morning start time"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__days_work_include_late
+msgid "Days Work"
+msgstr "วันทำงาน"
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance__days_work_include_late
+#: model:ir.model.fields,field_description:employee_late_check_in.field_zk_machine_attendance__days_work_include_late
+msgid "Days Work (with Late)"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "December"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields.selection,name:employee_late_check_in.selection__late_check_in__state__deducted
+msgid "Deducted"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_res_company__deduction_amount
+#: model:ir.model.fields,field_description:employee_late_check_in.field_res_config_settings__deduction_amount
+msgid "Deduction Amount"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_res_company__deduction_type
+#: model:ir.model.fields,field_description:employee_late_check_in.field_res_config_settings__deduction_type
+msgid "Deduction Type"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__department_id
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_wizard__department_id
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_report_line_search
+msgid "Department"
+msgstr "แผนก"
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__display_name
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_wizard__display_name
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in__display_name
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_progressive_rate__display_name
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_slot__display_name
+#: model:ir.model.fields,field_description:employee_late_check_in.field_progressive_rate__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields.selection,name:employee_late_check_in.selection__late_check_in__state__draft
+msgid "Draft"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model,name:employee_late_check_in.model_hr_employee
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__employee_id
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in__employee_id
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_report_line_search
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.late_check_in_view_search
+msgid "Employee"
+msgstr "พนักงาน"
+
+#. module: employee_late_check_in
+#. odoo-python
+#: code:addons/employee_late_check_in/models/hr_employee.py:0
+#: code:addons/employee_late_check_in/models/hr_employees_public.py:0
+#, python-format
+msgid "Employee Late Check-in"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_wizard__employee_ids
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_progressive_rate__employee_ids
+msgid "Employees"
+msgstr "พนักงาน"
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "Errors"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "February"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_wizard__date_from
+msgid "From Date"
+msgstr "ถึงวันที่"
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_report_wizard_form
+msgid "Generate Report"
+msgstr "ออกรายงาน"
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_report_line_search
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.late_check_in_view_search
+msgid "Group By"
+msgstr "กลุ่มโดย"
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_res_company__deduction_amount
+msgid "How much amount need to be deducted if a employee was late"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_res_config_settings__deduction_amount
+msgid "How much amount need to be deducted if a employee was late "
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.res_config_settings_view_form
+msgid ""
+"How much work hour to count a day work                             (set 1 "
+"for 100% work-hour compare with average day-work from schedule to count as a"
+" day work)"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_res_config_settings__day_work_count_ratio
+msgid ""
+"How much work hour to count a day work(set 1 for 100% work-hour compare with"
+" average day-work from schedule to count as a day work)"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "Hr Attendance Search"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__id
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_wizard__id
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in__id
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_progressive_rate__id
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_slot__id
+#: model:ir.model.fields,field_description:employee_late_check_in.field_progressive_rate__id
+msgid "ID"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__is_work_day
+msgid "Is Work Day"
+msgstr "เป็นวันทำงาน"
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "January"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "July"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "June"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "Last 3 Months"
+msgstr "3 เดือนล่าสุด"
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "Last 7 days"
+msgstr " 7 วันล่าสุด"
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__write_uid
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_wizard__write_uid
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in__write_uid
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_progressive_rate__write_uid
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_slot__write_uid
+#: model:ir.model.fields,field_description:employee_late_check_in.field_progressive_rate__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__write_date
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_wizard__write_date
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in__write_date
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_progressive_rate__write_date
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_slot__write_date
+#: model:ir.model.fields,field_description:employee_late_check_in.field_progressive_rate__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__late_check_in
+msgid "Late AM (Min)"
+msgstr "ส.เช้า"
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance__late_check_in_afternoon
+#: model:ir.model.fields,field_description:employee_late_check_in.field_zk_machine_attendance__late_check_in_afternoon
+msgid "Late Afternoon Check-in(Minutes)"
+msgstr "ส.บ่าย"
+
+#. module: employee_late_check_in
+#: model:ir.model,name:employee_late_check_in.model_late_check_in
+msgid "Late Check In"
+msgstr "เวลาเข้างาน"
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_employee__late_check_in_count
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_employee_public__late_check_in_count
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.view_employee_form
+msgid "Late Check-In"
+msgstr "เวลาเข้างาน"
+
+#. module: employee_late_check_in
+#: model:ir.actions.act_window,name:employee_late_check_in.late_check_in_action
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_commission_payslip__late_check_in_ids
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_payslip__late_check_in_ids
+#: model:ir.ui.menu,name:employee_late_check_in.head_menu_late_check_in
+#: model:ir.ui.menu,name:employee_late_check_in.menu_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.late_check_in_view_form
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.late_check_in_view_tree
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.res_config_settings_view_form
+msgid "Late Check-in"
+msgstr "เวลาเข้างาน"
+
+#. module: employee_late_check_in
+#: model:ir.model,name:employee_late_check_in.model_late_check_in_progressive_rate
+#: model:ir.ui.menu,name:employee_late_check_in.menu_late_check_in_progressive_rate
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.view_late_check_progressive_rate_form
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.view_late_check_progressive_rate_tree
+msgid "Late Check-in Progressive Rate"
+msgstr "เวลาเข้างาน อัตราก้าวหน้า"
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.view_late_check_in_slot_form
+msgid "Late Check-in Slot"
+msgstr "ระบุเวลาเข้างานใหม่"
+
+#. module: employee_late_check_in
+#: model:ir.model,name:employee_late_check_in.model_late_check_in_slot
+msgid "Late Check-in Slot Configuration"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.view_late_check_in_slot_tree
+msgid "Late Check-in Slots"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_res_company__late_check_in_after
+#: model:ir.model.fields,field_description:employee_late_check_in.field_res_config_settings__late_check_in_after
+msgid "Late Check-in Starts After"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance__late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_zk_machine_attendance__late_check_in
+msgid "Late Check-in(Minutes)"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:hr.salary.rule,name:employee_late_check_in.late_check_in
+msgid "Late Check-in(มาสาย)"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in__late_minutes
+msgid "Late Minutes"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__late_check_in_afternoon
+msgid "Late PM (Min)"
+msgstr "ส.บ่าย"
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_progressive_rate__late_check_in_progressive_rate_id
+#: model:ir.model.fields,help:employee_late_check_in.field_progressive_rate__late_check_in_progressive_rate_id
+msgid "Late check in progressive rate"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_res_config_settings__late_check_in_not_count_after
+msgid "Late check-in not count after"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_hr_commission_payslip__late_check_in_ids
+#: model:ir.model.fields,help:employee_late_check_in.field_hr_payslip__late_check_in_ids
+msgid "Late check-in records of the employee"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_late_check_in__employee_id
+msgid "Late employee"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_progressive_rate__late_minute_range
+msgid "Late minutes range"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__is_leave
+#: model:ir.model.fields.selection,name:employee_late_check_in.selection__hr_attendance_report_line__status__leave
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_report_line_search
+msgid "Leave"
+msgstr "สิทธิหยุด"
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__leave_hours
+msgid "Leave Hours"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_hr_attendance_report_wizard__employee_ids
+msgid "Leave empty for all employees"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_res_config_settings__Lunch_break_time
+msgid "Lunch break time"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_res_config_settings__currency_id
+msgid "Main currency of the company."
+msgstr "สกุลเงินหลักของบริษัท"
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "March"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_res_company__maximum_minutes
+#: model:ir.model.fields,field_description:employee_late_check_in.field_res_config_settings__maximum_minutes
+msgid "Maximum Late Minute"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_res_company__maximum_minutes
+msgid "Maximum time limit a employee was considered as late"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_res_config_settings__maximum_minutes
+msgid ""
+"Maximum time limit a employee was considered as late when compute record"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.res_config_settings_view_form
+msgid ""
+"Maximum time limit a employee was considered as late when create late check-"
+"in records. If not fill,                          late check-in record can "
+"not be create."
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "May"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "My Attendances"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "My Team"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in__name
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_progressive_rate__name
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_slot__name
+msgid "Name"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.view_employee_search_no_checkin
+msgid "Never Checked In"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.view_employee_search_no_checkin
+msgid "No Check-In Today"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_progressive_rate__note
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_slot__note
+msgid "Note"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "November"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "October"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model,name:employee_late_check_in.model_hr_payslip
+msgid "Pay Slip"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_progressive_rate__penalty_rate
+msgid "Penalty rate for the late minute range"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields.selection,name:employee_late_check_in.selection__res_company__deduction_type__minutes
+#: model:ir.model.fields.selection,name:employee_late_check_in.selection__res_config_settings__deduction_type__minutes
+msgid "Per Minutes"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields.selection,name:employee_late_check_in.selection__res_company__deduction_type__total
+#: model:ir.model.fields.selection,name:employee_late_check_in.selection__res_config_settings__deduction_type__total
+msgid "Per Total"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__is_present
+#: model:ir.model.fields.selection,name:employee_late_check_in.selection__hr_attendance_report_line__status__present
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_report_line_search
+msgid "Present"
+msgstr "เข้างาน"
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "Previous Year"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.view_late_check_progressive_rate_form
+msgid "Progressive Rate"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model,name:employee_late_check_in.model_progressive_rate
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in_progressive_rate__progressive_rate_ids
+msgid "Progressive Rate IDs"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.view_late_check_progressive_rate_form
+msgid "Progressive Rate Lines"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model,name:employee_late_check_in.model_hr_employee_public
+msgid "Public Employee"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.late_check_in_view_form
+msgid "Reference ...."
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_late_check_in__name
+msgid "Reference number of the record"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.late_check_in_view_form
+msgid "Refuse"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields.selection,name:employee_late_check_in.selection__late_check_in__state__refused
+msgid "Refused"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.late_check_in_view_search
+msgid "Search Late check-in records"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "September"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_res_config_settings__Lunch_break_time
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.res_config_settings_view_form
+msgid "Setting Lunch break time for employee."
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.res_config_settings_view_form
+msgid ""
+"Setting day-off morning start time for employee who want to work in day-off "
+"for computing late check-in."
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_res_config_settings__day_off_start_morning
+msgid ""
+"Setting day-off morning start time for employee who want to work in day-off."
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_progressive_rate__late_minute_range
+msgid "Setting late minutes range."
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_progressive_rate__penalty_rate
+msgid "Setting multiply rate to penalty amount."
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.view_employee_search_no_checkin
+msgid "Should be working but no check-in"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_late_check_in__state
+msgid "State"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_late_check_in__state
+msgid "State of the record"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__status
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_report_line_search
+msgid "Status"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_late_check_in__late_minutes
+msgid "The field indicates the number of minutes the worker is late."
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_view_filter_override
+msgid "This Month"
+msgstr "เดือนนี้"
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_hr_attendance__late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_hr_attendance__late_check_in_afternoon
+#: model:ir.model.fields,help:employee_late_check_in.field_zk_machine_attendance__late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_zk_machine_attendance__late_check_in_afternoon
+msgid "This indicates the duration of the employee's tardiness."
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_wizard__date_to
+msgid "To Date"
+msgstr "เริ่มวันที่"
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_res_company__deduction_type
+#: model:ir.model.fields,help:employee_late_check_in.field_res_config_settings__deduction_type
+msgid ""
+"Type of deduction, (If Per Minutes is chosen then for each minutes given "
+"amount is deducted, if Per Total is chosen then given amount is deducted "
+"from the total salary)"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:hr.salary.rule,name:employee_late_check_in.hr_attendance_unpaid
+msgid "Unpaid(ลาไม่จ่าย)"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__is_weekend
+#: model:ir.model.fields.selection,name:employee_late_check_in.selection__hr_attendance_report_line__status__weekend
+msgid "Weekend"
+msgstr "หยุดปกติ"
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.view_employee_search_no_checkin
+msgid "Weekend, Holiday, or Approved Leave"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_res_company__late_check_in_after
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.res_config_settings_view_form
+msgid "When should the late check-in count down starts."
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_res_config_settings__late_check_in_after
+msgid "When should the late check-in count."
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,help:employee_late_check_in.field_res_config_settings__late_check_in_not_count_after
+msgid ""
+"When should the late check-in not count starts.If late check-in exceed the set time, \n"
+"        employee is considered absent for that period and late check-in does not count"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.res_config_settings_view_form
+msgid ""
+"When should the late check-in not count starts.If late check-in over the "
+"setting time, employee has consider                                 absences"
+" fro that period and late check-in not count"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model:ir.model.fields,field_description:employee_late_check_in.field_hr_attendance_report_line__worked_hours
+msgid "Worked Hours"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.hr_attendance_report_line_search
+msgid "Working Days"
+msgstr ""
+
+#. module: employee_late_check_in
+#: model_terms:ir.ui.view,arch_db:employee_late_check_in.view_employee_search_no_checkin
+msgid "Working Today"
+msgstr ""

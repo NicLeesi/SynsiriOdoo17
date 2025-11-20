@@ -30,14 +30,13 @@ class SteelPriceHistory(models.Model):
         help="Numeric difference from the previous record's price for the same item code.",
     )
 
-
     @api.depends("price", "code", "date")
     def _compute_price_change(self):
         """Compute numeric difference between this record's price and the previous record."""
         SteelPrice = self.env["steel.price.history"]
         records_by_code = {}
 
-        # 🔄 Preload records by code for efficiency
+        # Preload records by code for efficiency
         for code in self.mapped("code"):
             if code:
                 records_by_code[code] = SteelPrice.search(
@@ -58,33 +57,18 @@ class SteelPriceHistory(models.Model):
             try:
                 idx = ids.index(rec.id)
             except ValueError:
-                continue  # record not in the list
+                continue
 
             if idx <= 0:
-                continue  # no previous record
+                continue
 
             prev = records[idx - 1]
-
-            # 🧩 Debug logging
-            _logger.info(
-                "📊 Price Change Calc for %s | Date: %s | Current: %.2f | Prev: %.2f | Diff: %.2f",
-                rec.code,
-                rec.date,
-                rec.price or 0.0,
-                prev.price or 0.0,
-                (rec.price or 0.0) - (prev.price or 0.0),
-            )
-
-            # ✅ Set computed value
             rec.price_change_display = round(rec.price_per_weight - (prev.price_per_weight or 0.0), 2)
 
-    # -------------------------------------------------------------------------
-    # Fetch 2 payloads (like browser behavior) and merge same-day records
-    # -------------------------------------------------------------------------
     @api.model
     def fetch_prices(self):
-        """Fetch steel prices from SteelBestBuy API (two payloads like browser) and merge same-day records."""
-        try:  # ✅ Added missing try block
+        """Fetch steel prices from SteelBestBuy API and merge same-day records."""
+        try:
             api_key = self.env["ir.config_parameter"].sudo().get_param("steelbestbuy.api_key")
             if not api_key:
                 raise ValueError("API key is missing. Please set 'steelbestbuy.api_key' in System Parameters.")
@@ -116,9 +100,7 @@ class SteelPriceHistory(models.Model):
                 "x-api-key": api_key,
             }
 
-            # ✅ All payload groups (clean & consistent)
-
-            # 1️⃣ Steel bar and all steel
+            # Steel bar and all steel
             payloads1 = [
                 {
                     "productCodes": [
@@ -134,7 +116,7 @@ class SteelPriceHistory(models.Model):
                 },
             ]
 
-            # 2️⃣ 90° Angle Steel
+            # 90° Angle Steel
             payload2 = [
                 {
                     "productCodes": [
@@ -147,7 +129,7 @@ class SteelPriceHistory(models.Model):
                 }
             ]
 
-            # 3️⃣ Steel Sheet
+            # Steel Sheet
             payload4 = [
                 {
                     "productCodes": [
@@ -159,7 +141,7 @@ class SteelPriceHistory(models.Model):
                 }
             ]
 
-            # 4️⃣ Equal Angle & C-Channel Steel
+            # Equal Angle & C-Channel Steel
             payload5 = [
                 {
                     "productCodes": [
@@ -171,7 +153,7 @@ class SteelPriceHistory(models.Model):
                 }
             ]
 
-            # 5️⃣ Square & Rectangular Tube (solid & hollow)
+            # Square & Rectangular Tube (solid & hollow)
             payload6 = [
                 {
                     "productCodes": [
@@ -198,7 +180,7 @@ class SteelPriceHistory(models.Model):
                 },
             ]
 
-            # 6️⃣ Rectangular Bar (GI) + Round Tube
+            # Rectangular Bar (GI) + Round Tube
             payload8 = [
                 {
                     "productCodes": [
@@ -216,7 +198,7 @@ class SteelPriceHistory(models.Model):
                 },
             ]
 
-            # 7️⃣ H-Beam, W-Flange, I-Beam
+            # H-Beam, W-Flange, I-Beam
             payload10 = [
                 {
                     "productCodes": [
@@ -244,22 +226,20 @@ class SteelPriceHistory(models.Model):
                 }
             ]
 
-            # 🔹 Combine all payload groups into a single list
-            payloads = []
-            payloads += payloads1
-            payloads += payload2
-            payloads += payload4
-            payloads += payload5
-            payloads += payload6
-            payloads += payload8
-            payloads += payload10
+            # Combine all payload groups
+            payloads = (
+                    payloads1 + payload2 + payload4 +
+                    payload5 + payload6 + payload8 + payload10
+            )
 
-            # 🔹 Fetch loop with 2-second delay between payloads
+            # Fetch loop
             today = fields.Date.today()
             total_new, total_updated, total_items = 0, 0, 0
 
             for idx, payload in enumerate(payloads, 1):
-                _logger.info("📦 Sending payload %s with %s product codes", idx, len(payload["productCodes"]))
+                _logger.info("📦 Sending payload %s/%s with %s product codes",
+                             idx, len(payloads), len(payload["productCodes"]))
+
                 res = requests.post(url, headers=headers, json=payload, timeout=30)
                 if res.status_code != 200:
                     _logger.error("❌ API error %s: %s", res.status_code, res.text[:300])
@@ -267,121 +247,84 @@ class SteelPriceHistory(models.Model):
 
                 try:
                     raw = res.json()
-                except Exception as json_err:  # ✅ Added exception variable
-                    _logger.error("❌ Invalid JSON response for payload %s:\n%s", idx, res.text[:500])
+                except Exception:
+                    _logger.error("❌ Invalid JSON response for payload %s", idx)
                     continue
 
                 items = raw.get("data", {}).get("items", [])
                 if not items:
-                    _logger.warning("⚠️ No items found in response for payload %s.", idx)
+                    _logger.warning("⚠️ No items found in response for payload %s", idx)
                     continue
 
-                # ✅ Removed duplicate code block
                 priced_items = [p for p in items if p.get("price") or p.get("pricePerWeight")]
                 total_items += len(priced_items)
 
-                # 🔹 Fetch loop with 2-second delay between payloads
-                today = fields.Date.today()
-                total_new, total_updated, total_items = 0, 0, 0
-
-                for idx, payload in enumerate(payloads, 1):
-                    _logger.info("📦 Sending payload %s with %s product codes", idx, len(payload["productCodes"]))
-                    res = requests.post(url, headers=headers, json=payload, timeout=30)
-                    if res.status_code != 200:
-                        _logger.error("❌ API error %s: %s", res.status_code, res.text[:300])
+                for item in priced_items:
+                    code = item.get("code")
+                    if not code:
                         continue
 
-                    try:
-                        raw = res.json()
-                    except Exception as json_err:
-                        _logger.error("❌ Invalid JSON response for payload %s:\n%s", idx, res.text[:500])
-                        continue
+                    # Check for existing record from today
+                    existing_today = self.search([
+                        ("code", "=", code),
+                        ("date", ">=", f"{today} 00:00:00"),
+                        ("date", "<=", f"{today} 23:59:59"),
+                    ], limit=1)
 
-                    items = raw.get("data", {}).get("items", [])
-                    if not items:
-                        _logger.warning("⚠️ No items found in response for payload %s.", idx)
-                        continue
+                    # Find the latest record overall for this code
+                    last_record = self.search([("code", "=", code)], order="date desc", limit=1)
 
-                    priced_items = [p for p in items if p.get("price") or p.get("pricePerWeight")]
-                    total_items += len(priced_items)
+                    # Prepare new values from API
+                    price = item.get("price")
+                    price_per_weight = item.get("pricePerWeight")
+                    daily_price_change = item.get("dailyPriceChange")
+                    weekly_price_change = item.get("weeklyPriceChange")
+                    monthly_price_change = item.get("monthlyPriceChange")
 
-                    for item in priced_items:
-                        code = item.get("code")
-                        if not code:
+                    vals = {
+                        "name": item.get("name"),
+                        "category_name": item.get("categoryName"),
+                        "description": item.get("description"),
+                        "weight": item.get("weight"),
+                        "uom": item.get("uom"),
+                        "price": price,
+                        "price_per_weight": price_per_weight,
+                        "daily_price_change": daily_price_change,
+                        "weekly_price_change": weekly_price_change,
+                        "monthly_price_change": monthly_price_change,
+                        "date": fields.Datetime.now(),
+                    }
+
+                    # Compare with last record to skip if unchanged
+                    if last_record:
+                        last_price_per_weight = last_record.price_per_weight or 0.0
+                        last_daily_change = last_record.daily_price_change or 0.0
+                        new_price_per_weight = price_per_weight or 0.0
+                        new_daily_change = daily_price_change or 0.0
+
+                        if (abs(last_price_per_weight - new_price_per_weight) < 0.01 and
+                                abs(last_daily_change - new_daily_change) < 0.01):
                             continue
 
-                        # 🔹 Check for an existing record from today
-                        existing_today = self.search([
-                            ("code", "=", code),
-                            ("date", ">=", f"{today} 00:00:00"),
-                            ("date", "<=", f"{today} 23:59:59"),
-                        ], limit=1)
+                    # Update existing or create new
+                    if existing_today:
+                        existing_today.write(vals)
+                        total_updated += 1
+                    else:
+                        vals["code"] = code
+                        self.create(vals)
+                        total_new += 1
 
-                        # 🔹 Always find the *latest record* overall for this code
-                        last_record = self.search([("code", "=", code)], order="date desc", limit=1)
+                _logger.info("✅ Payload %s/%s processed: %s items",
+                             idx, len(payloads), len(priced_items))
 
-                        # 🔹 Prepare new values from API
-                        price = item.get("price")
-                        price_per_weight = item.get("pricePerWeight")
-                        daily_price_change = item.get("dailyPriceChange")
-                        weekly_price_change = item.get("weeklyPriceChange")
-                        monthly_price_change = item.get("monthlyPriceChange")
+                # Sleep between payloads (except after last one)
+                if idx < len(payloads):
+                    time.sleep(2)
 
-                        vals = {
-                            "name": item.get("name"),
-                            "category_name": item.get("categoryName"),
-                            "description": item.get("description"),
-                            "weight": item.get("weight"),
-                            "uom": item.get("uom"),
-                            "price": price,
-                            "price_per_weight": price_per_weight,
-                            "daily_price_change": daily_price_change,
-                            "weekly_price_change": weekly_price_change,
-                            "monthly_price_change": monthly_price_change,
-                            "date": fields.Datetime.now(),
-                        }
-
-                        # 🧠 If there is a last record, compare its key fields
-                        if last_record:
-                            # Handle None values in comparison
-                            last_price_per_weight = last_record.price_per_weight or 0.0
-                            last_daily_change = last_record.daily_price_change or 0.0
-                            new_price_per_weight = price_per_weight or 0.0
-                            new_daily_change = daily_price_change or 0.0
-
-                            # Check if values are unchanged
-                            if (abs(last_price_per_weight - new_price_per_weight) < 0.01 and
-                                    abs(last_daily_change - new_daily_change) < 0.01):
-                                _logger.info(
-                                    "⏩ Skipped %s — price_per_weight (%.2f) and daily_change (%.2f) unchanged since last fetch.",
-                                    code,
-                                    new_price_per_weight,
-                                    new_daily_change,
-                                )
-                                continue  # skip creation — data is identical
-
-                        # 🟢 If today's record already exists, update it
-                        if existing_today:
-                            existing_today.write(vals)
-                            total_updated += 1
-                            _logger.info("♻️ Updated existing record for %s", code)
-                        else:
-                            # 🟢 Otherwise create new record (only if change detected)
-                            vals["code"] = code
-                            self.create(vals)
-                            total_new += 1
-                            _logger.info("🆕 Created new record for %s", code)
-
-                    # ✅ Sleep moved here - after processing each payload
-                    _logger.info("✅ Payload %s processed: %s items", idx, len(priced_items))
-
-                    # Only sleep if not the last payload
-                    if idx < len(payloads):
-                        time.sleep(5)
-
-                # ✅ Final summary log moved outside the loop
-                _logger.info("✅ Total %s items fetched: %s updated, %s new.", total_items, total_updated, total_new)
-                return True
+            _logger.info("✅ Fetch complete: %s items total, %s updated, %s new",
+                         total_items, total_updated, total_new)
+            return True
 
         except Exception as e:
             _logger.error("❌ Fetch failed: %s", e, exc_info=True)

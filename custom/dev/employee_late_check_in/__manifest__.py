@@ -37,6 +37,13 @@
     'company': 'Cybrosys Techno Solutions',
     'maintainer': 'Cybrosys Techno Solutions',
     'website': 'https://www.cybrosys.com',
+    'assets': {
+            'web.assets_backend': [
+                    'employee_late_check_in/static/src/css/pivot_custom.css',
+                    'employee_late_check_in/static/src/js/pivot_hide_zero.js',
+                    'employee_late_check_in/static/src/js/pivot_cell_colors.js'
+                ],
+            },
     'depends': ['hr_attendance', 'hr_payroll_community', 'hr_contract','hr_payroll_commission'],
     'data': [
         'security/ir.model.access.csv',
@@ -49,6 +56,7 @@
         'views/late_check_in_views.xml',
         'views/hr_employee_views.xml',
         'views/hr_payslip_views.xml',
+        'wizard/attendance_report_wizard_view.xml',
 
     ],
     'images': ['static/description/banner.jpg'],

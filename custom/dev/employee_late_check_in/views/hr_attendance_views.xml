@@ -15,5 +15,122 @@
             </field>
         </field>
     </record>
+
+    <record id="hr_attendance_view_filter_override" model="ir.ui.view">
+        <field name="name">hr_attendance_view_filter.override</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="replace">
+                <search string="Hr Attendance Search">
+                    <field name="employee_id"/>
+                    <field name="department_id" operator="child_of"/>
+                    <field name="check_in"/>
+                    <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
+                    <filter string="My Team" name="myteam" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter string="At Work" name="nocheckout" domain="[('check_out', '=', False)]" />
+                    <filter string="Errors" name="errors"
+                            domain="['|', ('worked_hours', '&gt;=', 16), '&amp;', ('check_out', '=', False), ('check_in', '&lt;=',  (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                    <filter string="Check In" name="check_in_filter" date="check_in"/>
+                    <filter string="Last 7 days" name="last_week" domain="[(
+                        'check_in','&gt;=', (
+                            context_today() + datetime.timedelta(days=-7)
+                            )
+                        )]"/>
+                    <filter string="Last 3 Months" invisible="1" name="last_three_months" domain="[(
+                        'check_in','&gt;=', (
+                            context_today() + datetime.timedelta(days=-90)
+                            )
+                        )]"/>
+
+                    <separator/>
+                    <!-- Year Filters -->
+                    <filter string="Previous Year" name="previous_year"
+                            domain="[('check_in', '&gt;=',
+                            (context_today() - datetime.timedelta(days=365)).strftime('%Y-01-01')),
+                            ('check_in', '&lt;', context_today().strftime('%Y-01-01'))]"/>
+                    <filter string="This Month" name="this_month"
+                            domain="[('check_in', '&gt;=', context_today().strftime('%Y-%m-01')),
+                                ('check_in', '&lt;', (context_today() + relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                    <separator/>
+                    <!-- Month Filters -->
+                    <filter string="January" name="month_01"
+                            domain="[('check_in', '&gt;=', context_today().strftime('%Y-01-01')), ('check_in', '&lt;', context_today().strftime('%Y-02-01'))]"/>
+                    <filter string="February" name="month_02"
+                            domain="[('check_in', '&gt;=', context_today().strftime('%Y-02-01')), ('check_in', '&lt;', context_today().strftime('%Y-03-01'))]"/>
+                    <filter string="March" name="month_03"
+                            domain="[('check_in', '&gt;=', context_today().strftime('%Y-03-01')), ('check_in', '&lt;', context_today().strftime('%Y-04-01'))]"/>
+                    <filter string="April" name="month_04"
+                            domain="[('check_in', '&gt;=', context_today().strftime('%Y-04-01')), ('check_in', '&lt;', context_today().strftime('%Y-05-01'))]"/>
+                    <filter string="May" name="month_05"
+                            domain="[('check_in', '&gt;=', context_today().strftime('%Y-05-01')), ('check_in', '&lt;', context_today().strftime('%Y-06-01'))]"/>
+                    <filter string="June" name="month_06"
+                            domain="[('check_in', '&gt;=', context_today().strftime('%Y-06-01')), ('check_in', '&lt;', context_today().strftime('%Y-07-01'))]"/>
+                    <filter string="July" name="month_07"
+                            domain="[('check_in', '&gt;=', context_today().strftime('%Y-07-01')), ('check_in', '&lt;', context_today().strftime('%Y-08-01'))]"/>
+                    <filter string="August" name="month_08"
+                            domain="[('check_in', '&gt;=', context_today().strftime('%Y-08-01')), ('check_in', '&lt;', context_today().strftime('%Y-09-01'))]"/>
+                    <filter string="September" name="month_09"
+                            domain="[('check_in', '&gt;=', context_today().strftime('%Y-09-01')), ('check_in', '&lt;', context_today().strftime('%Y-10-01'))]"/>
+                    <filter string="October" name="month_10"
+                            domain="[('check_in', '&gt;=', context_today().strftime('%Y-10-01')), ('check_in', '&lt;', context_today().strftime('%Y-11-01'))]"/>
+                    <filter string="November" name="month_11"
+                            domain="[('check_in', '&gt;=', context_today().strftime('%Y-11-01')), ('check_in', '&lt;', context_today().strftime('%Y-12-01'))]"/>
+                    <filter string="December" name="month_12"
+                            domain="[('check_in', '&gt;=', context_today().strftime('%Y-12-01')), ('check_in', '&lt;', (context_today() + datetime.timedelta(days=31)).strftime('%Y-01-01'))]"/>
+
+                    <group expand="1" string="Group By">
+                        <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+
+                    </group>
+                </search>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="hr_attendance_view_pivot_inherit_late" model="ir.ui.view">
+        <field name="name">hr.attendance.pivot.late.inherit</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_pivot"/>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot" position="replace">
+                <pivot string="Attendance Analysis">
+                    <field name="employee_id" type="row"/>
+                    <field name="check_in" type="col" interval="month"/>
+                    <field name="check_in" type="col" interval="day"/>
+<!--                    <field name="worked_hours" type="measure"/>-->
+<!--                    <field name="overtime_hours" type="measure"/>-->
+                    <field name="late_check_in" type="measure"/>
+<!--                    <field name="late_check_in_afternoon" type="measure"/>-->
+<!--                    <field name="check_in_hour" type="measure"/>-->
+                </pivot>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_attendance.hr_attendance_reporting" model="ir.actions.act_window">
+        <field name="name">Attendances</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="search_view_id" ref="hr_attendance_view_filter_override"/>
+        <field name="context">
+            {
+                "search_default_this_month": 1
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No attendance records found
+            </p>
+            <p>
+                The attendance reporting of your employees will be displayed here.
+            </p>
+        </field>
+    </record>
+
+
 </odoo>
 

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Wizard Form View -->
+    <record id="hr_attendance_report_wizard_form" model="ir.ui.view">
+        <field name="name">hr.attendance.report.wizard.form</field>
+        <field name="model">hr.attendance.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Attendance Report">
+                <group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="department_id"/>
+                        <field name="employee_ids" widget="many2many_tags"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_generate_report"
+                            string="Generate Report"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Report Line Pivot View -->
+    <record id="hr_attendance_report_line_pivot" model="ir.ui.view">
+        <field name="name">hr.attendance.report.line.pivot</field>
+        <field name="model">hr.attendance.report.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Attendance Report">
+                <field name="employee_id" type="row"/>
+                <field name="date" type="col" interval="day"/>
+                <field name="worked_hours" />
+                <field name="days_work_include_late" />
+                <field name="late_check_in" type="measure"/>
+                <field name="late_check_in_afternoon" />
+                <field name="absent_deduction" type="measure"/>
+                <field name="is_present" />
+                <field name="is_absent" />
+                <field name="is_leave" />
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Report Line Tree View -->
+    <record id="hr_attendance_report_line_tree" model="ir.ui.view">
+        <field name="name">hr.attendance.report.line.tree</field>
+        <field name="model">hr.attendance.report.line</field>
+        <field name="arch" type="xml">
+            <tree string="Attendance Report">
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="status" decoration-success="status == 'present'"
+                       decoration-danger="status == 'absent'"
+                       decoration-info="status == 'leave'"
+                       decoration-muted="status == 'weekend'"/>
+                <field name="worked_hours" widget="float_time"/>
+                <field name="late_check_in"/>
+                <field name="late_check_in_afternoon" />
+                <field name="leave_hours"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Report Line Search View -->
+    <record id="hr_attendance_report_line_search" model="ir.ui.view">
+        <field name="name">hr.attendance.report.line.search</field>
+        <field name="model">hr.attendance.report.line</field>
+        <field name="arch" type="xml">
+            <search string="Attendance Report">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="date"/>
+                <filter string="Present" name="present" domain="[('status', '=', 'present')]"/>
+                <filter string="Absent" name="absent" domain="[('status', '=', 'absent')]"/>
+                <filter string="Leave" name="leave" domain="[('status', '=', 'leave')]"/>
+                <filter string="Working Days" name="working_days" domain="[('is_weekend', '=', False)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Department" name="department" context="{'group_by': 'department_id'}"/>
+                    <filter string="Status" name="status" context="{'group_by': 'status'}"/>
+                    <filter string="Date" name="date" context="{'group_by': 'date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Wizard Action -->
+    <record id="action_hr_attendance_report_wizard" model="ir.actions.act_window">
+        <field name="name">Attendance Report</field>
+        <field name="res_model">hr.attendance.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_hr_attendance_report_wizard"
+              name="Attendance Report"
+              parent="hr_attendance.menu_hr_attendance_root"
+              action="action_hr_attendance_report_wizard"
+              sequence="20"/>
+</odoo>
