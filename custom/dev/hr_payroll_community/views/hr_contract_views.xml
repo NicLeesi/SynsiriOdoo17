@@ -24,8 +24,14 @@
                    position="after">
                 <field name="schedule_pay"/>
             </xpath>
+
+            <!-- Add groups attribute to Salary Information page -->
+            <xpath expr="//page[@name='information']" position="attributes">
+                <attribute name="groups">hr_payroll_community.group_hr_payroll_community_manager</attribute>
+            </xpath>
+
             <xpath expr="//page[@name='information']" position="after">
-                <page string="Commission Information" name="Commission" groups="hr_contract.group_hr_contract_manager">
+                <page string="Commission Information" name="Commission" groups="hr_payroll_community.group_hr_payroll_community_manager">
                     <group string="Commission income" name='Commission income'>
                         <label for="commission_start"/>
                         <div class="o_row mw-50" name="commission_start">
@@ -86,25 +92,21 @@
                     </div>
                     <label for="travel_allowance"/>
                     <div class="o_row">
-
                         <field name="travel_allowance" nolabel="1"/>
                         <span>/ month</span>
                     </div>
                     <label for="meal_allowance"/>
                     <div class="o_row">
-
                         <field name="meal_allowance" nolabel="1"/>
                         <span>/ month</span>
                     </div>
                     <label for="medical_allowance"/>
                     <div class="o_row">
-
                         <field name="medical_allowance" nolabel="1"/>
                         <span>/ month</span>
                     </div>
                     <label for="other_allowance"/>
                     <div class="o_row">
-
                         <field name="other_allowance" nolabel="1"/>
                         <span>/ month</span>
                     </div>

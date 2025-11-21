@@ -80,7 +80,7 @@ class HrAttendanceReportWizard(models.TransientModel):
             return days_work_include_late
 
     def action_generate_report(self):
-        """Generate attendance summary records"""
+        """Generate attendance summary records - OPTIMIZED"""
         self.ensure_one()
 
         _logger.info("Starting attendance report generation...")
@@ -120,56 +120,103 @@ class HrAttendanceReportWizard(models.TransientModel):
         date_from = self.date_from
         date_to = self.date_to
 
-        report_lines = []
+        # Convert date range to UTC
+        local_start = user_tz.localize(datetime.combine(date_from, datetime.min.time()))
+        local_end = user_tz.localize(datetime.combine(date_to, datetime.max.time()))
+        utc_start = local_start.astimezone(pytz.UTC).replace(tzinfo=None)
+        utc_end = local_end.astimezone(pytz.UTC).replace(tzinfo=None)
 
-        # Track absences per employee for penalty calculation
+        # BATCH FETCH: Get all attendances for all employees in date range at once
+        all_attendances = self.env['hr.attendance'].search([
+            ('employee_id', 'in', employees.ids),
+            ('check_in', '>=', utc_start),
+            ('check_in', '<=', utc_end),
+        ])
+        _logger.info("Fetched %s attendances", len(all_attendances))
+
+        # BATCH FETCH: Get all leaves for all employees in date range at once
+        all_leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', employees.ids),
+            ('state', '=', 'validate'),
+            ('date_from', '<=', date_to),
+            ('date_to', '>=', date_from),
+        ])
+        _logger.info("Fetched %s leaves", len(all_leaves))
+
+        # Group attendances by employee and date
+        attendance_map = {}
+        for att in all_attendances:
+            # Convert check_in to local date
+            check_in_utc = pytz.UTC.localize(att.check_in)
+            check_in_local = check_in_utc.astimezone(user_tz)
+            att_date = check_in_local.date()
+
+            key = (att.employee_id.id, att_date)
+            if key not in attendance_map:
+                attendance_map[key] = []
+            attendance_map[key].append(att)
+
+        # Group leaves by employee and date
+        leave_map = {}
+        for leave in all_leaves:
+            emp_id = leave.employee_id.id
+            leave_start = leave.date_from.date() if isinstance(leave.date_from, datetime) else leave.date_from
+            leave_end = leave.date_to.date() if isinstance(leave.date_to, datetime) else leave.date_to
+
+            current = max(leave_start, date_from)
+            end = min(leave_end, date_to)
+
+            while current <= end:
+                key = (emp_id, current)
+                leave_map[key] = leave
+                current += timedelta(days=1)
+
+        # Pre-calculate work days for all employees
+        work_day_map = {}
+        for employee in employees:
+            current_date = date_from
+            while current_date <= date_to:
+                is_work_day = self._is_work_day(employee, current_date)
+                work_day_map[(employee.id, current_date)] = is_work_day
+                current_date += timedelta(days=1)
+
+        _logger.info("Pre-calculated work days")
+
+        report_lines = []
         employee_absences = {}
 
         for employee in employees:
             current_date = date_from
-            employee_absences[employee.id] = 0  # Reset absence counter for each employee
+            employee_absences[employee.id] = 0
 
             while current_date <= date_to:
-                # Convert local date to UTC datetime range
-                local_start = user_tz.localize(datetime.combine(current_date, datetime.min.time()))
-                local_end = user_tz.localize(datetime.combine(current_date, datetime.max.time()))
-                utc_start = local_start.astimezone(pytz.UTC).replace(tzinfo=None)
-                utc_end = local_end.astimezone(pytz.UTC).replace(tzinfo=None)
+                key = (employee.id, current_date)
 
-                # Get ALL attendances for this day
-                attendances = self.env['hr.attendance'].search([
-                    ('employee_id', '=', employee.id),
-                    ('check_in', '>=', utc_start),
-                    ('check_in', '<=', utc_end),
-                ])
+                # Get attendances for this employee/date from map
+                attendances = attendance_map.get(key, [])
 
-                # Check leave
-                leave = self.env['hr.leave'].search([
-                    ('employee_id', '=', employee.id),
-                    ('state', '=', 'validate'),
-                    ('date_from', '<=', current_date),
-                    ('date_to', '>=', current_date),
-                ], limit=1)
+                # Get leave for this employee/date from map
+                leave = leave_map.get(key)
 
-                # Check if work day
-                is_work_day = self._is_work_day(employee, current_date)
+                # Get work day status from map
+                is_work_day = work_day_map.get(key, False)
 
                 # Determine status and values
                 if attendances:
                     status = 'present'
-                    worked_hours = sum(attendances.mapped('worked_hours')) or 0.0
-                    days_work_include_late = sum(attendances.mapped('days_work_include_late')) or 0.0
+                    worked_hours = sum(att.worked_hours or 0.0 for att in attendances)
+                    days_work_include_late = sum(att.days_work_include_late or 0.0 for att in attendances)
 
-                    late_check_in = 0
-                    late_check_in_pm = 0
+                    late_check_in = False
+                    late_check_in_pm = False
 
-                    if 'late_check_in' in self.env['hr.attendance']._fields:
-                        late_check_in = sum(attendances.mapped('late_check_in')) or 0
+                    total_late = sum(att.late_check_in or 0 for att in attendances)
+                    if total_late > 0:
+                        late_check_in = float(total_late)
 
-
-                    if 'late_check_in_afternoon' in self.env['hr.attendance']._fields:
-                        late_check_in_pm = sum(attendances.mapped('late_check_in_afternoon')) or 0
-
+                    total_late_pm = sum(att.late_check_in_afternoon or 0 for att in attendances)
+                    if total_late_pm > 0:
+                        late_check_in_pm = float(total_late_pm)
 
                     is_present = 1
                     is_absent = 0
@@ -178,9 +225,9 @@ class HrAttendanceReportWizard(models.TransientModel):
                 elif leave:
                     status = 'leave'
                     worked_hours = 0.0
-                    days_work_include_late = 1.0  # Leave counts as full day
-                    late_check_in = 0
-                    late_check_in_pm = 0
+                    days_work_include_late = 1.0
+                    late_check_in = False
+                    late_check_in_pm = False
                     is_present = 0
                     is_absent = 0
                     is_leave = 1
@@ -189,8 +236,8 @@ class HrAttendanceReportWizard(models.TransientModel):
                     status = 'weekend'
                     worked_hours = 0.0
                     days_work_include_late = 0.0
-                    late_check_in = 0
-                    late_check_in_pm = 0
+                    late_check_in = False
+                    late_check_in_pm = False
                     is_present = 0
                     is_absent = 0
                     is_leave = 0
@@ -199,8 +246,8 @@ class HrAttendanceReportWizard(models.TransientModel):
                     status = 'absent'
                     worked_hours = 0.0
                     days_work_include_late = 0.0
-                    late_check_in = 0
-                    late_check_in_pm = 0
+                    late_check_in = False
+                    late_check_in_pm = False
                     is_present = 0
                     is_absent = 1
                     is_leave = 0
@@ -210,19 +257,11 @@ class HrAttendanceReportWizard(models.TransientModel):
 
                 # Apply penalty for multiple absences
                 if absent_deduction < 0:
-                    # This is an absence
                     employee_absences[employee.id] += 1
-
-                    # Apply penalty: 2nd absence onwards gets additional -1 penalty
                     if employee_absences[employee.id] > 1:
-                        penalty = employee_absences[employee.id] - 1  # 2nd absence = 1 extra, 3rd = 2 extra, etc.
+                        penalty = employee_absences[employee.id] - 1
                         absent_deduction -= penalty
-                        _logger.info(
-                            "Employee: %s | Date: %s | Absence #%s | Base: -1 | Penalty: -%s | Total: %s",
-                            employee.name, current_date, employee_absences[employee.id], penalty, absent_deduction
-                        )
 
-                # Create report line
                 report_lines.append({
                     'employee_id': employee.id,
                     'department_id': employee.department_id.id if employee.department_id else False,
@@ -246,20 +285,9 @@ class HrAttendanceReportWizard(models.TransientModel):
         _logger.info("Creating %s report lines", len(report_lines))
 
         if report_lines:
-            created_records = self.env['hr.attendance.report.line'].create(report_lines)
-            _logger.info("Created %s records successfully", len(created_records))
-        else:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': 'Warning',
-                    'message': 'No data to generate.',
-                    'type': 'warning',
-                }
-            }
-
-        _logger.info("Returning action to view report")
+            # Batch create for better performance
+            self.env['hr.attendance.report.line'].create(report_lines)
+            _logger.info("Created records successfully")
 
         return {
             'name': 'Attendance Report',
