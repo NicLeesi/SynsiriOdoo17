@@ -33,9 +33,10 @@ class HrContract(models.Model):
         """Get the default notice period from the  configuration.
             :return: The default notice period in days.
             :rtype: int """
-        return self.env['ir.config_parameter'].get_param(
+        # FIX: Add .sudo() to read system parameters
+        return self.env['ir.config_parameter'].sudo().get_param(
             'hr_employee_updation.no_of_days') if self.env[
-            'ir.config_parameter'].get_param(
+            'ir.config_parameter'].sudo().get_param(
             'hr_employee_updation.notice_period') else 0
 
     notice_days = fields.Integer(string="Notice Period",
