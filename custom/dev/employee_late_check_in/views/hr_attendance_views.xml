@@ -16,6 +16,36 @@
         </field>
     </record>
 
+    <record id="view_attendance_tree_recompute" model="ir.ui.view">
+            <field name="name">hr.attendance.tree.recompute</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+            <field name="arch" type="xml">
+                <tree position="inside">
+                    <header>
+                        <button name="action_recompute_days_work"
+                                string="Recompute Days Work"
+                                type="object"
+                                class="btn-primary"/>
+                    </header>
+                </tree>
+            </field>
+        </record>
+
+    <!-- Still keep the action for Action dropdown -->
+    <record id="action_recompute_days_work" model="ir.actions.server">
+            <field name="name">Recompute Days Work</field>
+            <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+            <field name="binding_model_id" ref="hr_attendance.model_hr_attendance"/>
+            <field name="binding_view_types">list</field>
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>  <!-- Only for Settings users -->
+            <field name="state">code</field>
+            <field name="code">
+    if records:
+        action = records.action_recompute_days_work()
+            </field>
+        </record>
+
     <record id="hr_attendance_view_filter_override" model="ir.ui.view">
         <field name="name">hr_attendance_view_filter.override</field>
         <field name="model">hr.attendance</field>

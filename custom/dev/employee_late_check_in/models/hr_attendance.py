@@ -25,6 +25,7 @@ from datetime import datetime, timedelta
 from odoo import fields, models, api
 from odoo.addons.resource.models.utils import Intervals
 
+from odoo.exceptions import AccessError
 
 class HrAttendance(models.Model):
     """Inherit the module to add fields and methods"""
@@ -49,6 +50,39 @@ class HrAttendance(models.Model):
         compute='_compute_check_in_hour',
         store=True,
     )
+
+    def action_recompute_days_work(self):
+        """Recompute days_work_include_late (Admin only)"""
+        # CHECK PERMISSION FIRST
+        if not self.env.user.has_group('base.group_system'):
+            raise AccessError('Only administrators can recompute attendance data.')
+
+        if not self:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': 'Warning',
+                    'message': 'Please select at least one record',
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
+
+        # Recompute
+        for rec in self:
+            rec._compute_days_work()
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Success',
+                'message': f'Recomputed days_work_include_late for {len(self)} record(s)',
+                'type': 'success',
+                'sticky': False,
+            }
+        }
 
     @api.depends('check_in')
     def _compute_check_in_hour(self):
@@ -238,18 +272,13 @@ class HrAttendance(models.Model):
                         corresponding_attendance.check_in.date() != late_check_in_record.date):
                     late_check_in_record.unlink()
 
-    @api.depends('check_in', 'check_out', 'employee_id')
+
+    @api.depends('check_in', 'check_out', 'employee_id', 'employee_id.contract_id')
     def _compute_late_check_in_afternoon(self):
         for rec in self:
             rec.late_check_in_afternoon = 0.0
 
-            if not rec.employee_id:
-                continue
-
-            if not rec.employee_id.contract_id:
-                continue
-
-            if not rec.check_in:
+            if not rec.employee_id or not rec.employee_id.contract_id or not rec.check_in:
                 continue
 
             # Get timezone
@@ -266,8 +295,8 @@ class HrAttendance(models.Model):
                 dt = old_tz.localize(dt)
             dt_local = dt.astimezone(new_tz)
 
-            # Get morning checkout record
-            morning_checkout = self._get_morning_checkout(rec.employee_id, rec.check_in)
+            # Get morning checkout record (pass rec.id to exclude it)
+            morning_checkout = self._get_morning_checkout(rec.employee_id, rec.check_in, rec.id)
             if not morning_checkout:
                 continue
 
@@ -285,10 +314,7 @@ class HrAttendance(models.Model):
             break_minutes = int(break_time_param)
 
             minutes_after_param = self.env['ir.config_parameter'].sudo().get_param('late_check_in_after')
-            if not minutes_after_param:
-                grace_minutes = 10
-            else:
-                grace_minutes = int(minutes_after_param)
+            grace_minutes = int(minutes_after_param) if minutes_after_param else 10
 
             # Expected afternoon check-in time
             expected_checkin_dt = morning_checkout_local + timedelta(minutes=break_minutes + grace_minutes)
@@ -301,27 +327,16 @@ class HrAttendance(models.Model):
 
                 # Check maximum late time
                 max_late_param = self.env['ir.config_parameter'].sudo().get_param('late_check_in_not_count_after')
-                if not max_late_param:
-                    max_late = 240  # default
-                else:
-                    max_late = float(max_late_param)
+                max_late = float(max_late_param) if max_late_param else 240
 
                 if rec.late_check_in_afternoon >= max_late:
                     rec.late_check_in_afternoon = 0
                     if rec.days_work_include_late > 0:
                         rec.days_work_include_late -= 0.5
 
-    def _get_morning_checkout(self, employee, check_in_datetime):
-        """
-            Find the most recent checkout before the given check-in time on the same day.
+    def _get_morning_checkout(self, employee, check_in_datetime, current_record_id=False):
+        """Retrieve the morning check-out record for the same day as the given check-in datetime."""
 
-            Args:
-                employee: hr.employee record
-                check_in_datetime: datetime object for the afternoon check-in
-
-            Returns:
-                hr.attendance record or False
-            """
         tz_name = self.env.user.tz or 'UTC'
         if tz_name not in pytz.all_timezones:
             tz_name = 'UTC'
@@ -329,7 +344,7 @@ class HrAttendance(models.Model):
         old_tz = pytz.timezone('UTC')
         new_tz = pytz.timezone(tz_name)
 
-        # Localize check_in_datetime if naive
+        # Localize if naive
         if not check_in_datetime.tzinfo:
             check_in_datetime_utc = old_tz.localize(check_in_datetime)
         else:
@@ -345,14 +360,19 @@ class HrAttendance(models.Model):
         start_of_day_utc = new_tz.localize(start_of_day_local.replace(tzinfo=None)).astimezone(old_tz).replace(
             tzinfo=None)
 
-        # Search morning checkout
-        morning_checkout = self.env['hr.attendance'].search([
+        # Build search domain
+        domain = [
             ('employee_id', '=', employee.id),
             ('check_out', '!=', False),
             ('check_out', '>=', start_of_day_utc),
             ('check_out', '<', check_in_datetime),
-            ('id', '!=', self.id),
-        ], order='check_out desc', limit=1)
+        ]
+
+        # Exclude current record if provided
+        if current_record_id:
+            domain.append(('id', '!=', current_record_id))
+
+        # Search morning checkout
+        morning_checkout = self.env['hr.attendance'].search(domain, order='check_out desc', limit=1)
 
         return morning_checkout
-
