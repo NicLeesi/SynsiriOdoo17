@@ -24,7 +24,6 @@ from pytz import timezone
 from datetime import datetime, timedelta
 from odoo import fields, models, api
 from odoo.addons.resource.models.utils import Intervals
-import logging
 
 
 class HrAttendance(models.Model):
@@ -239,64 +238,121 @@ class HrAttendance(models.Model):
                         corresponding_attendance.check_in.date() != late_check_in_record.date):
                     late_check_in_record.unlink()
 
-
-
+    @api.depends('check_in', 'check_out', 'employee_id')
     def _compute_late_check_in_afternoon(self):
-        """Calculate late check-in for (afternoon session) minutes for each record in the current Odoo
-        model.This method iterates through the records and calculates late
-        check-in minutes based on the employee's contract schedule.The
-        calculation takes into account the employee's time zone, scheduled
-        check-in time, and the actual check-in time."""
         for rec in self:
             rec.late_check_in_afternoon = 0.0
-            if rec.employee_id.contract_id:
-                dt = rec.check_in
-                if self.env.user.tz in pytz.all_timezones:
-                    old_tz = pytz.timezone('UTC')
-                    new_tz = pytz.timezone(self.env.user.tz)
-                    dt = old_tz.localize(dt).astimezone(new_tz)
-                str_time = dt.strftime("%H:%M")
-                check_in_date = datetime.strptime(
-                    str_time, "%H:%M").time()
-                morning_checkout = self._get_morning_checkout(rec.employee_id, rec.check_in)
-                if morning_checkout:
-                    morning_checkout_time = morning_checkout.check_out
-                    morning_checkout_time = old_tz.localize(morning_checkout_time).astimezone(
-                        new_tz)
-                    morning_checkout_str_time = morning_checkout_time.strftime("%H:%M")
-                    morning_checkout_time = datetime.strptime(morning_checkout_str_time,
-                                                              "%H:%M").time()
-                    morning_checkout_timedelta = timedelta(hours=morning_checkout_time.hour,
-                                                           minutes=morning_checkout_time.minute)
 
-                    break_time = int(self.env['ir.config_parameter'].sudo().get_param(
-                                'Lunch_break_time'))
-                    check_in = timedelta(hours=check_in_date.hour,
-                                         minutes=check_in_date.minute)
-                    break_time = timedelta(minutes=break_time)
-                    minutes_after_value = int(self.env['ir.config_parameter'].sudo().get_param(
-                        'late_check_in_after')) or 10
-                    minutes_after = timedelta(minutes=minutes_after_value)
+            if not rec.employee_id:
+                continue
 
-                    if check_in > morning_checkout_timedelta + break_time:
-                        final = max(timedelta(0), check_in - (morning_checkout_timedelta + break_time + minutes_after))
-                        rec.late_check_in_afternoon = final.total_seconds() / 60
-                        if rec.late_check_in_afternoon >= float(self.env['ir.config_parameter'].sudo().get_param(
-                                'late_check_in_not_count_after')):
-                            rec.late_check_in_afternoon = 0
-                            if rec.days_work_include_late > 0:
-                                rec.days_work_include_late -= 0.5
+            if not rec.employee_id.contract_id:
+                continue
 
+            if not rec.check_in:
+                continue
 
+            # Get timezone
+            tz_name = self.env.user.tz or 'UTC'
+            if tz_name not in pytz.all_timezones:
+                tz_name = 'UTC'
+
+            old_tz = pytz.timezone('UTC')
+            new_tz = pytz.timezone(tz_name)
+
+            # Convert check-in to local timezone
+            dt = rec.check_in
+            if not dt.tzinfo:
+                dt = old_tz.localize(dt)
+            dt_local = dt.astimezone(new_tz)
+
+            # Get morning checkout record
+            morning_checkout = self._get_morning_checkout(rec.employee_id, rec.check_in)
+            if not morning_checkout:
+                continue
+
+            # Convert morning checkout to local timezone
+            morning_checkout_dt = morning_checkout.check_out
+            if not morning_checkout_dt.tzinfo:
+                morning_checkout_dt = old_tz.localize(morning_checkout_dt)
+            morning_checkout_local = morning_checkout_dt.astimezone(new_tz)
+
+            # Get configuration parameters
+            break_time_param = self.env['ir.config_parameter'].sudo().get_param('Lunch_break_time')
+            if not break_time_param:
+                continue
+
+            break_minutes = int(break_time_param)
+
+            minutes_after_param = self.env['ir.config_parameter'].sudo().get_param('late_check_in_after')
+            if not minutes_after_param:
+                grace_minutes = 10
+            else:
+                grace_minutes = int(minutes_after_param)
+
+            # Expected afternoon check-in time
+            expected_checkin_dt = morning_checkout_local + timedelta(minutes=break_minutes + grace_minutes)
+
+            # Calculate if late
+            if dt_local > expected_checkin_dt:
+                late_timedelta = dt_local - expected_checkin_dt
+                late_minutes = late_timedelta.total_seconds() / 60
+                rec.late_check_in_afternoon = late_minutes
+
+                # Check maximum late time
+                max_late_param = self.env['ir.config_parameter'].sudo().get_param('late_check_in_not_count_after')
+                if not max_late_param:
+                    max_late = 240  # default
+                else:
+                    max_late = float(max_late_param)
+
+                if rec.late_check_in_afternoon >= max_late:
+                    rec.late_check_in_afternoon = 0
+                    if rec.days_work_include_late > 0:
+                        rec.days_work_include_late -= 0.5
 
     def _get_morning_checkout(self, employee, check_in_datetime):
-        """Retrieve the morning check-out record for the same day as the given check-in datetime."""
-        start_of_day = check_in_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
-        noon = start_of_day + timedelta(hours=23)
+        """
+            Find the most recent checkout before the given check-in time on the same day.
 
-        return self.env['hr.attendance'].search([
+            Args:
+                employee: hr.employee record
+                check_in_datetime: datetime object for the afternoon check-in
+
+            Returns:
+                hr.attendance record or False
+            """
+        tz_name = self.env.user.tz or 'UTC'
+        if tz_name not in pytz.all_timezones:
+            tz_name = 'UTC'
+
+        old_tz = pytz.timezone('UTC')
+        new_tz = pytz.timezone(tz_name)
+
+        # Localize check_in_datetime if naive
+        if not check_in_datetime.tzinfo:
+            check_in_datetime_utc = old_tz.localize(check_in_datetime)
+        else:
+            check_in_datetime_utc = check_in_datetime
+
+        # Convert to local timezone
+        local_dt = check_in_datetime_utc.astimezone(new_tz)
+
+        # Start of day in local timezone
+        start_of_day_local = local_dt.replace(hour=0, minute=0, second=0, microsecond=0)
+
+        # Convert start of day back to UTC
+        start_of_day_utc = new_tz.localize(start_of_day_local.replace(tzinfo=None)).astimezone(old_tz).replace(
+            tzinfo=None)
+
+        # Search morning checkout
+        morning_checkout = self.env['hr.attendance'].search([
             ('employee_id', '=', employee.id),
-            ('check_out', '>=', start_of_day),
-            ('check_out', '<', check_in_datetime)
-        ], limit=1)
+            ('check_out', '!=', False),
+            ('check_out', '>=', start_of_day_utc),
+            ('check_out', '<', check_in_datetime),
+            ('id', '!=', self.id),
+        ], order='check_out desc', limit=1)
+
+        return morning_checkout
 
