@@ -2,13 +2,13 @@
 
 /* Compact pivot table */
 .o_pivot {
-    font-size: 11px;
+    font-size: 13px;
 }
 
 /* Column headers (dates) in thead - make narrow */
 .o_pivot table thead th {
     min-width: 25px !important;
-    max-width: 30px !important;
+    max-width: 35px !important;
     padding: 1px 1px !important;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -18,7 +18,7 @@
 /* Data value cells in tbody - make narrow */
 .o_pivot table tbody td:not(:first-child) {
     min-width: 25px !important;
-    max-width: 30px !important;
+    max-width: 35px !important;
     padding: 1px 1px !important;
     overflow: hidden;
     text-overflow: ellipsis;

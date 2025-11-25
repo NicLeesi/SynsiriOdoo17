@@ -256,11 +256,11 @@ class HrAttendanceReportWizard(models.TransientModel):
                 absent_deduction = self._calculate_absent_deduction(days_work_include_late, is_work_day)
 
                 # Apply penalty for multiple absences
-                if absent_deduction < 0:
-                    employee_absences[employee.id] += 1
-                    if employee_absences[employee.id] > 1:
-                        penalty = employee_absences[employee.id] - 1
-                        absent_deduction -= penalty
+                # if absent_deduction < 0:
+                #     employee_absences[employee.id] += 1
+                #     if employee_absences[employee.id] > 1:
+                #         penalty = employee_absences[employee.id] - 1
+                #         absent_deduction -= penalty
 
                 report_lines.append({
                     'employee_id': employee.id,
@@ -293,7 +293,7 @@ class HrAttendanceReportWizard(models.TransientModel):
             'name': 'Attendance Report',
             'type': 'ir.actions.act_window',
             'res_model': 'hr.attendance.report.line',
-            'view_mode': 'tree,pivot',
+            'view_mode': 'pivot,tree',
             'target': 'main',
         }
 

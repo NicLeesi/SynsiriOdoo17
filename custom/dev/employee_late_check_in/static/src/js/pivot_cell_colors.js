@@ -4,73 +4,50 @@ import { patch } from "@web/core/utils/patch";
 import { PivotRenderer } from "@web/views/pivot/pivot_renderer";
 import { onMounted, onPatched } from "@odoo/owl";
 
-console.log("Loading pivot cell coloring - simple version...");
-
 patch(PivotRenderer.prototype, {
     setup() {
         super.setup();
-
         const processTable = () => {
-            setTimeout(() => {
-                this._processPivotTable();
-            }, 200);
+            setTimeout(() => this._processPivotTable(), 200);
         };
-
         onMounted(processTable);
         onPatched(processTable);
     },
 
     _processPivotTable() {
-        console.log("Processing pivot table...");
-
         const table = document.querySelector('.o_pivot table');
-        if (!table) {
-            console.log("No pivot table found");
-            return;
-        }
+        if (!table) return;
 
-        // Get all value cells
-        const cells = table.querySelectorAll('tbody td.o_pivot_cell_value');
-        console.log("Found", cells.length, "value cells");
+        const bodyRows = table.querySelectorAll('tbody tr');
 
-        cells.forEach((cell) => {
-            const text = cell.textContent.trim();
-            const value = parseFloat(text);
+        bodyRows.forEach((row) => {
+            const valueCells = row.querySelectorAll('td.o_pivot_cell_value');
 
-            // Reset styles
-            cell.style.backgroundColor = '';
-            cell.style.color = '';
-            cell.style.fontWeight = '';
+            valueCells.forEach((cell) => {
+                const text = cell.textContent.trim();
+                const cleaned = text.replace(/[⚠️🔴❌⏰]/g, '').trim();
+                const value = parseFloat(cleaned);
 
-            if (isNaN(value)) return;
+                // reset
+                cell.style.backgroundColor = '';
+                cell.style.color = '';
+                cell.style.fontWeight = '';
+                cell.textContent = cleaned;
 
-            // Hide zeros
-            if (value === 0) {
-                cell.textContent = '';
-                return;
-            }
+                if (isNaN(value)) return;
 
-            // Value < 0 = Red
-            if (value < 0) {
-                cell.style.backgroundColor = '#ffe6e6';
-                cell.style.color = '#cc0000';
-                cell.style.fontWeight = 'bold';
-            }
-            // Value between 0 and 1 (inclusive) = Green
-            // This catches 0.5, 1, and any value like 0.50, 1.00
-            else if (value > 0 && value <= 1) {
-                cell.style.backgroundColor = '#e6ffe6';
-                cell.style.color = '#02ed02';
-                cell.style.fontWeight = 'bold';
-            }
-            // Value > 1 = Red
-            else if (value > 1) {
-                cell.style.backgroundColor = '#ffe6e6';
-                cell.style.color = '#cc0000';
-                cell.style.fontWeight = 'bold';
-            }
+                if (value === 0) {
+                    cell.textContent = '';
+                    return;
+                }
+
+                // simple rule
+                if (value < 0) {
+                    cell.style.backgroundColor = '#ffe6e6';
+                    cell.style.color = '#cc0000';
+                    cell.style.fontWeight = 'bold';
+                }
+            });
         });
-
-        console.log("Pivot table processing complete");
     }
 });
