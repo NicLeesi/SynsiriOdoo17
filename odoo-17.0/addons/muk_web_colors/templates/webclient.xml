@@ -6,7 +6,7 @@
         <xpath expr="//meta[@name='theme-color']" position="replace">
             <meta 
             	name="theme-color" 
-            	t-att-content="'#242733' if request.httprequest.cookies.get('color_scheme') == 'dark' else '#714B67'"
+            	t-att-content="'#242733' if request.httprequest.cookies.get('color_scheme') == 'dark' else '#00476b'"
             />
         </xpath>
     </template>

@@ -218,7 +218,15 @@ class HrAttendanceReportWizard(models.TransientModel):
                     if total_late_pm > 0:
                         late_check_in_pm = float(total_late_pm)
 
-                    is_present = 1
+                    # Get the first check-in time and convert to local timezone
+                    first_attendance = min(attendances, key=lambda a: a.check_in)
+                    check_in_utc = pytz.UTC.localize(first_attendance.check_in)
+                    check_in_local = check_in_utc.astimezone(user_tz)
+
+                    # Convert to float hours (e.g., 8:30 = 8.5)
+                    check_in_hour = check_in_local.hour + check_in_local.minute / 60.0
+
+                    is_present = check_in_hour  # Store as float hour
                     is_absent = 0
                     is_leave = 0
 
@@ -324,5 +332,5 @@ class HrAttendanceReportLine(models.TransientModel):
 
     is_absent = fields.Integer(string='Absent')
     is_weekend = fields.Integer(string='Weekend')
-    is_present = fields.Integer(string='Present')
+    is_present = fields.Float(string='Present', digits=(10, 2))
     is_leave = fields.Integer(string='Leave')
