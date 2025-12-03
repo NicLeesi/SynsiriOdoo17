@@ -207,7 +207,34 @@
                                 </table>
                             </div>
                         </div>
-                        <h3 style="font-size: 20px;"> Working Day Summary(สรุปวันทำงาน) </h3>
+                        <h3 style="font-size: 20px; margin-bottom: 10px; margin-top: 15px;"> <!-- Adjust -10px as needed -->
+                            Additional Inputs (รายละเอียดเพิ่มเติม)
+                        </h3>
+                        <table class="table table-sm" style="margin-top: -10px;"> <!-- Adjust -10px as needed -->
+                            <thead>
+                                <tr>
+                                    <th>Name (ชื่อ)</th>
+                                    <th>Code (รหัส)</th>
+                                    <th>Amount (จำนวน)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.input_line_ids" t-as="input">
+                                    <td>
+                                        <span t-esc="input.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="input.code"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="input.amount"
+                                              t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3 style="font-size: 20px;"> Working Day (สรุปวันทำงาน) </h3>
                         <div class="row">
                             <div class="col-6">
                                 <table class="table table-sm mb32">
@@ -235,7 +262,7 @@
                                         </tr>
                                         <!-- Compute total sum for 'DED' code -->
                                         <tr>
-                                            <td colspan="2"><strong>WD(รวมวันทำงาน)</strong></td>
+                                            <td colspan="2"><strong>WorkDay(สรุปวันทำงาน)</strong></td>
                                             <td class="text-right">
                                                 <strong>
                                                     <span t-esc="sum([h['total'] for h in get_details_by_rule_category.get(o.id, []) if h['category_code'] == 'WD' and h['code'] != 'WD'])"
@@ -284,71 +311,6 @@
                                 </table>
                             </div>
                         </div>
-
-
-
-
-                        <!--                        <h3>Payslip Lines by Contribution Register</h3>-->
-                        <!--                        <table class="table table-sm mt32">-->
-                        <!--                            <thead>-->
-                        <!--                                <tr>-->
-                        <!--                                    <th>Code</th>-->
-                        <!--                                    <th>Name</th>-->
-                        <!--                                    <th>Quantity/rate</th>-->
-                        <!--                                    <th>Amount</th>-->
-                        <!--                                    <th>Total</th>-->
-                        <!--                                </tr>-->
-                        <!--                            </thead>-->
-                        <!--                            <tbody>-->
-                        <!--                                <tr t-foreach="get_lines_by_contribution_register.get(o.id, [])"-->
-                        <!--                                    t-as="p">-->
-                        <!--                                    <td>-->
-                        <!--                                        <span t-esc="p.get('code', '')"/>-->
-                        <!--                                    </td>-->
-                        <!--                                    <td>-->
-                        <!--                                        <span t-esc="p.get('name', '')"/>-->
-                        <!--                                    </td>-->
-                        <!--                                    <td>-->
-                        <!--                                        <span t-esc="p.get('quantity', '')"/>-->
-                        <!--                                    </td>-->
-                        <!--                                    <td>-->
-                        <!--                                        <span t-esc="p.get('amount', 0)"/>-->
-                        <!--                                    </td>-->
-                        <!--                                    <td class="text-right">-->
-                        <!--                                        <span t-esc="p.get('total', 0)"-->
-                        <!--                                              t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>-->
-                        <!--                                    </td>-->
-                        <!--                                </tr>-->
-                        <!--                            </tbody>-->
-                        <!--                        </table>-->
-
-
-                        <h3 style="font-size: 20px; margin-bottom: 10px; margin-top: 15px;"> <!-- Adjust -10px as needed -->
-                            Additional Inputs (รายละเอียดเพิ่มเติม)
-                        </h3>
-                        <table class="table table-sm" style="margin-top: -10px;"> <!-- Adjust -10px as needed -->
-                            <thead>
-                                <tr>
-                                    <th>Name (ชื่อ)</th>
-                                    <th>Code (รหัส)</th>
-                                    <th>Amount (จำนวน)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr t-foreach="o.input_line_ids" t-as="input">
-                                    <td>
-                                        <span t-esc="input.name"/>
-                                    </td>
-                                    <td>
-                                        <span t-esc="input.code"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-esc="input.amount"
-                                              t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
 
                         <p class="text-right">
                             <strong>Authorized signature(ลงชื่อผู้รับสลิป)</strong>
