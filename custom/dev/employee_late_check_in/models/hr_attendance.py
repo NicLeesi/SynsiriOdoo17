@@ -143,7 +143,23 @@ class HrAttendance(models.Model):
                         self.env['ir.config_parameter'].sudo().get_param('day_work_count_ratio'))
 
                     if days_work_total < 0.5 * day_work_ratio_config:
-                        rec.days_work_include_late = 0
+                        check_in_date = rec.check_in.date()
+                        date_start = datetime.combine(check_in_date, datetime.min.time())
+                        date_end = datetime.combine(check_in_date, datetime.max.time())
+                        # handle late check out for morning session
+                        same_day_attendances = self.env['hr.attendance'].search([
+                            ('employee_id', '=', rec.employee_id.id),
+                            ('check_in', '>=', date_start),
+                            ('check_in', '<=', date_end),
+                        ])
+                        total_same_day_day_work = sum(att.days_work_include_late for att in same_day_attendances)
+                        total_same_day_work_hours = sum(att.worked_hours for att in same_day_attendances)
+                        total_days_work_same_day = (total_same_day_work_hours + rec_work_hours) / average_work_day
+                        if 1 * day_work_ratio_config <= total_days_work_same_day and total_same_day_day_work < 1:
+                            rec.days_work_include_late = 0.5
+                        else:
+                            rec.days_work_include_late = 0
+                            
                     elif 0.5 * day_work_ratio_config <= days_work_total <= 1 * day_work_ratio_config:
                         rec.days_work_include_late = 0.5
                     else:
