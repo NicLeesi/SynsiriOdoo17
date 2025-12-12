@@ -159,7 +159,6 @@ class HrAttendance(models.Model):
                             rec.days_work_include_late = 0.5
                         else:
                             rec.days_work_include_late = 0
-                            
                     elif 0.5 * day_work_ratio_config <= days_work_total <= 1 * day_work_ratio_config:
                         rec.days_work_include_late = 0.5
                     else:

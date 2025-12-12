@@ -16,7 +16,7 @@ class HrAttendance(models.Model):
         ('user', 'User'),
         ('bio_device', 'Bio Device')
         ], string="Edit Source", compute='_compute_edit_source', store=True, readonly=True )
-    alert_flag = fields.Integer(string='Alert',store=True, group_operator='sum',readonly=True)
+    alert_flag = fields.Integer(string='Alert',compute='_compute_color', group_operator='sum',readonly=True)
 
     def write(self, vals):
         if 'is_bio_device' not in vals:
@@ -66,12 +66,7 @@ class HrAttendance(models.Model):
                         color = 2
                         alert = 1
             else:
-                # No check out — check if it’s an old entry
-                if attendance.check_in and attendance.check_in < (datetime.today() - timedelta(days=1)):
-                    color = 1
-                    alert = 1
-                else:
-                    color = 10  # Optional: fallback color
+                color = 10  # Optional: fallback color
 
             attendance.color = color
             attendance.alert_flag = alert
