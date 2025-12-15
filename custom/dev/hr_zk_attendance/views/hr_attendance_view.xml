@@ -17,7 +17,7 @@
         <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree/field[@name='employee_id']" position="after">
-                <field name="alert_flag"/>
+                <field name="alert_flag" sum="Total Alerts"/>
 <!--                <field name="is_bio_device"/>-->
                 <field name="created_by_user"/>
                 <field name="edit_source"/>

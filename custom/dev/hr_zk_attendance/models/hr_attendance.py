@@ -16,7 +16,13 @@ class HrAttendance(models.Model):
         ('user', 'User'),
         ('bio_device', 'Bio Device')
         ], string="Edit Source", compute='_compute_edit_source', store=True, readonly=True )
-    alert_flag = fields.Integer(string='Alert',compute='_compute_color', group_operator='sum',readonly=True)
+    alert_flag = fields.Integer(string='Alert', compute='_compute_color', group_operator='sum',readonly=True, store=True)
+    color = fields.Integer(
+        string='Color',
+        compute='_compute_color',
+        store=True,
+        readonly=True
+    )
 
     def write(self, vals):
         if 'is_bio_device' not in vals:
