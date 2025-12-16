@@ -31,7 +31,18 @@
                 <field name="daily_price_change"/>
                 <field name="weekly_price_change"/>
                 <field name="monthly_price_change"/>
-                <field name="price_change_display" string="Change vs Last" />
+                <field name="price_change_display"
+                       decoration-success="price_change_display &lt; 0"
+                       decoration-danger="price_change_display &gt; 0"/>
+                <field name="price_vs_average"
+                       decoration-success="price_vs_average &lt; 0"
+                       decoration-danger="price_vs_average &gt; 0"
+                       />
+                <field name="price_position"
+                       decoration-danger="'Highest' in price_position"
+                       decoration-warning="'High' in price_position or 'Upper mid' in price_position"
+                       decoration-info="'Lower mid' in price_position or 'Low price' in price_position"
+                       decoration-success="'Lowest' in price_position"/>
             </tree>
         </field>
     </record>

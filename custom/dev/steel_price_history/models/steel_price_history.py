@@ -2,6 +2,7 @@ from odoo import models, api, fields
 import requests
 import logging
 import time
+from datetime import timedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -22,12 +23,30 @@ class SteelPriceHistory(models.Model):
     weekly_price_change = fields.Float("Weekly Change")
     monthly_price_change = fields.Float("Monthly Change")
     date = fields.Datetime("Fetched On", default=fields.Datetime.now, index=True)
+
     price_change_display = fields.Float(
         string="Daily change p/kg(Baht)",
         compute="_compute_price_change",
         store=True,
         digits=(16, 2),
         help="Numeric difference from the previous record's price for the same item code.",
+    )
+
+    # NEW FIELD 1: Percentage difference from average
+    price_vs_average = fields.Float(
+        string="% vs Average",
+        compute="_compute_price_analytics",
+        store=True,
+        digits=(16, 2),
+        help="Percentage difference from 90-day average price. Positive = above average, Negative = below average.",
+    )
+
+    # NEW FIELD 2: Price position (highest/lowest in X months)
+    price_position = fields.Char(
+        string="Price Position",
+        compute="_compute_price_analytics",
+        store=True,
+        help="Shows if this is the highest or lowest price in recent months (e.g., 'Highest in 3 months')",
     )
 
     @api.depends("price", "code", "date")
@@ -65,6 +84,112 @@ class SteelPriceHistory(models.Model):
             prev = records[idx - 1]
             rec.price_change_display = round(rec.price_per_weight - (prev.price_per_weight or 0.0), 2)
 
+    @api.depends("price_per_weight", "code", "date")
+    def _compute_price_analytics(self):
+        """Compute price comparison to average and price position (highest/lowest)."""
+        SteelPrice = self.env["steel.price.history"]
+
+        for rec in self:
+            rec.price_vs_average = 0.0
+            rec.price_position = ""
+
+            if not rec.code or not rec.price_per_weight or not rec.date:
+                continue
+
+            # Get records for the last 12 months for this code
+            date_12_months_ago = rec.date - timedelta(days=365)
+            historical_records = SteelPrice.search([
+                ("code", "=", rec.code),
+                ("price_per_weight", "!=", 0),
+                ("date", ">=", date_12_months_ago),
+                ("date", "<=", rec.date),
+            ], order="date asc")
+
+            if not historical_records or len(historical_records) < 2:
+                continue
+
+            # Calculate average price (90-day rolling average)
+            # EXCLUDE current record from average calculation
+            date_90_days_ago = rec.date - timedelta(days=90)
+            recent_records = historical_records.filtered(
+                lambda r: r.date >= date_90_days_ago and r.date < rec.date and r.id != rec.id
+            )
+
+            # Need at least 5 records for meaningful average
+            if recent_records and len(recent_records) >= 5:
+                avg_price = sum(recent_records.mapped("price_per_weight")) / len(recent_records)
+                if avg_price > 0:
+                    # Calculate percentage difference
+                    difference = rec.price_per_weight - avg_price
+                    percentage = (difference / avg_price) * 100
+                    rec.price_vs_average = round(percentage, 2)
+            else:
+                # Not enough data for 90-day average, use all available historical data
+                all_previous = historical_records.filtered(lambda r: r.date < rec.date and r.id != rec.id)
+
+                if all_previous and len(all_previous) >= 3:
+                    avg_price = sum(all_previous.mapped("price_per_weight")) / len(all_previous)
+                    if avg_price > 0:
+                        difference = rec.price_per_weight - avg_price
+                        percentage = (difference / avg_price) * 100
+                        rec.price_vs_average = round(percentage, 2)
+
+            # Determine price position
+            current_price = rec.price_per_weight
+            prices = historical_records.mapped("price_per_weight")
+            max_price = max(prices)
+            min_price = min(prices)
+
+            highest_period = 0
+            lowest_period = 0
+
+            # Check all periods and find the LONGEST period for each
+            for months in [1, 2, 3, 6, 9, 12]:
+                date_x_months_ago = rec.date - timedelta(days=months * 30)
+                records_in_period = historical_records.filtered(
+                    lambda r: r.date >= date_x_months_ago
+                )
+
+                if records_in_period:
+                    period_max = max(records_in_period.mapped("price_per_weight"))
+                    period_min = min(records_in_period.mapped("price_per_weight"))
+
+                    # Check if highest in this period - keep checking to find longest period
+                    if abs(current_price - period_max) < 0.01:
+                        highest_period = months
+
+                    # Check if lowest in this period - keep checking to find longest period
+                    if abs(current_price - period_min) < 0.01:
+                        lowest_period = months
+
+            # Build the price position string
+            position_parts = []
+
+            if highest_period > 0:
+                position_parts.append(f"Highest in {highest_period} month{'s' if highest_period > 1 else ''}")
+
+            if lowest_period > 0:
+                position_parts.append(f"Lowest in {lowest_period} month{'s' if lowest_period > 1 else ''}")
+
+            if position_parts:
+                rec.price_position = " | ".join(position_parts)
+            else:
+                # Calculate position in range for context
+                if max_price > min_price:
+                    price_range = max_price - min_price
+                    position_pct = round(((current_price - min_price) / price_range) * 100)
+
+                    if position_pct >= 75:
+                        rec.price_position = "High price (top 25%)"
+                    elif position_pct >= 50:
+                        rec.price_position = "Upper mid (50-75%)"
+                    elif position_pct >= 25:
+                        rec.price_position = "Lower mid (25-50%)"
+                    else:
+                        rec.price_position = "Low price (bottom 25%)"
+                else:
+                    rec.price_position = "Stable price"
+
     @api.model
     def fetch_prices(self):
         """Fetch steel prices from SteelBestBuy API and merge same-day records."""
@@ -100,7 +225,7 @@ class SteelPriceHistory(models.Model):
                 "x-api-key": api_key,
             }
 
-            # Steel bar and all steel
+            # Steel bar and tata steel
             payloads1 = [
                 {
                     "productCodes": [
@@ -112,6 +237,19 @@ class SteelPriceHistory(models.Model):
                     "productCodes": [
                         "2S2406100", "2S2409100", "2S4012100",
                         "2S4016100", "2S4020100", "2S4025100",
+                    ]
+                },
+                {
+                    "productCodes": [
+                        "2S2406103", "2S2406104", "2S2409103", "2S2409104",
+                    ]
+                },
+                {
+                    "productCodes": [
+                        "2S4012103", "2S4012104", "2S4012123", "2S4012124",
+                        "2S4016103", "2S4016104", "2S4016123", "2S4016124",
+                        "2S4020103", "2S4020104", "2S4020123", "2S4020124",
+                        "2S4025103", "2S4025104", "2S4025123", "2S4025124",
                     ]
                 },
             ]
@@ -178,6 +316,24 @@ class SteelPriceHistory(models.Model):
                         "2SQT03201.4F", "2SQT03201.2F", "2SQT03201.2J",
                     ]
                 },
+                {
+                    "productCodes": [
+                        "2RTT02501201.0J", "2RTT03201401.2F", "2RTT03201401.4F",
+                        "2RTT03801901.0F", "2RTT03801901.0J", "2RTT03801901.2F",
+                        "2RTT03801901.2J", "2RTT03801903.0J", "2RTT04002001.2J",
+                        "2RTT04002001.4J", "2RTT04002001.7T", "2RTT05002001.2F",
+                        "2RTT05002001.4F", "2RTT05002001.7F", "2RTT05002002.0J",
+                        "2RTT05002501.15", "2RTT05002501.35", "2RTT05002501.65",
+                        "2RTT05002501.95", "2RTT05002502.3T", "2RTT05002502.45",
+                        "2RTT05002502.65", "2RTT05002503.2T", "2RTT05003001.2J",
+                        "2RTT05003001.4J", "2RTT05003001.7J", "2RTT05003002.0J",
+                        "2RTT05003002.3J", "2RTT06003001.2J", "2RTT06003001.4J",
+                        "2RTT06003002.0T", "2RTT06003002.3T", "2RTT25010009.0J",
+                        "2RTT25015009.0T", "2RTT25015012.0J", "2RTT30010006.0T",
+                        "2RTT30020004.5T", "2RTT30020006.0T", "2RTT30020009.0T",
+                        "2RTT30020012.0T",
+                    ]
+                },
             ]
 
             # Rectangular Bar (GI) + Round Tube
@@ -234,7 +390,7 @@ class SteelPriceHistory(models.Model):
 
             # Fetch loop
             today = fields.Date.today()
-            total_new, total_updated, total_items = 0, 0, 0
+            total_new, total_updated, total_items, total_skipped = 0, 0, 0, 0
 
             for idx, payload in enumerate(payloads, 1):
                 _logger.info("📦 Sending payload %s/%s with %s product codes",
@@ -298,12 +454,11 @@ class SteelPriceHistory(models.Model):
                     # Compare with last record to skip if unchanged
                     if last_record:
                         last_price_per_weight = last_record.price_per_weight or 0.0
-                        last_daily_change = last_record.daily_price_change or 0.0
                         new_price_per_weight = price_per_weight or 0.0
-                        new_daily_change = daily_price_change or 0.0
 
-                        if (abs(last_price_per_weight - new_price_per_weight) < 0.01 and
-                                abs(last_daily_change - new_daily_change) < 0.01):
+                        if abs(last_price_per_weight - new_price_per_weight) < 0.01:
+                            total_skipped += 1
+                            _logger.debug("⏭️ Skipping %s - no price change", code)
                             continue
 
                     # Update existing or create new
@@ -322,8 +477,8 @@ class SteelPriceHistory(models.Model):
                 if idx < len(payloads):
                     time.sleep(2)
 
-            _logger.info("✅ Fetch complete: %s items total, %s updated, %s new",
-                         total_items, total_updated, total_new)
+            _logger.info("✅ Fetch complete: %s items total, %s updated, %s new, %s skipped",
+                         total_items, total_updated, total_new, total_skipped)
             return True
 
         except Exception as e:
