@@ -41,6 +41,7 @@
         'views/biometric_device_attendance_menus.xml',
         'views/res_config_settings_views.xml',
         'views/hr_attendance_view.xml',
+        'views/zk_machine_attendance_views.xml',
         # 'data/ir_cron_data.xml'
     ],
     'images': ['static/description/banner.png'],
