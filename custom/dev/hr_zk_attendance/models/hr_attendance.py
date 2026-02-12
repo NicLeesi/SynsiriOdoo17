@@ -160,10 +160,19 @@ class HrAttendance(models.Model):
             ], order='check_in desc', limit=1)
 
             if last_attendance_before_check_in and last_attendance_before_check_in.check_out and last_attendance_before_check_in.check_out > attendance.check_in:
-                raise exceptions.ValidationError(
-                    _("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
-                      empl_name=attendance.employee_id.name,
-                      datetime=format_datetime(self.env, attendance.check_in, dt_format=False)))
+                # ✅ IMPROVED ERROR MESSAGE:
+                raise exceptions.ValidationError(_(
+                    "Cannot create new attendance record for employee :  %(empl_name)s.\n"
+                    "New check-in: %(new_checkin)s\n"
+                    "Conflicts with existing record:\n"
+                    "  - Check-in: %(old_checkin)s\n"
+                    "  - Check-out: %(old_checkout)s\n"
+                    "Please correct the existing record first.",
+                    empl_name=attendance.employee_id.name,
+                    new_checkin=format_datetime(self.env, attendance.check_in, dt_format=False),
+                    old_checkin=format_datetime(self.env, last_attendance_before_check_in.check_in, dt_format=False),
+                    old_checkout=format_datetime(self.env, last_attendance_before_check_in.check_out, dt_format=False)
+                ))
 
             if not attendance.check_out:
                 # ✅ Only close forgotten check-ins from PREVIOUS calendar days

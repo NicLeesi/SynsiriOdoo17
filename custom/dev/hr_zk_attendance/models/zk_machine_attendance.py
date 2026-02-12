@@ -26,7 +26,7 @@ class ZkMachineAttendance(models.Model):
     """Model to hold data from the biometric device"""
     _name = 'zk.machine.attendance'
     _description = 'Attendance'
-    _inherit = 'hr.attendance'
+    # _inherit = 'hr.attendance'
 
     @api.constrains('check_in', 'check_out', 'employee_id')
     def _check_validity(self):

@@ -36,7 +36,7 @@ class SteelPriceHistory(models.Model):
     price_vs_average = fields.Float(
         string="% vs Average",
         compute="_compute_price_analytics",
-        store=True,
+        store=False,
         digits=(16, 2),
         help="Percentage difference from 90-day average price. Positive = above average, Negative = below average.",
     )
@@ -45,7 +45,7 @@ class SteelPriceHistory(models.Model):
     price_position = fields.Char(
         string="Price Position",
         compute="_compute_price_analytics",
-        store=True,
+        store=False,
         help="Shows if this is the highest or lowest price in recent months (e.g., 'Highest in 3 months')",
     )
 
@@ -97,11 +97,11 @@ class SteelPriceHistory(models.Model):
                 continue
 
             # Get records for the last 12 months for this code
-            date_12_months_ago = rec.date - timedelta(days=365)
+            date_36_months_ago = rec.date - timedelta(days=1095)
             historical_records = SteelPrice.search([
                 ("code", "=", rec.code),
                 ("price_per_weight", "!=", 0),
-                ("date", ">=", date_12_months_ago),
+                ("date", ">=", date_36_months_ago),
                 ("date", "<=", rec.date),
             ], order="date asc")
 
@@ -110,7 +110,7 @@ class SteelPriceHistory(models.Model):
 
             # Calculate average price (90-day rolling average)
             # EXCLUDE current record from average calculation
-            date_90_days_ago = rec.date - timedelta(days=90)
+            date_90_days_ago = rec.date - timedelta(days=1095)
             recent_records = historical_records.filtered(
                 lambda r: r.date >= date_90_days_ago and r.date < rec.date and r.id != rec.id
             )
@@ -144,22 +144,25 @@ class SteelPriceHistory(models.Model):
             lowest_period = 0
 
             # Check all periods and find the LONGEST period for each
-            for months in [1, 2, 3, 6, 9, 12]:
+            for months in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 28, 32, 36]:
                 date_x_months_ago = rec.date - timedelta(days=months * 30)
+
+                # FIX 1: Exclude current record from comparison
                 records_in_period = historical_records.filtered(
-                    lambda r: r.date >= date_x_months_ago
+                    lambda r: r.date >= date_x_months_ago and r.id != rec.id
                 )
 
-                if records_in_period:
+                # FIX 2: Need at least 2 records for meaningful comparison
+                if records_in_period and len(records_in_period) >= 2:
                     period_max = max(records_in_period.mapped("price_per_weight"))
                     period_min = min(records_in_period.mapped("price_per_weight"))
 
-                    # Check if highest in this period - keep checking to find longest period
-                    if abs(current_price - period_max) < 0.01:
+                    # FIX 3: Use >= and <= instead of abs() to catch cases where
+                    # current price exceeds the period max/min
+                    if current_price >= period_max - 0.01:
                         highest_period = months
 
-                    # Check if lowest in this period - keep checking to find longest period
-                    if abs(current_price - period_min) < 0.01:
+                    if current_price <= period_min + 0.01:
                         lowest_period = months
 
             # Build the price position string

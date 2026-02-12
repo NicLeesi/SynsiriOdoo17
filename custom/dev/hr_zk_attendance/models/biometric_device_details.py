@@ -289,12 +289,30 @@ class BiometricDeviceDetails(models.Model):
                     hr_attendance_create_vals = []
                     hr_attendance_to_update = []
 
+                    # ✅ OPTIMIZATION 5: Batch fetch all HR attendances
+                    employee_ids = list(pending_punches_by_employee.keys())
+
+                    # Fetch all open attendances in ONE query
+                    open_attendances = hr_attendance.search([
+                        ('employee_id', 'in', employee_ids),
+                        ('check_out', '=', False)
+                    ])
+                    open_attendance_dict = {att.employee_id.id: att for att in open_attendances}
+
+                    # Fetch all attendances for these employees in ONE query
+                    all_attendances = hr_attendance.search([
+                        ('employee_id', 'in', employee_ids)
+                    ], order='employee_id, check_in desc')
+
+                    # Group by employee, keeping only most recent
+                    last_attendance_dict = {}
+                    for att in all_attendances:
+                        if att.employee_id.id not in last_attendance_dict:
+                            last_attendance_dict[att.employee_id.id] = att
+
                     for emp_id, punches in pending_punches_by_employee.items():
                         # Get existing open attendance for this employee
-                        open_attendance = hr_attendance.search([
-                            ('employee_id', '=', emp_id),
-                            ('check_out', '=', False)
-                        ], order='check_in desc', limit=1)
+                        open_attendance = open_attendance_dict.get(emp_id)
 
                         for punch in punches:
                             punch_time = punch['time']
@@ -303,9 +321,7 @@ class BiometricDeviceDetails(models.Model):
                             if punch_type == '0':  # Check-in
                                 if not open_attendance:
                                     # No open attendance, check if this is a new day
-                                    last_attendance = hr_attendance.search([
-                                        ('employee_id', '=', emp_id)
-                                    ], order='check_in desc', limit=1)
+                                    last_attendance = last_attendance_dict.get(emp_id)
 
                                     should_create = True
                                     if last_attendance:
@@ -365,18 +381,10 @@ class BiometricDeviceDetails(models.Model):
                                             break
                                 else:
                                     # No open attendance - check database
-                                    last_attendance = hr_attendance.search([
-                                        ('employee_id', '=', emp_id)
-                                    ], order='check_in desc', limit=1)
+                                    last_attendance = last_attendance_dict.get(emp_id)
 
-                                    # ✅ Only create new record if last one is closed OR doesn't exist
-                                    if not last_attendance or last_attendance.check_out:
-                                        if last_attendance and last_attendance.check_out:
-                                            _logger.warning(
-                                                f"Consecutive check-outs for employee {emp_id}. "
-                                                f"Creating new attendance record with estimated check-in."
-                                            )
-
+                                    if not last_attendance:
+                                        # No record at all - create with estimated check-in
                                         estimated_check_in = fields.Datetime.from_string(punch_time) - timedelta(
                                             minutes=5)
                                         hr_attendance_create_vals.append({
@@ -385,6 +393,26 @@ class BiometricDeviceDetails(models.Model):
                                             'check_out': punch_time,
                                             'is_bio_device': True
                                         })
+                                    elif last_attendance.check_out:
+                                        # Last record already closed
+                                        estimated_check_in = fields.Datetime.from_string(punch_time) - timedelta(
+                                            minutes=5)
+
+                                        # Check if would overlap with the last record
+                                        if last_attendance.check_out <= estimated_check_in:
+                                            # Safe to create - no overlap
+                                            hr_attendance_create_vals.append({
+                                                'employee_id': emp_id,
+                                                'check_in': fields.Datetime.to_string(estimated_check_in),
+                                                'check_out': punch_time,
+                                                'is_bio_device': True
+                                            })
+                                    else:
+                                        # Last attendance exists and is OPEN - update it
+                                        hr_attendance_to_update.append((last_attendance, {
+                                            'check_out': punch_time,
+                                            'is_bio_device': True
+                                        }))
 
                     # ✅ BATCH CREATE hr.attendance records
                     if hr_attendance_create_vals:
