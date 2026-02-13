@@ -513,7 +513,10 @@ class BiometricDeviceDetails(models.Model):
                         ('device_id_num', 'in', device_ids),
                         ('punching_time', 'in', processed_times)
                     ])
-                    existing_zk_set = {(p.device_id_num, p.punching_time) for p in existing_zk_punches}
+                    existing_zk_set = {
+                        (p.device_id_num, fields.Datetime.to_string(p.punching_time))
+                        for p in existing_zk_punches
+                    }
 
                     # ✅ NEW: Check hr_attendance duplicates (both check-in and check-out)
                     existing_hr_records = hr_attendance.search([
