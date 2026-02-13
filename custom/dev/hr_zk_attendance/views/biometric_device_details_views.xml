@@ -8,6 +8,7 @@
             <tree>
                 <field name="name"/>
                 <field name="device_ip"/>
+                <field name="device_timezone"/>
                 <field name="port_number"/>
             </tree>
         </field>
@@ -37,6 +38,7 @@
                         <field name="device_ip"/>
                         <field name="port_number"/>
                         <field name="address_id"/>
+                        <field name="device_timezone"/>
                     </group>
                     <button name="action_test_connection"
                             type="object" class="btn btn-secondary">
