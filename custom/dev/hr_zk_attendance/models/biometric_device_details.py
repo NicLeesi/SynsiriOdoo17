@@ -534,7 +534,7 @@ class BiometricDeviceDetails(models.Model):
 
                     for each in attendance:
                         atten_time = each.timestamp
-                        local_tz = pytz.timezone(self.env.user.partner_id.tz or 'GMT')
+                        local_tz = pytz.timezone(device_timezone)
                         local_dt = local_tz.localize(atten_time, is_dst=None)
                         utc_dt = local_dt.astimezone(pytz.utc)
                         utc_dt = utc_dt.strftime("%Y-%m-%d %H:%M:%S")
@@ -645,9 +645,46 @@ class BiometricDeviceDetails(models.Model):
                                                     'check_out': atten_time,
                                                     'is_bio_device': True
                                                 })
+                                            else:
+                                                # No open record - create with estimated check-in
+                                                estimated_check_in = atten_time_dt - timedelta(minutes=1)
+                                                hr_attendance.create({
+                                                    'employee_id': get_user_id.id,
+                                                    'check_in': fields.Datetime.to_string(estimated_check_in),
+                                                    'check_out': atten_time,
+                                                    'is_bio_device': True
+                                                })
+                                    else:
+                                        # ✅ NEW: No open attendance at all - create with estimated check-in
+                                        estimated_check_in = atten_time_dt - timedelta(minutes=1)
+                                        hr_attendance.create({
+                                            'employee_id': get_user_id.id,
+                                            'check_in': fields.Datetime.to_string(estimated_check_in),
+                                            'check_out': atten_time,
+                                            'is_bio_device': True
+                                        })
+                                        _logger.info(
+                                            f"Created attendance with estimated check-in (no open) for {get_user_id.name}: "
+                                            f"{estimated_check_in} → {atten_time}"
+                                        )
                             else:
-                                _logger.warning(
-                                    f"Skipping unknown employee: Device ID {each.user_id}, Name '{uid.name}'")
+                                employee = self.env['hr.employee'].create({
+                                    'device_id_num': each.user_id,
+                                    'name': uid.name
+                                })
+                                zk_attendance.create({
+                                    'employee_id': employee.id,
+                                    'device_id_num': each.user_id,
+                                    'attendance_type': str(each.status),
+                                    'punch_type': '0',
+                                    'punching_time': atten_time,
+                                    'address_id': info.address_id.id
+                                })
+                                hr_attendance.create({
+                                    'employee_id': employee.id,
+                                    'check_in': atten_time,
+                                    'is_bio_device': True
+                                })
 
                     conn.disconnect()
                     return True

@@ -17,7 +17,8 @@ class HrAttendance(models.Model):
         ('user', 'User'),
         ('bio_device', 'Bio Device')
     ], string="Edit Source", compute='_compute_edit_source', store=True, readonly=True)
-    alert_flag = fields.Integer(string='Alert', store=True, readonly=True)
+    alert_flag = fields.Integer(string='Error', store=True, readonly=True)
+    one_session_work = fields.Integer(string='1 Session', store=True, readonly=True)
     color = fields.Integer(string='Color', store=True, readonly=True)
 
     @api.depends('create_uid', 'write_uid', 'is_bio_device')
@@ -33,7 +34,6 @@ class HrAttendance(models.Model):
     @api.model
     def cron_compute_attendance_colors(self):
         """Scheduled action to compute colors for attendance records from last 60 days"""
-        _logger.info("Starting daily attendance color computation (last 60 days)...")
 
         # ✅ Calculate date 60 days ago
         sixty_days_ago = datetime.now() - timedelta(days=60)
@@ -45,10 +45,8 @@ class HrAttendance(models.Model):
         ], order='check_in desc')
 
         total = len(recent_attendances)
-        _logger.info(f"Computing colors for {total} attendance records (from {sixty_days_ago.date()})...")
 
         if total == 0:
-            _logger.info("No attendance records found in the last 60 days")
             return True
 
         # ✅ Process in batches to avoid memory issues
@@ -56,9 +54,7 @@ class HrAttendance(models.Model):
         for i in range(0, total, batch_size):
             batch = recent_attendances[i:i + batch_size]
             self._compute_colors_batch(batch)
-            _logger.info(f"Processed {min(i + batch_size, total)}/{total} records")
 
-        _logger.info("Daily attendance color computation completed!")
         return True
 
     def _compute_colors_batch(self, attendances):
@@ -66,10 +62,13 @@ class HrAttendance(models.Model):
         # Cache to avoid duplicate queries for same employee/day
         cache = {}
 
+        user_tz = pytz.timezone(self.env.user.tz or 'UTC')
+        today_date = datetime.now(user_tz).date()
+
         for attendance in attendances:
             color = 0
             alert = 0
-
+            one_session = 0
             if attendance.check_out:
                 if attendance.worked_hours == 0:
                     color = 1
@@ -78,7 +77,7 @@ class HrAttendance(models.Model):
                     color = 1
                     alert = 1
                 elif attendance.check_out < attendance.check_in + timedelta(minutes=10):
-                    color = 2
+                    color = 1
                     alert = 1
                 else:
                     # Simple cache key
@@ -93,14 +92,28 @@ class HrAttendance(models.Model):
                                                                                microsecond=0))
                         ])
 
-                    if cache[cache_key] == 1:
-                        color = 2
-                        alert = 1
+                    if cache[cache_key] == 1 and attendance.days_work_include_late >= 1:
+                        color = 6
+                        one_session = 1
+                    if cache[cache_key] == 1 and attendance.days_work_include_late < 1:
+                        # ✅ Convert attendance time to user's timezone
+                        if attendance.check_in.tzinfo is None:
+                            # Assume UTC if no timezone info
+                            attendance_utc = pytz.utc.localize(attendance.check_in)
+                        else:
+                            attendance_utc = attendance.check_in
+
+                        attendance_local = attendance_utc.astimezone(user_tz)
+                        attendance_date = attendance_local.date()
+
+                        if attendance_date < today_date:
+                            color = 1
+                            alert = 1
             else:
-                color = 10
+                color = 3
 
             # ✅ Update without triggering other computations
-            attendance.write({'color': color, 'alert_flag': alert})
+            attendance.write({'color': color, 'alert_flag': alert, 'one_session_work': one_session})
 
     @api.constrains('check_in', 'check_out', 'employee_id')
     def _check_validity(self):
