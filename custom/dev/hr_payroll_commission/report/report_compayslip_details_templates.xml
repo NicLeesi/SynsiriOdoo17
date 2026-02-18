@@ -66,32 +66,7 @@
                                 </td>
                             </tr>
                         </table>
-                        <h3>Details by Salary Rule Category</h3>
-                        <table class="table table-sm mb32">
-                            <thead>
-                                <tr>
-                                    <th>Code</th>
-                                    <th>Salary Rule Category</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr t-foreach="get_details_by_rule_category.get(o.id, [])"
-                                    t-as="h">
-                                    <td>
-                                        <span t-esc="h['code']"/>
-                                    </td>
-                                    <td>
-                                        <span t-esc="'..'*h['level']"/>
-                                        <span t-esc="h['rule_category']"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-esc="h['total']"
-                                              t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+
                         <h3 style="font-size: 20px; margin-bottom: 10px; margin-top: 15px;"> <!-- Adjust -10px as needed -->
                              Skills Assessment (ประเมินศักยภาพ)
                         </h3>
@@ -152,6 +127,69 @@
                                 </tr>
                             </tbody>
                         </table>
+
+                        <h3 style="font-size: 20px;">
+                            Details by Salary Rule Category(รายละเอียด)
+                        </h3>
+                        <table class="table table-sm mb32">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Salary Rule Category</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="get_details_by_rule_category.get(o.id, [])"
+                                    t-as="h"
+                                    t-if="not h['is_category']">
+                                    <td>
+                                        <span t-esc="h['code']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="'..'*h['level']"/>
+                                        <span t-esc="h['rule_category']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="h['total']"
+                                              t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h3 style="font-size: 20px; ">
+                            Net Amount(ค่าคอมสุทธิ)
+                        </h3>
+                        <table class="table table-sm mb32">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Salary Rule Category</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="get_details_by_rule_category.get(o.id, [])"
+                                    t-as="h"
+                                    t-if="h['code'] == 'TOTAL'">
+                                    <td>
+                                        <span t-esc="h['code']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="'..'*h['level']"/>
+                                        <span t-esc="h['rule_category']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <strong>
+                                            <span t-esc="h['total']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'
+                                                  style="font-size: 22px; font-weight: bold; text-decoration: underline;"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
 <!--                        <h3>Payslip Lines by Contribution Register</h3>-->
 <!--                        <table class="table table-sm mt32">-->
 <!--                            <thead>-->

@@ -74,6 +74,7 @@ class ReportHrPayrollCommunityReportPayslipDetails(models.AbstractModel):
                             'code': parent.code,
                             'level': level,
                             'total': sum(lines.mapped('total')),
+                            'is_category': True
                         })
                         level += 1
                     for line in lines:
@@ -82,7 +83,9 @@ class ReportHrPayrollCommunityReportPayslipDetails(models.AbstractModel):
                             'name': line.name,
                             'code': line.code,
                             'total': line.total,
-                            'level': level
+                            'level': level,
+                            'is_category': False
+
                         })
         return res
 

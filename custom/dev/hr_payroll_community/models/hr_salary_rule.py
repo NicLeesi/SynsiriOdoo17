@@ -167,7 +167,11 @@ class HrSalaryRule(models.Model):
             children_rules += rule.child_ids._recursive_search_of_rules()
         return [(rule.id, rule.sequence) for rule in self] + children_rules
 
-    # TODO should add some checks on the type of result (should be float)
+    # # TODO should add some checks on the type of result (should be float)
+
+    import traceback
+    import sys
+
     def _compute_rule(self, localdict):
         """
         :param localdict: dictionary containing the environement in which to compute the rule
@@ -180,22 +184,24 @@ class HrSalaryRule(models.Model):
                 try:
                     return rec.amount_fix, float(
                         safe_eval(rec.quantity, localdict)), 100.0
-                except:
+                except Exception as e:
                     raise UserError(
-                        _('Wrong quantity defined for salary rule %s (%s).') % (
-                            rec.name, rec.code))
+                        _('Wrong quantity defined for salary rule %s (%s).\n'
+                          'Error: %s') % (rec.name, rec.code, str(e)))
+
             elif rec.amount_select == 'percentage':
                 try:
                     return (
                         float(safe_eval(rec.amount_percentage_base, localdict)),
                         float(safe_eval(rec.quantity, localdict)),
                         rec.amount_percentage)
-                except:
+                except Exception as e:
                     raise UserError(
                         _('Wrong percentage base or quantity defined '
-                          'for salary rule %s (%s).') % (
-                            rec.name, rec.code))
-            else:
+                          'for salary rule %s (%s).\n'
+                          'Error: %s') % (rec.name, rec.code, str(e)))
+
+            else:  # Python code
                 try:
                     safe_eval(rec.amount_python_compute, localdict, mode='exec',
                               nocopy=True)
@@ -203,11 +209,71 @@ class HrSalaryRule(models.Model):
                             'result_qty' in localdict and
                             localdict['result_qty'] or 1.0, 'result_rate'
                             in localdict and localdict['result_rate'] or 100.0)
-                except:
-                    raise UserError(
-                        _('Wrong python code defined for salary '
-                          'rule %s (%s).') % (
-                            rec.name, rec.code))
+                except Exception as e:
+                    # ✅ Capture detailed error information
+                    error_type = type(e).__name__
+                    error_message = str(e)
+
+                    # ✅ Get traceback details
+                    tb = sys.exc_info()[2]
+                    tb_lines = traceback.format_tb(tb)
+
+                    # ✅ Try to extract line number from Python code
+                    error_details = f"{error_type}: {error_message}"
+
+                    # ✅ Show the Python code with line numbers
+                    code_lines = rec.amount_python_compute.split('\n')
+                    numbered_code = '\n'.join([
+                        f"{i + 1}: {line}"
+                        for i, line in enumerate(code_lines)
+                    ])
+
+                    raise UserError(_(
+                        'Wrong python code defined for salary rule %s (%s).\n\n'
+                        'Error: %s\n\n'
+                        'Python Code:\n%s'
+                    ) % (rec.name, rec.code, error_details, numbered_code))
+
+    # def _compute_rule(self, localdict):
+    #     """
+    #     :param localdict: dictionary containing the environement in which to compute the rule
+    #     :return: returns a tuple build as the base/amount computed, the quantity and the rate
+    #     :rtype: (float, float, float)
+    #     """
+    #     for rec in self:
+    #         rec.ensure_one()
+    #         if rec.amount_select == 'fix':
+    #             try:
+    #                 return rec.amount_fix, float(
+    #                     safe_eval(rec.quantity, localdict)), 100.0
+    #             except:
+    #                 raise UserError(
+    #                     _('Wrong quantity defined for salary rule %s (%s).') % (
+    #                         rec.name, rec.code))
+    #         elif rec.amount_select == 'percentage':
+    #             try:
+    #                 return (
+    #                     float(safe_eval(rec.amount_percentage_base, localdict)),
+    #                     float(safe_eval(rec.quantity, localdict)),
+    #                     rec.amount_percentage)
+    #             except:
+    #                 raise UserError(
+    #                     _('Wrong percentage base or quantity defined '
+    #                       'for salary rule %s (%s).') % (
+    #                         rec.name, rec.code))
+    #         else:
+    #             try:
+    #                 safe_eval(rec.amount_python_compute, localdict, mode='exec',
+    #                           nocopy=True)
+    #                 return (float(localdict['result']),
+    #                         'result_qty' in localdict and
+    #                         localdict['result_qty'] or 1.0, 'result_rate'
+    #                         in localdict and localdict['result_rate'] or 100.0)
+    #             except:
+    #                 raise UserError(
+    #                     _('Wrong python code defined for salary '
+    #                       'rule %s (%s).') % (
+    #                         rec.name, rec.code))
 
     def _satisfy_condition(self, localdict):
         """

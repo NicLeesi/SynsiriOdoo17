@@ -90,7 +90,7 @@ class ReportHrPayrollCommunityReportPayslipDetails(models.AbstractModel):
                             'name': line.name,
                             'code': line.code,
                             'total': line.total,
-                            'level': level
+                            'level': level,
                         })
 
         return res
