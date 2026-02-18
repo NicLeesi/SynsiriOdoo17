@@ -121,8 +121,7 @@
                                         <span t-esc="goal.current"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="goal.completeness"
-                                              t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                        <span t-esc="goal.completeness"/>
                                     </td>
                                 </tr>
                             </tbody>

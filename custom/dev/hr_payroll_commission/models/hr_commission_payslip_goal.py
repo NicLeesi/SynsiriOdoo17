@@ -25,11 +25,11 @@ class HrComPayslipGoal(models.Model):
 
     definition_id = fields.Char(string='Goal name',
                                   )
-    completeness = fields.Float(string='Completeness',
+    completeness = fields.Float(string='Completeness', digits=(16, 2)
                                   )
     target_goal = fields.Char(string='Target goal',
                                   )
-    current = fields.Float(string='Current value',
+    current = fields.Float(string='Current value'
                                   )
 
     # number_of_days = fields.Float(string='Number of Days',
