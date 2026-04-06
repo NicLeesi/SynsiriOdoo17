@@ -76,7 +76,7 @@ class BiometricDeviceDetails(models.Model):
     def action_test_connection(self):
         """Checking the connection status"""
         zk = ZK(self.device_ip, port=self.port_number, timeout=30,
-                password=False, ommit_ping=False)
+                password=False, ommit_ping=True)
         try:
             if zk.connect():
                 return {
@@ -101,7 +101,7 @@ class BiometricDeviceDetails(models.Model):
                 try:
                     # Connecting with the device
                     zk = ZK(machine_ip, port=zk_port, timeout=30,
-                            password=0, force_udp=False, ommit_ping=False)
+                            password=0, force_udp=False, ommit_ping=True)
                 except NameError:
                     raise UserError(_(
                         "Please install it with 'pip3 install pyzk'."))
@@ -463,7 +463,7 @@ class BiometricDeviceDetails(models.Model):
 
             try:
                 zk = ZK(machine_ip, port=zk_port, timeout=15, password=0,
-                        force_udp=False, ommit_ping=False)
+                        force_udp=False, ommit_ping=True)
             except NameError:
                 raise UserError(
                     _("Pyzk module not Found. Please install it"
@@ -852,5 +852,5 @@ class BiometricDeviceDetails(models.Model):
         """For restarting the device"""
         zk = ZK(self.device_ip, port=self.port_number, timeout=15,
                 password=0,
-                force_udp=False, ommit_ping=False)
+                force_udp=False, ommit_ping=True)
         self.device_connect(zk).restart()
