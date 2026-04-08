@@ -101,7 +101,7 @@ class BiometricDeviceDetails(models.Model):
                 try:
                     # Connecting with the device
                     zk = ZK(machine_ip, port=zk_port, timeout=30,
-                            password=0, force_udp=False, ommit_ping=True)
+                            password=0, force_udp=False, ommit_ping=False)
                 except NameError:
                     raise UserError(_(
                         "Please install it with 'pip3 install pyzk'."))
@@ -463,7 +463,7 @@ class BiometricDeviceDetails(models.Model):
 
             try:
                 zk = ZK(machine_ip, port=zk_port, timeout=15, password=0,
-                        force_udp=False, ommit_ping=True)
+                        force_udp=False, ommit_ping=False)
             except NameError:
                 raise UserError(
                     _("Pyzk module not Found. Please install it"
@@ -491,7 +491,7 @@ class BiometricDeviceDetails(models.Model):
 
                     # ✅ OPTIMIZATION 3: Pre-fetch all employees
                     device_ids = list(set(each.user_id for each in attendance))
-                    employees = self.env['hr.employee'].search([
+                    employees = self.env['hr.employee'].with_context(active_test=False).search([
                         ('device_id_num', 'in', device_ids)
                     ])
                     employee_dict = {emp.device_id_num: emp for emp in employees}
@@ -672,6 +672,7 @@ class BiometricDeviceDetails(models.Model):
                                     'device_id_num': each.user_id,
                                     'name': uid.name
                                 })
+                                employee_dict[each.user_id] = employee
                                 zk_attendance.create({
                                     'employee_id': employee.id,
                                     'device_id_num': each.user_id,
@@ -852,5 +853,5 @@ class BiometricDeviceDetails(models.Model):
         """For restarting the device"""
         zk = ZK(self.device_ip, port=self.port_number, timeout=15,
                 password=0,
-                force_udp=False, ommit_ping=True)
+                force_udp=False, ommit_ping=False)
         self.device_connect(zk).restart()
